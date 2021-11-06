@@ -1,0 +1,8 @@
+{
+  // These plugins make developing in VSCode much nicer
+  "recommendations": [
+    "svelte.svelte-vscode",
+    "heybourn.headwind",
+    "bradlc.vscode-tailwindcss"
+  ]
+}
