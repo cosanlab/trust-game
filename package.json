@@ -1,5 +1,5 @@
 {
-  "name": "svelte-vite-tailwind-firebase",
+  "name": "create-svelte-experiment",
   "version": "0.0.0",
   "scripts": {
     "dev": "vite",
