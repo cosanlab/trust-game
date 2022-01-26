@@ -12,6 +12,12 @@ import { writable } from 'svelte/store';
 
 // Copy and paste your firebase config here:
 const firebaseConfig = {
+  apiKey: "AIzaSyD9udIO5ap006xab7tb2bZ6s5C7Kc4m7YM",
+  authDomain: "max-thesis.firebaseapp.com",
+  projectId: "max-thesis",
+  storageBucket: "max-thesis.appspot.com",
+  messagingSenderId: "658200948450",
+  appId: "1:658200948450:web:15a5eff940daf56b3378bb"
 };
 
 initializeApp(firebaseConfig);
