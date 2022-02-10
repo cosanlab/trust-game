@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getFirestore, doc, setDoc, updateDoc, runTransaction, serverTimestamp } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc, runTransaction, serverTimestamp, onSnapShot } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { writable, get } from 'svelte/store';
 
@@ -47,7 +47,39 @@ export const loggedIn = writable(false);
 // And one more so we can keep track of their user id to subscribe to their collection
 export const userId = writable(null);
 // Store to control the UI for what state the experiment is in
-export const stateDisplay = writable([])
+export const stateDisplay = writable([]);
+// This function creates a *custom* Svelte store, that works just like regular Svelte
+// stores but subscribes to a firebase document the first time it's used and also has a
+// .save() method which writes the data in the store back to firebase
+export function createFirebaseStore(collection, docId) {
+  // First initialize a regular writable store
+  // The second argument is a function that runs the first time any component subscribes
+  // to the store, i.e uses the $ syntax. Here we tell it to subscribe to firebase when
+  // that happens and save the data from the firebase listener to the store's value
+  const customStore = writable({}, () => {
+    // Setup a firebase realtime listener the first time this store is used
+    console.log(`Now listening to live changes on firebase document ${collection}/${docId}`);
+    const stopFirebaseSubscription = onSnapshot(doc(db, collection, docId), (doc) => set(doc.data()));
+    return () => {
+      // When no components are using this store kill the firebase subscription
+      console.log('Closing realtime firebase listener');
+      stopFirebaseSubscription();
+    };
+
+  });
+  const { subscribe, set, update } = customStore;
+
+  // Then return those default functions/methods along with custom save() method
+  // which writes the value of the store back to firebase
+  return {
+    subscribe,
+    set,
+    update,
+    save: async () => {
+      await setDoc(doc(db, collection, docId), get(customStore));
+    }
+  };
+}
 
 // Add any global variables you want to use elsewhere in the app
 // Then use them in another file by importing:
@@ -96,42 +128,42 @@ export const initUser = async (groupId, subId, role, name) => {
   } catch (error) {
     console.error(`Error creating new document with ID ${userId}: `, error);
   }
-}
+};
 
 // Reset a group to the instructions and first trial
 // Doesn't erase their data
 export const resetGroupData = async () => {
   const groupData = get(groupStore);
   groupData.counter = [];
-  groupData.currentState = 'instructions'
-  groupData.currentTrial = 0
+  groupData.currentState = 'instructions';
+  groupData.currentTrial = 0;
   try {
     const docRef = doc(db, 'groups', groupData.groupId);
-    await setDoc(docRef, groupData)
-    console.log('Successfully reset group data')
+    await setDoc(docRef, groupData);
+    console.log('Successfully reset group data');
   } catch (error) {
-    console.error(`Error resetting group data:`, error)
+    console.error(`Error resetting group data:`, error);
   }
 
-}
+};
 
 // Format the values the user inputted so that we encode each id as 000, 001...NNN, so
 // we can use them as unique document ideas up to 1000 subs.
 export const formatUserId = (groupId, subId, role) => {
   let groupId_f, subId_f, userId_f, role_f;
-  let g = parseInt(groupId)
-  let s = parseInt(subId)
+  let g = parseInt(groupId);
+  let s = parseInt(subId);
   if (g < 10) {
-    groupId_f = `00${g}`
+    groupId_f = `00${g}`;
   } else if (g >= 10 && g < 100) {
-    groupId_f = `0${g}`
+    groupId_f = `0${g}`;
   } else {
     groupId_f = groupId;
   }
   if (s < 10) {
-    subId_f = `00${s}`
+    subId_f = `00${s}`;
   } else if (s >= 10 && s < 100) {
-    subId_f = `0${s}`
+    subId_f = `0${s}`;
   } else {
     subId_f = subId;
   }
@@ -144,32 +176,32 @@ export const formatUserId = (groupId, subId, role) => {
     subId_f,
     role_f,
     userId_f
-  }
-}
+  };
+};
 
 // Rounds a float to 2 decimal places
 export const round2 = (val) => {
-  return Math.round(val * 100) / 100
-}
+  return Math.round(val * 100) / 100;
+};
 
 export const roundHalf = (val) => {
   return Math.round(val * 2) / 2;
-}
+};
 // Calculates pain duration based on choice made, executed reactively by PainScale.svelte
 export const calcPainDuration = (ratingString, cost, endowment) => {
 
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
-  let painReduction = proportionOfEndowmentSpent * cost * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment)
+  let painReduction = proportionOfEndowmentSpent * cost * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment);
 
   // Don't let them reduce pain duraction more than the max possible reduction
   painReduction = painReduction > globalVars.maxPossiblePainReduction ? globalVars.maxPossiblePainReduction : painReduction;
 
   const painDuration = globalVars.maxPainDur - painReduction;
-  const painDurationRounded = round2(painDuration)
+  const painDurationRounded = round2(painDuration);
   return {
     painDurationRounded, proportionOfEndowmentSpent
-  }
-}
+  };
+};
 
 //#####################################
 // DATABASE TRANSACTION WRITE FUNCTIONS
@@ -215,7 +247,7 @@ export const reqStateChange = async (newState, updateTrial = false) => {
       // Get the latest data, rather than relying on the store
       const document = await transaction.get(docRef);
       if (!document.exists()) {
-        throw "Document does not exist!"
+        throw "Document does not exist!";
       }
       // Freshest data
       const { counter, currentState } = document.data();
@@ -236,19 +268,19 @@ export const reqStateChange = async (newState, updateTrial = false) => {
         );
         // Add the user to the counter if they're not already in it
         if (!counter.includes(userId)) {
-          await transaction.update(docRef, { counter: [...counter, userId] })
+          await transaction.update(docRef, { counter: [...counter, userId] });
         } else {
           console.log("Ignoring duplicate request");
         }
       }
-    })
+    });
   } catch (error) {
-    console.error(`Error updating state to ${newState} for group: ${groupId}`, error)
+    console.error(`Error updating state to ${newState} for group: ${groupId}`, error);
   }
   // Use helper function to run a second transaction that checks the counter length and
   // actually performs the state change if appropriate
   await verifyStateChange(newState, updateTrial);
-}
+};
 
 // Helper function called by reqStateChange that runs a follow-up transaction after the
 // reqStateChange transaction so we rely on freshes counter value in the db rather than
@@ -262,7 +294,7 @@ const verifyStateChange = async (newState, updateTrial = false) => {
   try {
     await runTransaction(db, async (transaction) => {
       // Get the latest data, rather than relying on the store
-      const document = await transaction.get(docRef)
+      const document = await transaction.get(docRef);
       if (!document.exists()) {
         throw "Document does not exist!";
       }
@@ -276,8 +308,8 @@ const verifyStateChange = async (newState, updateTrial = false) => {
         obj["currentState"] = newState;
         if (updateTrial) {
           if (currentTrial + 1 === maxTrials) {
-            console.log("At last trial...going to debrief")
-            obj["currentState"] = 'debrief'
+            console.log("At last trial...going to debrief");
+            obj["currentState"] = 'debrief';
           } else {
             console.log(`Also getting next trial`);
             obj["currentTrial"] = currentTrial + 1;
@@ -285,13 +317,13 @@ const verifyStateChange = async (newState, updateTrial = false) => {
         }
         await transaction.update(docRef, obj);
       } else {
-        console.log(`Still waiting for ${3 - counter.length} requests...`)
+        console.log(`Still waiting for ${3 - counter.length} requests...`);
       }
-    })
+    });
   } catch (error) {
-    console.error(`Error verifying state change`, error)
+    console.error(`Error verifying state change`, error);
   }
-}
+};
 
 // Save each user's name in the group doc
 export const saveName = async (name) => {
@@ -308,21 +340,21 @@ export const saveName = async (name) => {
       if (role === 'decider1') {
         updateData['D1_name'] = name;
       } else if (role === 'decider2') {
-        updateData['D2_name'] = name
+        updateData['D2_name'] = name;
       } else if (role === 'receiver') {
-        updateData['R_name'] = name
+        updateData['R_name'] = name;
       } else {
-        throw `${role} is an unknown role`
+        throw `${role} is an unknown role`;
       }
       await transaction.update(docRef, updateData);
-      console.log(`Successfully added ${name} to db`)
-    })
+      console.log(`Successfully added ${name} to db`);
+    });
 
   } catch (error) {
-    console.error(`Error saving name for user: ${name}`, error)
+    console.error(`Error saving name for user: ${name}`, error);
   }
 
-}
+};
 
 // Save trial data for BPQ questions handling concurrent writes
 export const saveBPQData = async (questions) => {
@@ -332,7 +364,7 @@ export const saveBPQData = async (questions) => {
   try {
     await runTransaction(db, async (transaction) => {
       // Get the latest data, rather than relying on the store
-      const document = await transaction.get(docRef)
+      const document = await transaction.get(docRef);
       if (!document.exists()) {
         throw "Document does not exist!";
       }
@@ -353,13 +385,13 @@ export const saveBPQData = async (questions) => {
         data["trials"][currentTrial]["R_D1"] = questions[0][0].rating;
         data["trials"][currentTrial]["R_D2"] = questions[0][1].rating;
       } else {
-        throw `${role} is an unknown role`
+        throw `${role} is an unknown role`;
       }
-      await transaction.update(docRef, data)
-      console.log(`Successfully saved BPQ data for: ${role}`)
-    })
+      await transaction.update(docRef, data);
+      console.log(`Successfully saved BPQ data for: ${role}`);
+    });
   } catch (error) {
-    console.error(`Error saving data for group: ${groupId}`, error)
+    console.error(`Error saving data for group: ${groupId}`, error);
   }
 };
 
@@ -386,7 +418,7 @@ export const saveAPQData = async (questions) => {
       } else if (role === 'receiver') {
         prefix = "R_";
       } else {
-        throw `${role} is an unknown role`
+        throw `${role} is an unknown role`;
       }
       questions.forEach((q) => {
         if (q.type.includes("other")) {
@@ -398,14 +430,14 @@ export const saveAPQData = async (questions) => {
         }
         data["trials"][currentTrial][key] = q.rating;
       });
-      await transaction.update(docRef, data)
-      console.log(`Successfully saved APQ data for: ${role}`)
-    })
+      await transaction.update(docRef, data);
+      console.log(`Successfully saved APQ data for: ${role}`);
+    });
   } catch (error) {
-    console.error(`Error saving data for group: ${groupId}`, error)
+    console.error(`Error saving data for group: ${groupId}`, error);
   }
 
-}
+};
 
 export const saveDebrief = async (data) => {
   const { groupId } = get(groupStore);
@@ -419,20 +451,20 @@ export const saveDebrief = async (data) => {
       }
       const updateData = { 'debrief': {} };
       if (role === 'decider1') {
-        updateData['debrief']['D1'] = data
+        updateData['debrief']['D1'] = data;
       } else if (role === 'decider2') {
-        updateData['debrief']['D2'] = data
+        updateData['debrief']['D2'] = data;
       } else if (role === 'receiver') {
-        updateData['debrief']['R'] = data
+        updateData['debrief']['R'] = data;
       } else {
-        throw `${role} is an unknown role`
+        throw `${role} is an unknown role`;
       }
       await transaction.update(docRef, updateData);
-      console.log("Successfully saved debrief data")
-    })
+      console.log("Successfully saved debrief data");
+    });
 
   } catch (error) {
-    console.error(`Error saving debrief data`, error)
+    console.error(`Error saving debrief data`, error);
   }
 
 }

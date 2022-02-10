@@ -1,3 +1,9 @@
+<script context="module">
+  // Create the user store
+  let userId = "test-user";
+  export const userFirebaseStore = createFirebaseStore("participants", userId);
+</script>
+
 <script>
   import { onAuthStateChanged } from "firebase/auth";
   import {
@@ -14,6 +20,7 @@
     groupStore,
     loggedIn,
     userId,
+    createFirebaseStore,
     initUser,
     resetGroupData,
     reqStateChange,
@@ -66,6 +73,16 @@
 
   async function updateState(newState) {
     await reqStateChange(newState);
+    const oldState = $userStore.currentState;
+    $userStore.currentState = newState;
+    try {
+      $userStore[`${oldState}_end`] = serverTime;
+      $userStore[`${$userStore.currentState}_start`] = serverTime;
+      // await updateUser($userStore);
+      await userStore.save();
+    } catch (error) {
+      console.error(error);
+    }
   }
 
   // Gets called when user submits their APQ responses
@@ -119,6 +136,17 @@
         } catch (error) {
           console.error(error);
         }
+        console.log("participant signed-in. Loading data...");
+        // try {
+        //   const unsubscribe = onSnapshot(
+        //     doc(db, "participants", userId),
+        //     (doc) => {
+        //       userStore.set(doc.data());
+        //     }
+        //   );
+        // } catch (error) {
+        //   console.error(error);
+        // }
       }
     });
   });

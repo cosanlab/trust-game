@@ -39,7 +39,11 @@ See the [how the app works](#2-how-the-app-works) section below for more details
 
 ### 1b. One time Netlify setup
 
-1. Do stuff
+1. Sign-in to [Netlify](https://netlify.app/) using your github account
+2. Choose add new site and select your github repo
+3. Change the *publish directory* to `dist`
+4. Click the site settings button and change the site name to something you'll remember
+5. Back in [firebase console](https://console.firebase.google.com/) go to Authentication > Sign-in method and click the Add domain button and paste in the site name (without a trailing `/` or `https` prefix)
 
 ### 1c. One time CORS configuration
 

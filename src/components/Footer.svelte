@@ -5,6 +5,7 @@ was just created -->
   import { getAuth, signOut } from "firebase/auth";
   import { createEventDispatcher } from "svelte";
   import { userStore, groupStore, loggedIn, userId } from "../utils.js";
+  import { userFirebaseStore } from "../App.svelte";
   const dispatch = createEventDispatcher();
 
   // Change to your email
