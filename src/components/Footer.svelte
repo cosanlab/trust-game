@@ -2,12 +2,25 @@
 document reset button when developing locally to re-initialize a user document as if it
 was just created -->
 <script>
+  import { getAuth, signOut } from "firebase/auth";
   import { createEventDispatcher } from "svelte";
-  import { userStore } from "../utils.js";
+  import { userStore, loggedIn, userId } from "../utils.js";
   const dispatch = createEventDispatcher();
 
   // Change to your email
   const email = "eshin.jolly@dartmouth.edu";
+
+  async function logout() {
+    // Get the current auth status
+    const auth = getAuth();
+    try {
+      await signOut(auth);
+      $userId = null;
+      console.log("Sucessfully logged out of firebase");
+    } catch (error) {
+      console.error(error);
+    }
+  }
 </script>
 
 <style>
@@ -43,10 +56,12 @@ was just created -->
       </p>
     </div>
   {/if}
+  <div>If you have questions please ask the experimenter</div>
   <div>
-    If you have questions about this HIT please <a
-      href="mailto:{email}"
-      class="underline hover:text-blue-400">email us</a
+    <button
+      class="px-4 py-1 text-xs font-bold bg-blue-500 rounded-full"
+      class:invisible={!$loggedIn}
+      on:click={logout}>logout</button
     >
   </div>
 </div>

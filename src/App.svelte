@@ -1,21 +1,20 @@
 <script>
-  import {
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-  } from "firebase/auth";
+  import { onAuthStateChanged } from "firebase/auth";
   import { doc, onSnapshot } from "firebase/firestore";
   import { onMount } from "svelte";
   import {
     auth,
     db,
     userStore,
+    loggedIn,
+    userId,
     initUser,
     updateUser,
     serverTime,
   } from "./utils.js";
 
   // app pages and components
+  import Login from "./pages/Login.svelte";
   import Consent from "./pages/Consent.svelte";
   import Experiment from "./pages/Experiment.svelte";
   import Debrief from "./pages/Debrief.svelte";
@@ -23,19 +22,7 @@
   import Footer from "./components/Footer.svelte";
 
   // VARIABLES USED WITHIN App.svelte
-  let email, userId, password;
-
-  if (import.meta.env.DEV) {
-    // for local development
-    email = "test-user@experiment.com";
-    userId = "test-user";
-    password = "test-user";
-  } else {
-    // when deployed, change me!
-    email = "test-user@experiment.com";
-    userId = "test-user";
-    password = "test-user";
-  }
+  let unsubscribe;
 
   // FUNCTIONS USED WITHIN App.svelte
 
@@ -58,31 +45,27 @@
     await initUser($userStore.userId);
   }
 
-  // Logic to try to sign a user in automatically and subscribe to their data
-  // or create a new user account if one doesn't exist
+  // When the app first starts up we check to see if the user is logged in and if they
+  // aren't we set the value of the $loggedIn svelte store to false which takes them to
+  // the <Login/> page. We also unsubscribe to any data we were already subscribed to.
+  // Because onAuthStateChange() is *always* watching to see if their login status
+  // changes, when they sign-in from the <Login/> page, we'll automatically be in the
+  // else block below. Here we set the value of the $loggedIn svelte store to true and
+  // subscribe to their data
   onMount(async () => {
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
-        try {
-          await signInWithEmailAndPassword(auth, email, password);
-        } catch (error) {
-          if (error.code === "auth/user-not-found") {
-            console.log("no participant found...creating new account");
-            await createUserWithEmailAndPassword(auth, email, password);
-            await initUser(userId);
-          } else {
-            console.error(error);
-          }
+        $loggedIn = false;
+        if (unsubscribe) {
+          unsubscribe();
         }
       } else {
         console.log("participant signed-in. Loading data...");
+        $loggedIn = true;
         try {
-          const unsubscribe = onSnapshot(
-            doc(db, "participants", userId),
-            (doc) => {
-              userStore.set(doc.data());
-            }
-          );
+          unsubscribe = onSnapshot(doc(db, "participants", $userId), (doc) => {
+            userStore.set(doc.data());
+          });
         } catch (error) {
           console.error(error);
         }
@@ -94,7 +77,9 @@
 <!-- This is our main markup. It uses the currentState field of the userStore to
 determine what page a user should be on. -->
 <main class="flex flex-col items-center h-screen p-10 space-y-10">
-  {#if !$userStore.currentState}
+  {#if !$loggedIn}
+    <Login />
+  {:else if !$userStore.currentState}
     <Loading />
   {:else if $userStore.currentState === "consent"}
     <Consent on:to-experiment={() => updateState("experiment")} />

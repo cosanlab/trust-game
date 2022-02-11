@@ -40,6 +40,10 @@ export const serverTime = serverTimestamp();
 // Initialize an empty reactive global variable (Svelte store) for storing a single 
 // user's data that will be accessible throughout the app
 export const userStore = writable({});
+// Another store that keeps track of whether a user is logged in or not
+export const loggedIn = writable(false);
+// And one more so we can keep track of their user id to subscribe to their collection
+export const userId = writable(null);
 
 // Add any global variables you want to use elsewhere in the app
 // Then use them in another file by importing:
