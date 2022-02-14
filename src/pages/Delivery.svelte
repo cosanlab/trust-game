@@ -4,17 +4,17 @@
 
   const dispatch = createEventDispatcher();
 
-  function goToDebrief() {
-    dispatch("to-debrief");
+  function goToPost_Questions() {
+    dispatch("to-post_questions");
   }
 </script>
 
 <div class="text-center">
-  <h1 class="mb-4 text-2xl">This is the experiment page</h1>
+  <h1 class="mb-4 text-2xl">This is the Delivery page</h1>
   <button
-    on:click={goToDebrief}
+    on:click={goToPost_Questions}
     class="px-4 py-4 text-white bg-green-500 rounded-full focus:outline-none hover:cursor-pointer"
   >
-    Go to debrief
+    Next
   </button>
 </div>

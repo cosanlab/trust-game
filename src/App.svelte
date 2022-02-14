@@ -15,8 +15,10 @@
 
   // app pages and components
   import Login from "./pages/Login.svelte";
-  import Consent from "./pages/Consent.svelte";
-  import Experiment from "./pages/Experiment.svelte";
+  import Instructions from "./pages/Instructions.svelte";
+  import Pre_Questions from "./pages/BPQ.svelte"
+  import Delivery from "./pages/Delivery.svelte";
+  import Post_Questions from "./pages/APQ.svelte"
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
   import Footer from "./components/Footer.svelte";
@@ -81,10 +83,12 @@ determine what page a user should be on. -->
     <Login />
   {:else if !$userStore.currentState}
     <Loading />
-  {:else if $userStore.currentState === "consent"}
-    <Consent on:to-experiment={() => updateState("experiment")} />
-  {:else if $userStore.currentState === "experiment"}
-    <Experiment on:to-debrief={() => updateState("debrief")} />
+  {:else if $userStore.currentState === "instructions"}
+    <Instructions on:to-pre_questions{() => updateState("pre_questions")} />
+  {:else if $userStore.currentState === "pre_questions"}
+    <Instructions on:to-delivery{() => updateState("delivery")} />
+  {:else if $userStore.currentState === "delivery"}
+    <Delivery on:to-debrief={() => updateState("debrief")} />
   {:else if $userStore.currentState === "debrief"}
     <Debrief />
   {/if}

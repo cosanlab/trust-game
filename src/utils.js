@@ -68,7 +68,7 @@ export const initUser = async (userId) => {
     // Add any additional fields here that you want
     await setDoc(docRef, {
       userId: userId,
-      currentState: 'consent',
+      currentState: 'instructions',
       currentTrial: 1,
       consent_start: serverTime,
     });
