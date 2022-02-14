@@ -4,8 +4,8 @@
 
   const dispatch = createEventDispatcher();
 
-  function goToExperiment() {
-    dispatch("to-experiment");
+  function goToPre_Questions() {
+    dispatch("to-pre_questions");
   }
 </script>
 
@@ -23,7 +23,7 @@
     automatically when each subject has responded.
   </p>
   <button
-    on:click={goToExperiment}
+    on:click={goToPre_Questions}
     class="px-4 py-4 text-white rounded-full bg-violet-500 focus:outline-none hover:cursor-pointer"
   >
     Ready

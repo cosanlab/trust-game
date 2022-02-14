@@ -71,6 +71,7 @@ export const initUser = async (userId) => {
       currentState: 'instructions',
       currentTrial: 1,
       consent_start: serverTime,
+      role: 'decider'
     });
 
     console.log(`New user successfully created with document ID: ${docRef.id}`);

@@ -86,9 +86,11 @@ determine what page a user should be on. -->
   {:else if $userStore.currentState === "instructions"}
     <Instructions on:to-pre_questions{() => updateState("pre_questions")} />
   {:else if $userStore.currentState === "pre_questions"}
-    <Instructions on:to-delivery{() => updateState("delivery")} />
+    <Pre_Questions on:to-delivery{() => updateState("delivery")} />
   {:else if $userStore.currentState === "delivery"}
-    <Delivery on:to-debrief={() => updateState("debrief")} />
+    <Delivery on:to-post_questions={() => updateState("post_questions")} />
+  {:else if $userStore.currentState === "post_questions"}
+    <Post_Questions on:to-debrief={() => updateState("debrief")} />
   {:else if $userStore.currentState === "debrief"}
     <Debrief />
   {/if}
