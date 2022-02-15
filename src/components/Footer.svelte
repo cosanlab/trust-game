@@ -15,6 +15,8 @@ was just created -->
     const auth = getAuth();
     try {
       await signOut(auth);
+      // Delete the user Id from their computer so a new user can sign-in
+      localStorage.removeItem("userId");
       $userId = null;
       console.log("Sucessfully logged out of firebase");
     } catch (error) {

@@ -60,18 +60,25 @@ export const globalVars = {
 // Add any functions here that you want to reuse throughout the app
 
 // Function to create a new user record in the database
-// Arguments: userID (string)
-// Returns: None
-export const initUser = async (userId) => {
+export const initUser = async (groupId, subId, role, name) => {
   try {
+    // We could have just tried to read the value of the $userId store here, but the $
+    // syntax only works in .svelte files. There's a special get() function we have to
+    // use instead, but because this is such simple case let's just make the userId like
+    // we do in Login.svelte and avoid the overhead.
+    const userId = `${groupId}_${subId}_${role}`;
+
     const docRef = doc(db, 'participants', userId);
     // Add any additional fields here that you want
     await setDoc(docRef, {
       userId: userId,
+      groupId: groupId,
+      subId: subId,
+      name: name,
       currentState: 'instructions',
-      currentTrial: 1,
+      currentTrial: 0,
       consent_start: serverTime,
-      role: 'decider'
+      role: role
     });
 
     console.log(`New user successfully created with document ID: ${docRef.id}`);
@@ -93,3 +100,35 @@ export const updateUser = async (userDoc) => {
     console.error(`Error updating user document: ${userDoc.userId}:`, error);
   }
 };
+
+// Format the values the user inputted so that we encode each id as 000, 001...NNN, so
+// we can use them as unique document ideas up to 1000 subs.
+export const formatUserId = (groupId, subId, role) => {
+  let groupId_f, subId_f, userId_f, role_f;
+  let g = parseInt(groupId)
+  let s = parseInt(subId)
+  if (g < 10) {
+    groupId_f = `00${g}`
+  } else if (g >= 10 && g < 100) {
+    groupId_f = `0${g}`
+  } else {
+    groupId_f = groupId;
+  }
+  if (s < 10) {
+    subId_f = `00${s}`
+  } else if (s >= 10 && s < 100) {
+    subId_f = `0${s}`
+  } else {
+    subId_f = subId;
+  }
+
+  userId_f = `${groupId_f}_${subId_f}_${role}`;
+  role_f = role;
+
+  return {
+    groupId_f,
+    subId_f,
+    role_f,
+    userId_f
+  }
+}

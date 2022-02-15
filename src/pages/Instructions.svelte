@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { updateUser } from "../utils.js";
+  import { updateUser, userId } from "../utils.js";
 
   const dispatch = createEventDispatcher();
 
@@ -11,6 +11,7 @@
 
 <div class="text-center">
   <h1 class="mb-4 text-2xl">Instructions for Part 2</h1>
+  <h2 class="text-xl">I am: {$userId}</h2>
   <p>
     In part 2, a random selection of the decisions made in part 1 have been
     chosen to be enacted <br />

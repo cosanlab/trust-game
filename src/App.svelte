@@ -44,7 +44,12 @@
   // Reset a user's data. Useful during development
   async function resetUser() {
     console.log("Reinitializing user data");
-    await initUser($userStore.userId);
+    await initUser(
+      $userStore.groupId,
+      $userStore.subId,
+      $userStore.role,
+      $userStore.name
+    );
   }
 
   // When the app first starts up we check to see if the user is logged in and if they
@@ -62,8 +67,15 @@
           unsubscribe();
         }
       } else {
-        console.log("participant signed-in. Loading data...");
+        // Set the userId store to the value on their local computer because if they're
+        // logging in for the first time, then Login.svelte would have already done
+        // localStore.setItem()
+        // Otherwise if they're already logged in and just refreshing the page, they
+        // won't see Login.svelte at all so we *have* read their userId from their
+        // computer.
+        $userId = localStorage.getItem("userId");
         $loggedIn = true;
+        console.log(`participant ${$userId} signed-in. Loading data...`);
         try {
           unsubscribe = onSnapshot(doc(db, "participants", $userId), (doc) => {
             userStore.set(doc.data());
@@ -81,7 +93,7 @@ determine what page a user should be on. -->
 <main class="flex flex-col items-center h-screen p-10 space-y-10">
   {#if !$loggedIn}
     <Login />
-  {:else if !$userStore.currentState}
+  {:else if !$userStore || !$userStore.currentState}
     <Loading />
   {:else if $userStore.currentState === "instructions"}
     <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
