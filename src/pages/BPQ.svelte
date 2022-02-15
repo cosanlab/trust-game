@@ -4,8 +4,8 @@
 
   const dispatch = createEventDispatcher();
 
-  function goToDelivery() {
-    dispatch("to-delivery");
+  function goToThermode_Placement() {
+    dispatch("to-thermode_placement");
   }
 </script>
 
@@ -31,7 +31,7 @@
   <!-- TODO change to group progression instead of button-->
 
   <button
-    on:click={goToDelivery}
+    on:click={goToThermode_Placement}
     class="px-4 py-4 text-white rounded-full bg-violet-500 focus:outline-none hover:cursor-pointer"
   >
     Next

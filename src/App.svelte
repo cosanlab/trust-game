@@ -20,7 +20,9 @@
   import Login from "./pages/Login.svelte";
   import Instructions from "./pages/Instructions.svelte";
   import Pre_Questions from "./pages/BPQ.svelte";
+  import Thermode_Placement from "./pages/Thermode_Placement.svelte";
   import Delivery from "./pages/Delivery.svelte";
+  import Pain_Rating from "./pages/Pain_Rating.svelte";
   import Post_Questions from "./pages/APQ.svelte";
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
@@ -139,9 +141,15 @@ determine what page a user should be on. -->
   {:else if $groupStore.currentState === "instructions"}
     <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
   {:else if $groupStore.currentState === "pre_questions"}
-    <Pre_Questions on:to-delivery={() => updateState("delivery")} />
+    <Pre_Questions
+      on:to-thermode_placement={() => updateState("thermode_placement")}
+    />
+  {:else if $groupStore.currentState === "thermode_placement"}
+    <Thermode_Placement on:to-delivery={() => updateState("delivery")} />
   {:else if $groupStore.currentState === "delivery"}
-    <Delivery on:to-post_questions={() => updateState("post_questions")} />
+    <Delivery on:to-post_questions={() => updateState("pain_rating")} />
+  {:else if $groupStore.currentState === "pain_rating"}
+    <Pain_Rating on:to-delivery={() => updateState("post_questions")} />
   {:else if $groupStore.currentState === "post_questions"}
     <Post_Questions on:to-debrief={() => updateState("debrief")} />
   {:else if $groupStore.currentState === "debrief"}
