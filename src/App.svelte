@@ -6,11 +6,14 @@
     auth,
     db,
     userStore,
+    groupStore,
     loggedIn,
     userId,
     initUser,
     updateUser,
+    updateGroup,
     serverTime,
+    createTestGroup,
   } from "./utils.js";
 
   // app pages and components
@@ -24,18 +27,42 @@
   import Footer from "./components/Footer.svelte";
 
   // VARIABLES USED WITHIN App.svelte
-  let unsubscribe;
+  let unsubscribe_user, unsubscribe_group;
 
   // FUNCTIONS USED WITHIN App.svelte
 
-  // Update the user state and write to firebase
+  // Update the experiment state and write to firebase
   async function updateState(newState) {
-    const oldState = $userStore.currentState;
-    $userStore.currentState = newState;
+    const oldState = $groupStore.currentState;
     try {
-      $userStore[`${oldState}_end`] = serverTime;
-      $userStore[`${$userStore.currentState}_start`] = serverTime;
-      await updateUser($userStore);
+      console.log(`Participant: ${$userId} is requesting state -> ${newState}`);
+      // Add the user to the counter if they're not already in it
+      if (!$groupStore.counter.includes($userStore.userId)) {
+        $groupStore.counter = [...$groupStore.counter, $userStore.userId];
+        await updateGroup($groupStore);
+      } else {
+        console.log("Ignoring duplicate request");
+      }
+      if ($groupStore.counter.length === 3) {
+        $groupStore.currentState = newState;
+        $groupStore.counter = [];
+        console.log(`Last request...initiating state change`);
+        await updateGroup($groupStore);
+      } else {
+        console.log(
+          `Still waiting for ${3 - $groupStore.counter.length} requests...`
+        );
+      }
+
+      // TODO: Keeping these here for now, but we may not need it anymore. In fact I'm
+      // wondering if we can actually just get rid of the participants collection and
+      // $userStore altogether...
+
+      // $userStore.currentState = newState;
+      // try {
+      //   $userStore[`${oldState}_end`] = serverTime;
+      //   $userStore[`${$userStore.currentState}_start`] = serverTime;
+      //   await updateUser($userStore);
     } catch (error) {
       console.error(error);
     }
@@ -63,8 +90,11 @@
     onAuthStateChanged(auth, async (user) => {
       if (!user) {
         $loggedIn = false;
-        if (unsubscribe) {
-          unsubscribe();
+        if (unsubscribe_user) {
+          unsubscribe_user();
+        }
+        if (unsubscribe_group) {
+          unsubscribe_group();
         }
       } else {
         // Set the userId store to the value on their local computer because if they're
@@ -77,9 +107,20 @@
         $loggedIn = true;
         console.log(`participant ${$userId} signed-in. Loading data...`);
         try {
-          unsubscribe = onSnapshot(doc(db, "participants", $userId), (doc) => {
-            userStore.set(doc.data());
-          });
+          // Subscribe to their user doc
+          unsubscribe_user = onSnapshot(
+            doc(db, "participants", $userId),
+            (doc) => {
+              userStore.set(doc.data());
+            }
+          );
+          // Also subscribe to their group doc
+          unsubscribe_group = onSnapshot(
+            doc(db, "groups", $userId.slice(0, 3)),
+            (doc) => {
+              groupStore.set(doc.data());
+            }
+          );
         } catch (error) {
           console.error(error);
         }
@@ -93,18 +134,18 @@ determine what page a user should be on. -->
 <main class="flex flex-col items-center h-screen p-10 space-y-10">
   {#if !$loggedIn}
     <Login />
-  {:else if !$userStore || !$userStore.currentState}
+  {:else if !$groupStore || !$groupStore.currentState}
     <Loading />
-  {:else if $userStore.currentState === "instructions"}
+  {:else if $groupStore.currentState === "instructions"}
     <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
-  {:else if $userStore.currentState === "pre_questions"}
+  {:else if $groupStore.currentState === "pre_questions"}
     <Pre_Questions on:to-delivery={() => updateState("delivery")} />
-  {:else if $userStore.currentState === "delivery"}
+  {:else if $groupStore.currentState === "delivery"}
     <Delivery on:to-post_questions={() => updateState("post_questions")} />
-  {:else if $userStore.currentState === "post_questions"}
+  {:else if $groupStore.currentState === "post_questions"}
     <Post_Questions on:to-debrief={() => updateState("debrief")} />
-  {:else if $userStore.currentState === "debrief"}
+  {:else if $groupStore.currentState === "debrief"}
     <Debrief />
   {/if}
 </main>
-<Footer on:resetUser={resetUser} />
+<Footer on:resetUser={resetUser} on:resetGroup={createTestGroup} />

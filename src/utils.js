@@ -40,6 +40,8 @@ export const serverTime = serverTimestamp();
 // Initialize an empty reactive global variable (Svelte store) for storing a single 
 // user's data that will be accessible throughout the app
 export const userStore = writable({});
+// Another store for the group data
+export const groupStore = writable({});
 // Another store that keeps track of whether a user is logged in or not
 export const loggedIn = writable(false);
 // And one more so we can keep track of their user id to subscribe to their collection
@@ -88,8 +90,6 @@ export const initUser = async (groupId, subId, role, name) => {
 }
 
 // Function to update an existing user record in the database
-// Arguments: userStore (svelte store)
-// Returns: None
 export const updateUser = async (userDoc) => {
   try {
     const docRef = doc(db, 'participants', userDoc.userId);
@@ -98,6 +98,16 @@ export const updateUser = async (userDoc) => {
     console.log(`user doc successfully updated: ${docRef.id}`);
   } catch (error) {
     console.error(`Error updating user document: ${userDoc.userId}:`, error);
+  }
+};
+
+// Function to update an existing group record in the database
+export const updateGroup = async (groupDoc) => {
+  try {
+    const docRef = doc(db, 'groups', groupDoc.groupId);
+    await setDoc(docRef, groupDoc);
+  } catch (error) {
+    console.error(`Error updating group document: ${groupDoc.userId}:`, error);
   }
 };
 
@@ -131,4 +141,65 @@ export const formatUserId = (groupId, subId, role) => {
     role_f,
     userId_f
   }
+}
+
+// Create a test group with 2 trials for developing the app locally and adjusting the
+// data structure. For the real experiment, this will be uploaded by a python script
+// after part 1
+export const createTestGroup = async () => {
+  const data = {
+    groupId: '000',
+    D1: '000',
+    D2: '001',
+    R: '002',
+    counter: [],
+    currentState: 'instructions',
+    currentTrial: 0,
+    trial: [
+      {
+        cost: 1,
+        endowment: 10,
+        pain_dur: 7,
+        D1D2: 0,
+        D1R: 0,
+        D1_actual: 1,
+        D1_agency: 0.2,
+        D1_post: [],
+        D2D1: 0,
+        D2R: 0,
+        D2_actual: 6,
+        D2_agency: 0.8,
+        D2_post: [],
+        RD1: 0,
+        RD2: 0,
+        R_post: [],
+      },
+      {
+        cost: 1,
+        endowment: 20,
+        pain_dur: 9,
+        D1D2: 0,
+        D1R: 0,
+        D1_actual: 1,
+        D1_agency: 0.2,
+        D1_post: [],
+        D2D1: 0,
+        D2R: 0,
+        D2_actual: 6,
+        D2_agency: 0.8,
+        D2_post: [],
+        RD1: 0,
+        RD2: 0,
+        R_post: [],
+      }
+    ],
+  }
+  try {
+    const docRef = doc(db, 'groups', '000');
+    await setDoc(docRef, data)
+    console.log('test group doc successfully created')
+  } catch (error) {
+    console.error(`Error creating test group doc:`, error)
+  }
+
 }
