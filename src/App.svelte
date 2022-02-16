@@ -34,8 +34,6 @@
   // VARIABLES USED WITHIN App.svelte
   let unsubscribe_user, unsubscribe_group;
 
-  // FUNCTIONS USED WITHIN App.svelte
-
   // Data updating API explanation:
   // To ensure that we don't get any conflicts and race conditions when multipler users
   // write to the db close to simultaneously we always fallow 3 rules to ensure all
@@ -43,21 +41,40 @@
   //
   // 1. Components and pages should only read data from a $sveltestore, but *never*
   //    write to it directly (i.e. never do $sveltestore.name = 'some value')
-  // 2. Instead they should write *directly to the db* using setDoc() or
-  //    runTransaction()
+  // 2. Instead they should write *directly to the db* either by: dispatching
+  //    events back up to App.svelte and hooking them up to updateState() below
+  //    OR
+  //    Calling await saveData(groupId {field1: val, field2: val...}) imported from
+  //    utils.js (see BPQ.svelte for an example)
   // 3. The $sveltestore should *only* be set by the real-time onSnapshot() listener,
   //    which subscribes to any database changes and "pushes" them to the $sveltestore
+  //    which occurs within onMount() inside App.svelte
   //
+  // Why?
   // If instead a client updates their own $sveltestore directly, *before* writing to
   // the database (e.g. $sveltestore.name = 'new name'; update($sveltestore)), they
   // run the risk of that $sveltestore being overwritten, by their onSnapshot() "push"
-  // being triggered, by a *different* player's setDoc() call that occurred before their
-  // own.
+  // being triggered, by a *different* participant's setDoc() call that occurred before
+  // their own.
   //
   // Instead by writing *directly* to the db, they let their own onSnapshot() update
   // their $sveltestore for them, thus ensuring their local $sveltestore and the real db
   // are never out of sync. They also "feel" the effect of the data change on
   // their UI at approx the same time as the other users.
+  //
+  // COMMON USAGE PATTERNS
+  // The three common patterns inside a page will be:
+  // 1. User clicks button to advance to next state, but doesn't need to save data:
+  //      dispatch('to-nextState')
+  //      then handle it inside App.svelte with on:to-nextState
+  // 2. User clicks button, but needs to save data before advancing to next state e.g.
+  //    after making ratings:
+  //      await saveData()
+  //      dispatch('to-nextState')
+  //      then handle it inside App.svelte with on:to-nextState
+  // 3. User just needs to save data, but not advance state (e.g. multiple question
+  //    screens):
+  //      await saveData()
 
   // UPDATE STATE
   // Update the experiment state and write to firebase
