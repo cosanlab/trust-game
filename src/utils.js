@@ -1,6 +1,6 @@
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getFirestore, serverTimestamp, doc, setDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { writable } from 'svelte/store';
 
@@ -31,7 +31,6 @@ initializeApp(firebaseConfig);
 export const db = getFirestore();
 export const storage = getStorage();
 export const auth = getAuth();
-export const serverTime = serverTimestamp();
 //###############################################
 
 //############################
@@ -71,15 +70,11 @@ export const initUser = async (groupId, subId, role, name) => {
     const userId = `${groupId}_${subId}_${role}`;
 
     const docRef = doc(db, 'participants', userId);
-    // Add any additional fields here that you want
     await setDoc(docRef, {
       userId: userId,
       groupId: groupId,
       subId: subId,
       name: name,
-      currentState: 'instructions',
-      currentTrial: 0,
-      consent_start: serverTime,
       role: role
     });
 
@@ -102,12 +97,14 @@ export const updateUser = async (userDoc) => {
 };
 
 // Function to update an existing group record in the database
-export const updateGroup = async (groupDoc) => {
+// This should be called in App.svelte in response to any save events from pages or components 
+export const saveData = async (groupId, data) => {
   try {
-    const docRef = doc(db, 'groups', groupDoc.groupId);
-    await setDoc(docRef, groupDoc);
+    const docRef = doc(db, 'groups', groupId);
+    await updateDoc(docRef, data);
+    console.log(`Successfully saved data for group: ${groupId}`);
   } catch (error) {
-    console.error(`Error updating group document: ${groupDoc.userId}:`, error);
+    console.error(`Error saving data for group: ${groupId}:`, error);
   }
 };
 
