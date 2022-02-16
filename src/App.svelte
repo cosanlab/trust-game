@@ -16,7 +16,6 @@
     userId,
     initUser,
     updateUser,
-    updateGroup,
     createTestGroup,
   } from "./utils.js";
 

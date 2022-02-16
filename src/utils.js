@@ -97,7 +97,6 @@ export const updateUser = async (userDoc) => {
 };
 
 // Function to update an existing group record in the database
-// This should be called in App.svelte in response to any save events from pages or components 
 export const saveData = async (groupId, data) => {
   try {
     const docRef = doc(db, 'groups', groupId);
