@@ -52,6 +52,10 @@ export const userId = writable(null);
 // console.log(globalVars.time)
 export const globalVars = {
   time: 5,
+  minPainDur: 5,
+  maxPainDur: 15,
+  maxEndowment: 20,
+  maxPossiblePainReduction: 10
 };
 //############################
 
@@ -197,5 +201,22 @@ export const createTestGroup = async () => {
   } catch (error) {
     console.error(`Error creating test group doc:`, error)
   }
+
+}
+
+export const calcPainDuration = (ratingString, multiplier, endowment) => {
+
+  const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
+  let painReduction = proportionOfEndowmentSpent * multiplier * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment)
+
+  // Don't let them reduce pain duraction more than the max possible reduction
+  painReduction = painReduction > globalVars.maxPossiblePainReduction ? globalVars.maxPossiblePainReduction : painReduction;
+
+  const painDuration = globalVars.maxPainDur - painReduction;
+  const painDurationRounded = Math.round(painDuration * 100) / 100
+  return {
+    painDurationRounded, proportionOfEndowmentSpent
+  }
+
 
 }
