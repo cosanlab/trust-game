@@ -116,13 +116,17 @@
   }
 </script>
 
-<div class="pb-32 text-center">
-  {#each questions as { questionText, rating }}
-    <div class="my-10">
-      <Rating {questionText} bind:rating />
-    </div>
-  {/each}
+{#if submitted}
+  <Loading text={"Waiting for other participants..."} />
+{:else}
+  <div class="pb-32 text-center">
+    {#each questions as { questionText, rating }}
+      <div class="my-10">
+        <Rating {questionText} bind:rating />
+      </div>
+    {/each}
 
-  <!-- TODO change to group progression instead of button-->
-  <Button on:click={goToDebrief}>Next</Button>
-</div>
+    <!-- TODO change to group progression instead of button-->
+    <Button on:click={goToDebrief}>Next</Button>
+  </div>
+{/if}

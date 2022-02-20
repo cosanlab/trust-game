@@ -33,6 +33,9 @@
 
   // VARIABLES USED WITHIN App.svelte
   let unsubscribe_user, unsubscribe_group;
+  // These are states that the reciever *directly* controls without needing responses
+  // from the two deciders
+  const nonSyncStates = ["delivery", "post_questions"];
 
   // Data updating API explanation:
   // To ensure that we don't get any conflicts and race conditions when multipler users
@@ -85,21 +88,10 @@
     const docRef = doc(db, "groups", $groupStore.groupId);
     const oldState = $groupStore.currentState;
     try {
-      console.log(
-        `Participant: ${$userId} is requesting state change: ${oldState} -> ${newState}`
-      );
-      // Add the user to the counter if they're not already in it
-      if (!$groupStore.counter.includes($userStore.userId)) {
-        // Call update doc here directly
-        await updateDoc(docRef, {
-          counter: [...$groupStore.counter, $userStore.userId],
-        });
-      } else {
-        console.log("Ignoring duplicate request");
-      }
-      if ($groupStore.counter.length === 3) {
-        // Call update doc here directly
-        console.log(`Last request...initiating state change`);
+      if (nonSyncStates.includes(newState)) {
+        console.log(
+          `Receiver is requesting direct state change: ${oldState} -> ${newState}`
+        );
         const obj = {};
         obj[`timings.${oldState}_${newState}`] = serverTimestamp();
         obj["counter"] = [];
@@ -107,8 +99,30 @@
         await updateDoc(docRef, obj);
       } else {
         console.log(
-          `Still waiting for ${3 - $groupStore.counter.length} requests...`
+          `Participant: ${$userId} is requesting state change: ${oldState} -> ${newState}`
         );
+        // Add the user to the counter if they're not already in it
+        if (!$groupStore.counter.includes($userStore.userId)) {
+          // Call update doc here directly
+          await updateDoc(docRef, {
+            counter: [...$groupStore.counter, $userStore.userId],
+          });
+        } else {
+          console.log("Ignoring duplicate request");
+        }
+        if ($groupStore.counter.length === 3) {
+          // Call update doc here directly
+          console.log(`Last request...initiating state change`);
+          const obj = {};
+          obj[`timings.${oldState}_${newState}`] = serverTimestamp();
+          obj["counter"] = [];
+          obj["currentState"] = newState;
+          await updateDoc(docRef, obj);
+        } else {
+          console.log(
+            `Still waiting for ${3 - $groupStore.counter.length} requests...`
+          );
+        }
       }
     } catch (error) {
       console.error(error);
@@ -192,9 +206,7 @@ determine what page a user should be on. -->
   {:else if $groupStore.currentState === "thermode_placement"}
     <Thermode_Placement on:to-delivery={() => updateState("delivery")} />
   {:else if $groupStore.currentState === "delivery"}
-    <Delivery on:to-post_questions={() => updateState("pain_rating")} />
-  {:else if $groupStore.currentState === "pain_rating"}
-    <Pain_Rating on:to-delivery={() => updateState("post_questions")} />
+    <Delivery on:to-post_questions={() => updateState("post_questions")} />
   {:else if $groupStore.currentState === "post_questions"}
     <Post_Questions on:to-debrief={() => updateState("debrief")} />
   {:else if $groupStore.currentState === "debrief"}
