@@ -22,9 +22,6 @@
   #ratingScale::-webkit-slider-thumb {
     @apply appearance-none h-6 w-6 border-black border rounded-full bg-blue-400 border-solid;
   }
-  #painDuration::-webkit-slider-thumb {
-    @apply appearance-none;
-  }
 </style>
 
 <div class="flex flex-col px-2 justify-items-center">

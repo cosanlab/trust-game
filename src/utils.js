@@ -45,6 +45,8 @@ export const groupStore = writable({});
 export const loggedIn = writable(false);
 // And one more so we can keep track of their user id to subscribe to their collection
 export const userId = writable(null);
+// Store to control the UI for what state the experiment is in
+export const stateDisplay = writable([])
 
 // Add any global variables you want to use elsewhere in the app
 // Then use them in another file by importing:
@@ -57,6 +59,8 @@ export const globalVars = {
   maxEndowment: 20,
   maxPossiblePainReduction: 10
 };
+
+
 //############################
 
 //############################

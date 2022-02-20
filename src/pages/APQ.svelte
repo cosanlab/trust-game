@@ -96,7 +96,7 @@
   }
 
   // TODO: save data for real by looping over questions
-  async function goToDebrief() {
+  async function getNextTrial() {
     submitted = true;
     // Simulate some rating each person makes when they press the button and save it to
     // the db just for development purposes
@@ -112,7 +112,7 @@
     // TODO: change me. This is the value from just the first scale until we save data for real
     data[key] = r1;
     // await saveData($groupStore.groupId, data)
-    dispatch("to-debrief");
+    dispatch("get-next-trial");
   }
 </script>
 
@@ -127,7 +127,7 @@
         </div>
       {/each}
 
-      <Button on:click={goToDebrief}>Next</Button>
+      <Button on:click={getNextTrial}>Next</Button>
     </div>
   </div>
 {/if}

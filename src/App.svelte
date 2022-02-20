@@ -29,6 +29,7 @@
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
   import Footer from "./components/Footer.svelte";
+  import StatusHeader from "./components/StatusHeader.svelte";
 
   // VARIABLES USED WITHIN App.svelte
   let unsubscribe_user, unsubscribe_group;
@@ -128,6 +129,40 @@
     }
   }
 
+  // Gets called when user submits their APQ responses
+  async function getNextTrial() {
+    const docRef = doc(db, "groups", $groupStore.groupId);
+    console.log(`Participant: ${$userId} is requesting next trial`);
+    // Add the user to the counter if they're not already in it
+    if (!$groupStore.counter.includes($userStore.userId)) {
+      // Call update doc here directly
+      await updateDoc(docRef, {
+        counter: [...$groupStore.counter, $userStore.userId],
+      });
+    } else {
+      console.log("Ignoring duplicate request");
+    }
+    if ($groupStore.counter.length === 3) {
+      console.log(`Last request...progressing to next trial`);
+      // If incrementing the trial counter beyond the last trial just go to debrief
+      if ($groupStore.currentTrial + 1 === $groupStore.trial.length) {
+        await updateState("debrief");
+      } else {
+        const obj = {};
+        obj["currentTrial"] = $groupStore.currentTrial + 1;
+        obj["currentState"] = "pre_questions";
+        obj["counter"] = [];
+        await updateDoc(docRef, obj);
+      }
+      // Reset the breadcrumb UI
+      // resetStateDisplay();
+    } else {
+      console.log(
+        `Still waiting for ${3 - $groupStore.counter.length} requests...`
+      );
+    }
+  }
+
   // When the app first starts up we check to see if the user is logged in and if they
   // aren't we set the value of the $loggedIn svelte store to false which takes them to
   // the <Login/> page. We also unsubscribe to any data we were already subscribed to.
@@ -185,20 +220,24 @@ determine what page a user should be on. -->
     <Login />
   {:else if !$groupStore || !$groupStore.currentState}
     <Loading />
-  {:else if $groupStore.currentState === "instructions"}
-    <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
-  {:else if $groupStore.currentState === "pre_questions"}
-    <Pre_Questions
-      on:to-thermode_placement={() => updateState("thermode_placement")}
-    />
-  {:else if $groupStore.currentState === "thermode_placement"}
-    <Thermode_Placement on:to-delivery={() => updateState("delivery")} />
-  {:else if $groupStore.currentState === "delivery"}
-    <Delivery on:to-post_questions={() => updateState("post_questions")} />
-  {:else if $groupStore.currentState === "post_questions"}
-    <Post_Questions on:to-debrief={() => updateState("debrief")} />
-  {:else if $groupStore.currentState === "debrief"}
-    <Debrief />
+  {:else}
+    <!-- Main experiment loop -->
+    <StatusHeader />
+    {#if $groupStore.currentState === "instructions"}
+      <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
+    {:else if $groupStore.currentState === "pre_questions"}
+      <Pre_Questions
+        on:to-thermode_placement={() => updateState("thermode_placement")}
+      />
+    {:else if $groupStore.currentState === "thermode_placement"}
+      <Thermode_Placement on:to-delivery={() => updateState("delivery")} />
+    {:else if $groupStore.currentState === "delivery"}
+      <Delivery on:to-post_questions={() => updateState("post_questions")} />
+    {:else if $groupStore.currentState === "post_questions"}
+      <Post_Questions on:get-next-trial={getNextTrial} />
+    {:else if $groupStore.currentState === "debrief"}
+      <Debrief />
+    {/if}
   {/if}
 </main>
 <Footer on:resetGroup={createTestGroup} />
