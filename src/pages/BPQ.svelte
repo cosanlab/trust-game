@@ -3,6 +3,7 @@
   import { userStore, groupStore, saveData } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import PainScale from "../components/PainScale.svelte";
+  import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
   let submitted = false;
@@ -59,12 +60,6 @@
     {/if}
 
     <!-- TODO change to group progression instead of button-->
-
-    <button
-      on:click={goToThermode_Placement}
-      class="px-4 py-4 mt-4 text-white rounded-full bg-violet-500 focus:outline-none hover:cursor-pointer"
-    >
-      Next
-    </button>
+    <Button on:click={goToThermode_Placement}>Next</Button>
   </div>
 {/if}

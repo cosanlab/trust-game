@@ -2,6 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { updateUser, userId, groupStore } from "../utils.js";
   import Loading from "../components/Loading.svelte";
+  import Button from "../components/Button.svelte";
 
   let submitted = false;
   const dispatch = createEventDispatcher();
@@ -38,11 +39,6 @@
       will progress <br />
       automatically when each subject has responded.
     </p>
-    <button
-      on:click={goToPre_Questions}
-      class="px-4 py-4 text-white rounded-full bg-violet-500 focus:outline-none hover:cursor-pointer"
-    >
-      Ready
-    </button>
+    <Button on:click={goToPre_Questions}>Next</Button>
   </div>
 {/if}

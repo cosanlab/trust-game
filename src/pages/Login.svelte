@@ -6,6 +6,7 @@
   } from "firebase/auth";
 
   import { userStore, initUser, userId, formatUserId } from "../utils";
+  import Button from "../components/Button.svelte";
 
   let name, groupId, subId, role, password, loginError;
 
@@ -137,12 +138,7 @@
       {/if}
     </div>
     <div class="text-center">
-      <button
-        class="px-4 py-2 font-bold text-white bg-blue-500 rounded hover:bg-blue-700 focus:outline-none focus:shadow-outline"
-        type="submit"
-      >
-        Login
-      </button>
+      <Button type={"submit"} color={"blue"}>Login</Button>
     </div>
   </form>
 </div>
