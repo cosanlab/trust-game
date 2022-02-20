@@ -4,6 +4,7 @@
   import { globalVars, calcPainDuration } from "../utils.js";
 
   // INPUTS:
+  export let disabled = false;
   export let questionText;
   export let rating;
   export let agency;
@@ -57,6 +58,7 @@
     min="0"
     max={agencyEndowment}
     bind:value={rating}
+    {disabled}
     on:change
   />
   <div class="flex flex-row justify-between">

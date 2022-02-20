@@ -109,7 +109,7 @@
     } else {
       key = "R_dummy_data";
     }
-    // This is the value from just the first scale until we save data for real
+    // TODO: change me. This is the value from just the first scale until we save data for real
     data[key] = r1;
     // await saveData($groupStore.groupId, data)
     dispatch("to-debrief");
@@ -119,14 +119,15 @@
 {#if submitted}
   <Loading text={"Waiting for other participants..."} />
 {:else}
-  <div class="pb-32 text-center">
-    {#each questions as { questionText, rating }}
-      <div class="my-10">
-        <Rating {questionText} bind:rating />
-      </div>
-    {/each}
+  <div class="w-1/2 mx-auto">
+    <div class="min-w-full pb-32 text-center">
+      {#each questions as { questionText, rating }}
+        <div class="my-10">
+          <Rating {questionText} bind:rating />
+        </div>
+      {/each}
 
-    <!-- TODO change to group progression instead of button-->
-    <Button on:click={goToDebrief}>Next</Button>
+      <Button on:click={goToDebrief}>Next</Button>
+    </div>
   </div>
 {/if}

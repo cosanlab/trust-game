@@ -6,6 +6,7 @@
   // INPUTS:
   export let questionText;
   export let rating;
+  export let disabled = false;
   export let labelText = "";
   export let leftText = "Not at all";
   export let rightText = "Extremely";
@@ -38,6 +39,7 @@
     min="0"
     max="100"
     bind:value={rating}
+    {disabled}
     on:change
   />
   <div class="flex flex-row justify-between">
