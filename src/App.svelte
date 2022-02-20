@@ -25,7 +25,6 @@
   import Pre_Questions from "./pages/BPQ.svelte";
   import Thermode_Placement from "./pages/Thermode_Placement.svelte";
   import Delivery from "./pages/Delivery.svelte";
-  import Pain_Rating from "./pages/Pain_Rating.svelte";
   import Post_Questions from "./pages/APQ.svelte";
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
@@ -129,17 +128,6 @@
     }
   }
 
-  // Reset a user's data. Useful during development
-  async function resetUser() {
-    console.log("Reinitializing user data");
-    await initUser(
-      $userStore.groupId,
-      $userStore.subId,
-      $userStore.role,
-      $userStore.name
-    );
-  }
-
   // When the app first starts up we check to see if the user is logged in and if they
   // aren't we set the value of the $loggedIn svelte store to false which takes them to
   // the <Login/> page. We also unsubscribe to any data we were already subscribed to.
@@ -213,4 +201,4 @@ determine what page a user should be on. -->
     <Debrief />
   {/if}
 </main>
-<Footer on:resetUser={resetUser} on:resetGroup={createTestGroup} />
+<Footer on:resetGroup={createTestGroup} />

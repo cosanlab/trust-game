@@ -36,29 +36,20 @@ was just created -->
   class:bg-red-600={import.meta.env.DEV}
   class:bg-gray-600={!import.meta.env.DEV}
 >
-  {#if import.meta.env.DEV}
-    <div>
-      Development mode
-      <div>
-        <button
-          class="px-4 py-1 text-xs font-bold bg-yellow-500 rounded-full"
-          class:invisible={!$loggedIn}
-          on:click={() => dispatch("resetUser")}>Reset User</button
-        >
-        <button
-          class="px-4 py-1 text-xs font-bold bg-green-600 rounded-full"
-          class:invisible={!$loggedIn}
-          on:click={() => dispatch("resetGroup")}>Reset Group</button
-        >
-      </div>
-    </div>
-  {/if}
   <div>If you have questions please ask the experimenter</div>
   <div>
     <button
-      class="px-4 py-1 text-xs font-bold bg-blue-500 rounded-full"
+      class="px-4 py-1 text-xs font-bold bg-blue-500 rounded"
       class:invisible={!$loggedIn}
       on:click={logout}>logout</button
     >
+    {#if import.meta.env.DEV}
+      <button
+        class="px-4 py-1 text-xs font-bold bg-green-600 rounded"
+        class:invisible={!$loggedIn}
+        on:click={() => dispatch("resetGroup")}>Reset Group</button
+      >
+    {/if}
+    <div />
   </div>
 </div>
