@@ -83,7 +83,7 @@
         questionText: "How much gratitude do you feel towards Decider 2?",
         rating: r8,
       },
-      // Replace with different rating scale?
+      // TODO: Replace with different rating scale?
       {
         questionText: "How much do you want to compensate Decider 1?",
         rating: r9,
