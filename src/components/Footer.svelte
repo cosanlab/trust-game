@@ -27,12 +27,12 @@ was just created -->
 
 <style>
   .banner {
-    @apply fixed left-0 bottom-0 w-[100vw] p-2 font-bold;
+    @apply flex justify-around text-center text-white fixed left-0 bottom-0 w-[100vw] p-2 font-bold;
   }
 </style>
 
 <div
-  class="flex justify-around text-white banner"
+  class="banner"
   class:bg-red-600={import.meta.env.DEV}
   class:bg-gray-600={!import.meta.env.DEV}
 >
