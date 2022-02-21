@@ -1,4 +1,6 @@
 <script>
+  import { saveData, groupStore, userStore } from "src/utils";
+
   import Button from "../components/Button.svelte";
   let age,
     sex,
@@ -12,16 +14,40 @@
     handed,
     feedback;
   async function debriefSubmit() {
-    setDoc(docRef, {
-      age: age,
-      sex: sex,
-      ethnicity: ethnicity,
-      race: race,
-      nativeLang: nativeLang,
-      birth: birth,
-      handed: handed,
-      feedback: feedback,
-    });
+    if ($userStore.role == "decider1") {
+      await saveData($groupStore.groupId, {
+        d1_age: age,
+        d1_sex: sex,
+        d1_ethnicity: ethnicity,
+        d1_race: race,
+        d1_nativeLang: nativeLang,
+        d1_birth: birth,
+        d1_handed: handed,
+        d1_feedback: feedback,
+      });
+    } else if ($userStore.role == "decider2") {
+      await saveData($groupStore.groupId, {
+        d2_age: age,
+        d2_sex: sex,
+        d2_ethnicity: ethnicity,
+        d2_race: race,
+        d2_nativeLang: nativeLang,
+        d2_birth: birth,
+        d2_handed: handed,
+        d2_feedback: feedback,
+      });
+    } else {
+      await saveData($groupStore.groupId, {
+        r_age: age,
+        r_sex: sex,
+        r_ethnicity: ethnicity,
+        r_race: race,
+        r_nativeLang: nativeLang,
+        r_birth: birth,
+        r_handed: handed,
+        r_feedback: feedback,
+      });
+    }
   }
 </script>
 
