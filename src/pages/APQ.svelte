@@ -122,7 +122,7 @@
 {#if submitted}
   <Loading text={"Waiting for other participants..."} />
 {:else}
-  <div class="w-3/4 mx-auto">
+  <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
       {#each questions as { questionText, rating }}
         <div class="my-10">
