@@ -84,7 +84,7 @@
     <p>{globalVars.maxPainDur}s</p>
   </div>
   <div class="mt-[-1em]">
-    <br />
+    <br /> <br />
     <p class="text-xl">Mutiplier: {multiplier}x</p>
   </div>
 </div>
