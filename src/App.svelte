@@ -16,7 +16,7 @@
     userId,
     initUser,
     updateUser,
-    createTestGroup,
+    resetGroupData,
   } from "./utils.js";
 
   // app pages and components
@@ -240,4 +240,4 @@ determine what page a user should be on. -->
     {/if}
   {/if}
 </main>
-<Footer on:resetGroup={createTestGroup} />
+<Footer on:resetGroup={resetGroupData} />

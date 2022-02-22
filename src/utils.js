@@ -1,3 +1,4 @@
+// @ts-nocheck
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getFirestore, doc, setDoc, updateDoc } from "firebase/firestore";
@@ -106,7 +107,6 @@ export const updateUser = async (userDoc) => {
 
 // Function to update an existing group record in the database
 export const saveData = async (data) => {
-  // @ts-ignore
   const { groupId } = get(groupStore)
   try {
     const docRef = doc(db, 'groups', groupId);
@@ -152,60 +152,18 @@ export const formatUserId = (groupId, subId, role) => {
 // Create a test group with 2 trials for developing the app locally and adjusting the
 // data structure. For the real experiment, this will be uploaded by a python script
 // after part 1
-export const createTestGroup = async () => {
-  const data = {
-    groupId: '000',
-    D1: '000',
-    D2: '001',
-    R: '002',
-    counter: [],
-    currentState: 'instructions',
-    currentTrial: 0,
-    trial: [
-      {
-        cost: 1,
-        endowment: 10,
-        pain_dur: 7,
-        D1D2: 0,
-        D1R: 0,
-        D1_actual: 1,
-        D1_agency: 0.2,
-        D1_post: [],
-        D2D1: 0,
-        D2R: 0,
-        D2_actual: 6,
-        D2_agency: 0.8,
-        D2_post: [],
-        RD1: 0,
-        RD2: 0,
-        R_post: [],
-      },
-      {
-        cost: 1,
-        endowment: 20,
-        pain_dur: 9,
-        D1D2: 0,
-        D1R: 0,
-        D1_actual: 1,
-        D1_agency: 0.2,
-        D1_post: [],
-        D2D1: 0,
-        D2R: 0,
-        D2_actual: 6,
-        D2_agency: 0.8,
-        D2_post: [],
-        RD1: 0,
-        RD2: 0,
-        R_post: [],
-      }
-    ],
-  }
+export const resetGroupData = async () => {
+  const groupData = get(groupStore);
+  groupData.counter = [];
+  groupData.currentState = 'instructions'
+  groupData.currentTrial = 0
+  groupData.timings = {}
   try {
-    const docRef = doc(db, 'groups', '000');
-    await setDoc(docRef, data)
-    console.log('test group doc successfully created')
+    const docRef = doc(db, 'groups', groupData.groupId);
+    await setDoc(docRef, groupData)
+    console.log('Successfully reset group data')
   } catch (error) {
-    console.error(`Error creating test group doc:`, error)
+    console.error(`Error resetting group data:`, error)
   }
 
 }
@@ -223,6 +181,4 @@ export const calcPainDuration = (ratingString, multiplier, endowment) => {
   return {
     painDurationRounded, proportionOfEndowmentSpent
   }
-
-
 }
