@@ -21,40 +21,80 @@
   // We can just tell this to participants, but it stops random people on the internet
   // from trying to do the experiment
 
+  function verifySubId() {
+    let gid = parseInt(groupId);
+    let sid = parseInt(subId);
+
+    // For test groups skip verification
+    if (gid === 0) return true;
+
+    // For subIds < 3 make sure the role assignments are correct
+    // groupId = 1, followed by 1, 2, 3 for D1, D2, R
+    if (sid <= 3) {
+      if (
+        groupId === 1 &&
+        ((role === "decider1" && sid === 1) ||
+          (role === "decider2" && sid === 2) ||
+          (role === "receiver" && side === 3))
+      ) {
+        return true;
+      }
+    }
+    // For subIds > 3 make sure the role assignments are correct
+    // D1's id should be divisible by 3 with a remainder of 1 e.g. sid = 4, 7, 10, etc
+    // D2's id should be divisible by 3 with a remainder of 2 e.g. sid = 5, 8, 11, etc
+    // R's id should be divisible by 3 with a remainder of 0 e.g. sid = 6, 9, 12, etc
+    if (sid > 3) {
+      if (
+        (role === "decider1" && 3 % sid === 1) ||
+        (role === "decider2" && 3 % sid === 2) ||
+        (role === "receiver" && 3 % sid === 0)
+      ) {
+        return true;
+      }
+    }
+    // Default is to fail verification
+    return false;
+  }
+
   async function login() {
-    // Get the current auth status
-    const auth = getAuth();
-    if (password === "cosanlab") {
-      // Convert their text input to NNN_NNN_role format
-      let { groupId_f, subId_f, role_f, userId_f } = formatUserId(
-        groupId,
-        subId,
-        role
-      );
-      let email = `${groupId_f}_${subId_f}_${role_f}@experiment.com`;
-      // The unique userId for any specific participant is a concatentation of their
-      // groupId_subjectId_role
-      // To make it easy to use this else where in the app we can save it as a svelte
-      // store called $userId. Then we can use that in App.svelte
-      $userId = userId_f;
-      // Also save this to the user's computer so that the app will auto-login them in
-      // if they refresh the page, but don't press the logout button.
-      localStorage.setItem("userId", $userId);
-      try {
-        await signInWithEmailAndPassword(auth, email, password);
-      } catch (error) {
-        if (error.code === "auth/user-not-found") {
-          console.log("no participant found...creating new account");
-          await createUserWithEmailAndPassword(auth, email, password);
+    if (verifySubId()) {
+      // Get the current auth status
+      const auth = getAuth();
+      if (password === "cosanlab") {
+        // Convert their text input to NNN_NNN_role format
+        let { groupId_f, subId_f, role_f, userId_f } = formatUserId(
+          groupId,
+          subId,
+          role
+        );
+        let email = `${groupId_f}_${subId_f}_${role_f}@experiment.com`;
+        // The unique userId for any specific participant is a concatentation of their
+        // groupId_subjectId_role
+        // To make it easy to use this else where in the app we can save it as a svelte
+        // store called $userId. Then we can use that in App.svelte
+        $userId = userId_f;
+        // Also save this to the user's computer so that the app will auto-login them in
+        // if they refresh the page, but don't press the logout button.
+        localStorage.setItem("userId", $userId);
+        try {
           await signInWithEmailAndPassword(auth, email, password);
-          await initUser(groupId_f, subId_f, role_f, name);
-        } else {
-          loginError = error.code;
-          console.error(error);
+        } catch (error) {
+          if (error.code === "auth/user-not-found") {
+            console.log("no participant found...creating new account");
+            await createUserWithEmailAndPassword(auth, email, password);
+            await signInWithEmailAndPassword(auth, email, password);
+            await initUser(groupId_f, subId_f, role_f, name);
+          } else {
+            loginError = error.code;
+            console.error(error);
+          }
         }
+      } else {
+        loginError = "Incorrect password";
       }
     } else {
-      loginError = "incorrect password";
+      loginError = "Incorrect Subject ID for selected Role";
     }
   }
 </script>
