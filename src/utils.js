@@ -58,7 +58,12 @@ export const globalVars = {
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 20,
-  maxPossiblePainReduction: 10
+  maxPossiblePainReduction: 10,
+  costConversion: {
+    0.25: '4',
+    0.5: '2',
+    1: '1'
+  }
 };
 
 
@@ -168,6 +173,11 @@ export const resetGroupData = async () => {
 
 }
 
+// Rounds a float to 2 decimal places
+export const round2 = (val) => {
+  return Math.round(val * 100) / 100
+}
+
 export const calcPainDuration = (ratingString, multiplier, endowment) => {
 
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
@@ -177,7 +187,7 @@ export const calcPainDuration = (ratingString, multiplier, endowment) => {
   painReduction = painReduction > globalVars.maxPossiblePainReduction ? globalVars.maxPossiblePainReduction : painReduction;
 
   const painDuration = globalVars.maxPainDur - painReduction;
-  const painDurationRounded = Math.round(painDuration * 100) / 100
+  const painDurationRounded = round2(painDuration)
   return {
     painDurationRounded, proportionOfEndowmentSpent
   }

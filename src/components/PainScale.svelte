@@ -6,13 +6,16 @@
   // INPUTS:
   export let disabled = false;
   export let questionText;
+  export let questionType = "other";
   export let rating;
   export let agency;
   export let endowment;
   export let multiplier;
 
+  $: agencyText = questionType === "other" ? "They" : "You";
+  $: agencyEndowment = Math.round(agency * endowment);
+
   let painDur, propSpent, painBarWidth;
-  let agencyEndowment = Math.round(agency * endowment);
   // For the painbar UI, what % containing div do we want to draw the vertical bar of 5s
   // of minimum pain and the 5s label below
   let lowerBoundOffset = `${Math.round(
@@ -47,7 +50,7 @@
 <div class="flex flex-col px-2 justify-items-center">
   <h2 class="mb-4 text-2xl">{questionText}</h2>
   <label for="ratingScale" class="mb-2 text-xl"
-    >They were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
+    >{agencyText} were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
   >
   <input
     id="ratingScale"
