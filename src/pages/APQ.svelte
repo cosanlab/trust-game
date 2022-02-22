@@ -20,6 +20,9 @@
   let r8 = 50;
   let r9 = 50;
   let r10 = 50;
+  // Other decider's name just for deciders
+  const otherName =
+    $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
 
   // Initialize all the question texts
   if ($userStore.role == "decider1" || $userStore.role === "decider2") {
@@ -33,15 +36,15 @@
         rating: r2,
       },
       {
-        questionText: "How guilty do you think the other decider feels?",
+        questionText: `How guilty do you ${otherName} feels?`,
         rating: r3,
       },
       {
-        questionText: "How responsible do you think the other decider feels?",
+        questionText: `How responsible do you think ${otherName} feels?`,
         rating: r4,
       },
       {
-        questionText: "How close do you feel to the other decider?",
+        questionText: `How close do you feel to ${otherName}?`,
         rating: r5,
       },
       {
@@ -60,36 +63,36 @@
         rating: r2,
       },
       {
-        questionText: "How angry do you feel towards Decider 1?",
+        questionText: `How angry do you feel towards ${$groupStore.D1_name}?`,
         rating: r3,
       },
       {
-        questionText: "How angry you feel towards Decider 2?",
+        questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
         rating: r4,
       },
       {
-        questionText: "How indebted do you feel towards Decider 1?",
+        questionText: `How indebted do you feel towards ${$groupStore.D1_name}?`,
         rating: r5,
       },
       {
-        questionText: "How indebted do you feel towards Decider 2?",
+        questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
         rating: r6,
       },
       {
-        questionText: "How much gratitude do you feel towards Decider 1?",
+        questionText: `How much gratitude do you feel towards ${$groupStore.D1_name}?`,
         rating: r7,
       },
       {
-        questionText: "How much gratitude do you feel towards Decider 2?",
+        questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
         rating: r8,
       },
       // TODO: Replace with different rating scale?
       {
-        questionText: "How much do you want to compensate Decider 1?",
+        questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
         rating: r9,
       },
       {
-        questionText: "How much do you want to compensate Decider 2?",
+        questionText: `How much do you want to compensate ${$groupStore.D2_name}?`,
         rating: r10,
       },
     ];
@@ -119,7 +122,7 @@
 {#if submitted}
   <Loading text={"Waiting for other participants..."} />
 {:else}
-  <div class="w-1/2 mx-auto">
+  <div class="w-3/4 mx-auto">
     <div class="min-w-full pb-32 text-center">
       {#each questions as { questionText, rating }}
         <div class="my-10">

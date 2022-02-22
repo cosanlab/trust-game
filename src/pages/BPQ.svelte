@@ -24,34 +24,36 @@
   let r2 = 0.5 * (agency * endowment); // initialize to mid-point of scale
   let actualChoice = 0.75 * (agency * endowment); // simulate actual choice;
   let r3 = 50; // closeness q
+  // Other decider's name just for deciders
+  const otherName =
+    $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
   if ($userStore.role == "decider1" || $userStore.role === "decider2") {
     questions = [
       {
-        questionText:
-          "How much do you think the receiver expected you to spend?",
+        questionText: `How much do you think ${$groupStore.R_name} expected you to spend?`,
         rating: r1,
       },
       {
-        questionText: "How much did you expect the other decider to spend?",
+        questionText: `How much did you expect ${otherName} to spend?`,
         rating: r2,
       },
       {
-        questionText: "The other decider actually spent:",
+        questionText: `${otherName} actually spent:`,
         rating: actualChoice,
       },
       {
-        questionText: "How close do you feel to the other decider?",
+        questionText: `How close do you feel to ${otherName}?`,
         rating: r3,
       },
     ];
   } else {
     questions = [
       {
-        questionText: "How much did you expect decider 1 to spend?",
+        questionText: `How much did you expect ${$groupStore.D1_name} to spend?`,
         rating: r1,
       },
       {
-        questionText: "How much did you expect decider 2 to spend?",
+        questionText: `How much did you expect ${$groupStore.D2_name} to spend?`,
         rating: r2,
       },
     ];
@@ -110,7 +112,7 @@
 {#if submitted}
   <Loading text={"Waiting for other participants..."} />
 {:else}
-  <div class="w-1/2 mx-auto">
+  <div class="w-3/4 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
         {#if switchToRatingScale}
