@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
 import { getFirestore, doc, setDoc, updateDoc } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
-import { writable } from 'svelte/store';
+import { writable, get } from 'svelte/store';
 
 //###############################################
 // INITIALIZE AND SETUP FIREBASE FOR DATA STORAGE
@@ -105,7 +105,9 @@ export const updateUser = async (userDoc) => {
 };
 
 // Function to update an existing group record in the database
-export const saveData = async (groupId, data) => {
+export const saveData = async (data) => {
+  // @ts-ignore
+  const { groupId } = get(groupStore)
   try {
     const docRef = doc(db, 'groups', groupId);
     await updateDoc(docRef, data);

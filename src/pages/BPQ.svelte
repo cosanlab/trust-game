@@ -73,7 +73,7 @@
     }
     // TODO: change me. This is the value from just the first scale until we save data for real
     data[key] = r1;
-    await saveData($groupStore.groupId, data);
+    await saveData(data);
     dispatch("to-thermode_placement");
   }
 

@@ -32,7 +32,7 @@
     <h2
       class="inline px-4 mr-10 text-white bg-blue-500 border border-blue-700 rounded-full self-baseline"
     >
-      Trial: {$groupStore.currentTrial + 1} of {$groupStore.trial.length}
+      Trial: {$groupStore.currentTrial + 1} of {$groupStore.trials.length}
     </h2>
     <ul class="steps">
       {#each stateDisplay as { name, display }}

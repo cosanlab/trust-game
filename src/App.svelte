@@ -145,7 +145,7 @@
     if ($groupStore.counter.length === 3) {
       console.log(`Last request...progressing to next trial`);
       // If incrementing the trial counter beyond the last trial just go to debrief
-      if ($groupStore.currentTrial + 1 === $groupStore.trial.length) {
+      if ($groupStore.currentTrial + 1 === $groupStore.trials.length) {
         await updateState("debrief");
       } else {
         const obj = {};

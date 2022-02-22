@@ -17,7 +17,7 @@
   async function debriefSubmit() {
     submitted = true;
     if ($userStore.role == "decider1") {
-      await saveData($groupStore.groupId, {
+      await saveData({
         d1_age: age,
         d1_sex: sex,
         d1_ethnicity: ethnicity,
@@ -28,7 +28,7 @@
         d1_feedback: feedback,
       });
     } else if ($userStore.role == "decider2") {
-      await saveData($groupStore.groupId, {
+      await saveData({
         d2_age: age,
         d2_sex: sex,
         d2_ethnicity: ethnicity,
@@ -39,7 +39,7 @@
         d2_feedback: feedback,
       });
     } else {
-      await saveData($groupStore.groupId, {
+      await saveData({
         r_age: age,
         r_sex: sex,
         r_ethnicity: ethnicity,
