@@ -29,26 +29,32 @@
     questions = [
       {
         questionText: "How guilty did you feel?",
+        type: "guilt",
         rating: r1,
       },
       {
         questionText: "How responsible did you feel?",
+        type: "responsible",
         rating: r2,
       },
       {
-        questionText: `How guilty do you ${otherName} feels?`,
+        questionText: `How guilty do you think ${otherName} feels?`,
+        type: "other_guilt",
         rating: r3,
       },
       {
         questionText: `How responsible do you think ${otherName} feels?`,
+        type: "other_responsible",
         rating: r4,
       },
       {
         questionText: `How close do you feel to ${otherName}?`,
+        type: "close",
         rating: r5,
       },
       {
         questionText: "How satisfied are you with the decision?",
+        type: "satisfied",
         rating: r6,
       },
     ];
@@ -56,43 +62,53 @@
     questions = [
       {
         questionText: "How much pain did you feel?",
+        type: "pain",
         rating: r1,
       },
       {
         questionText: "How satisfied are you with the decision?",
+        type: "satisfied",
         rating: r2,
       },
       {
         questionText: `How angry do you feel towards ${$groupStore.D1_name}?`,
+        type: "D1_anger",
         rating: r3,
       },
       {
         questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_anger",
         rating: r4,
       },
       {
         questionText: `How indebted do you feel towards ${$groupStore.D1_name}?`,
+        type: "D1_indebted",
         rating: r5,
       },
       {
         questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_indebted",
         rating: r6,
       },
       {
         questionText: `How much gratitude do you feel towards ${$groupStore.D1_name}?`,
+        type: "D1_gratitude",
         rating: r7,
       },
       {
         questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_gratitude",
         rating: r8,
       },
       // TODO: Replace with different rating scale?
       {
         questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
+        type: "D1_compensate",
         rating: r9,
       },
       {
         questionText: `How much do you want to compensate ${$groupStore.D2_name}?`,
+        type: "D2_compensate",
         rating: r10,
       },
     ];
@@ -101,20 +117,30 @@
   // TODO: save data for real by looping over questions
   async function getNextTrial() {
     submitted = true;
-    // Simulate some rating each person makes when they press the button and save it to
-    // the db just for development purposes
     const data = {};
-    let key, val;
+    let prefix;
+    let suffix;
+    let key;
+    data["trials"] = $groupStore.trials;
     if ($userStore.role === "decider1") {
-      key = "D1_dummy_data";
+      prefix = "D1_";
     } else if ($userStore.role === "decider2") {
-      key = "D2_dummy_data";
+      prefix = "D2_";
     } else {
-      key = "R_dummy_data";
+      prefix = "R_";
     }
-    // TODO: change me. This is the value from just the first scale until we save data for real
-    data[key] = r1;
-    // await saveData(data)
+    questions.forEach((q) => {
+      if (q.type.includes("other")) {
+        suffix = q.type.split("_")[1];
+        key = prefix === "D1_" ? "D2_" : "D1_";
+        key = `${prefix}${key}${suffix}`;
+      } else {
+        key = `${prefix}${q.type}`;
+      }
+      data["trials"][$groupStore.currentTrial][key] = q.rating;
+    });
+
+    await saveData(data);
     dispatch("get-next-trial");
   }
 </script>
