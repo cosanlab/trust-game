@@ -49,25 +49,11 @@
 
   // Now setup rating scales
   let d_r = 0.5 * (selfAgency * endowment); // either decider's expectation of receiver
-  let d_d = 0.5 * (otherAgency * endowment); // either decider's expetation of other decider
+  let d_d = 0.5 * (otherAgency * endowment); // either decider's expectation of other
   let closeness = 50; // decider closeness
   // Receiver expectations
   let r_d1 = 0.5 * (agency1 * endowment);
   let r_d2 = 0.5 * (agency2 * endowment);
-
-  // Set mid-points properly since they depend on the parameters of the choice
-  // if ($userStore.role === "decider1") {
-  //   d_r = 0.5 * (selfAgency * endowment);
-  //   d_d = 0.5 * (otherAgency * endowment);
-  // } else if ($userStore.role === "decider2") {
-  //   d_r = 0.5 * (agency2 * endowment);
-  //   d_d = 0.5 * (agency1 * endowment);
-  // } else if ($userStore.role === "receiver") {
-  //   r_d1 = 0.5 * (agency1 * endowment);
-  //   r_d2 = 0.5 * (agency2 * endowment);
-  // }
-  console.log($groupStore.trials[$groupStore.currentTrial].D1_agency);
-  console.log($groupStore.trials[$groupStore.currentTrial].D2_agency);
 
   if ($userStore.role == "decider1" || $userStore.role === "decider2") {
     questions = [
@@ -145,23 +131,32 @@
     ];
   }
 
-  // TODO: put the right data into the trial field in the db
   async function goToThermode_Placement() {
     submitted = true;
-    // Simulate some rating each person makes when they press the button and save it to
-    // the db just for development purposes
+    // NOTE: This might be an inefficient way to update the data because we can't update
+    // a specific array index in firestore directly, e.g. trials[0].D1_R. So we're
+    // actually making a copy of the *entire* array, adding the fields we want, then
+    // updating the document. If this turns out to be problematic we have 2 options:
+    // 1) Switch to a map/object instead of an array, e.g.:
+    // trials = {0: {D1_R: 10}, 1:{D1_R: 2}}...
+    // 2) Use firebase transactions: https://firebase.google.com/docs/database/web/read-and-write#save_data_as_transactions
     const data = {};
-    let key, val;
+    data["trials"] = $groupStore.trials;
     if ($userStore.role === "decider1") {
-      key = "D1_dummy_data";
+      data["trials"][$groupStore.currentTrial]["D1_R"] = questions[0].rating;
+      data["trials"][$groupStore.currentTrial]["D1_D2"] = questions[2].rating;
+      data["trials"][$groupStore.currentTrial]["D1_D2_close"] =
+        questions[4].rating;
     } else if ($userStore.role === "decider2") {
-      key = "D2_dummy_data";
+      data["trials"][$groupStore.currentTrial]["D2_R"] = questions[0].rating;
+      data["trials"][$groupStore.currentTrial]["D2_D1"] = questions[2].rating;
+      data["trials"][$groupStore.currentTrial]["D2_D1_close"] =
+        questions[4].rating;
     } else {
-      key = "R_dummy_data";
+      data["trials"][$groupStore.currentTrial]["R_D1"] = questions[0].rating;
+      data["trials"][$groupStore.currentTrial]["R_D2"] = questions[2].rating;
     }
-    // TODO: change me. This is the value from just the first scale until we save data for real
-    data[key] = r1;
-    // await saveData(data);
+    await saveData(data);
     dispatch("to-thermode_placement");
   }
 
