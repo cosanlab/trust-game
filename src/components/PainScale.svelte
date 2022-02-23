@@ -37,60 +37,6 @@
   // each time the user changes their rating
 </script>
 
-<!-- Money scale -->
-<div class="flex flex-col px-2 justify-items-center">
-  <h2 class="mb-4 text-2xl">{questionText}</h2>
-  <label for="ratingScale" class="mb-2 text-xl"
-    >{agencyText} were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
-  >
-  <input
-    id="ratingScale"
-    name="ratingScale"
-    class="w-full h-2 bg-black outline-none appearance-none slider"
-    type="range"
-    step=".1"
-    min="0"
-    max={agencyEndowment}
-    bind:value={rating}
-    {disabled}
-    on:change
-  />
-  <div class="flex flex-row justify-between">
-    <p>$0</p>
-    <p>${agencyEndowment}</p>
-  </div>
-</div>
-
-<!-- Pain Duration display -->
-<div class="flex flex-col px-2 justify-items-center">
-  <label for="painDuration" class="text-xl">Pain Duration: {painDur}s</label>
-  <div
-    class="relative flex items-center w-full h-6 border-2 border-black border-solid justify-items-start"
-  >
-    <div
-      class="absolute w-1 h-6 bg-black"
-      style:margin-left={lowerBoundOffset}
-    />
-    <input
-      type="range"
-      id="painDuration"
-      name="painDuration"
-      style:width={painBarWidth}
-      class="h-4 bg-yellow-300 border-none outline-none appearance-none"
-      min="0"
-      max={globalVars.maxPainDur}
-    />
-  </div>
-  <div class="relative flex flex-row justify-between">
-    <p>0s</p>
-    <p class="absolute" style:margin-left={lowerBoundOffset}>5s</p>
-    <p>{globalVars.maxPainDur}s</p>
-  </div>
-  <div class="mt-[-1em]">
-    <p class="text-xl">Mutiplier: {multiplier}x</p>
-  </div>
-</div>
-
 <style>
   #ratingScale::-webkit-slider-thumb {
     @apply appearance-none h-6 w-6 border-black border rounded-full bg-yellow-300 border-solid;
@@ -99,3 +45,70 @@
     @apply appearance-none;
   }
 </style>
+
+{#if agency == 0}
+  <div class="flex flex-col px-2 justify-items-center">
+    <h2 class="mb-4 text-2xl">{questionText}</h2>
+    <p class="text-xl">
+      {agencyText} were not able to spend any money from ${endowment}
+    </p>
+    <p class="mb-2 text-lg italic">0% spending power</p>
+  </div>
+{:else}
+  <!-- Money scale -->
+  <div class="flex flex-col px-2 justify-items-center">
+    <h2 class="mb-4 text-2xl">{questionText}</h2>
+    <label for="ratingScale" class="mb-2 text-xl"
+      >{agencyText} were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
+    >
+    <p class="mb-2 text-lg italic">
+      {Math.round(agency * 100)}% spending power
+    </p>
+    <input
+      id="ratingScale"
+      name="ratingScale"
+      class="w-full h-2 bg-black outline-none appearance-none slider"
+      type="range"
+      step=".1"
+      min="0"
+      max={agencyEndowment}
+      bind:value={rating}
+      {disabled}
+      on:change
+    />
+    <div class="flex flex-row justify-between">
+      <p>$0</p>
+      <p>${agencyEndowment}</p>
+    </div>
+  </div>
+
+  <!-- Pain Duration display -->
+  <div class="flex flex-col px-2 justify-items-center">
+    <label for="painDuration" class="text-xl">Pain Duration: {painDur}s</label>
+    <div
+      class="relative flex items-center w-full h-6 border-2 border-black border-solid justify-items-start"
+    >
+      <div
+        class="absolute w-1 h-6 bg-black"
+        style:margin-left={lowerBoundOffset}
+      />
+      <input
+        type="range"
+        id="painDuration"
+        name="painDuration"
+        style:width={painBarWidth}
+        class="h-4 bg-yellow-300 border-none outline-none appearance-none"
+        min="0"
+        max={globalVars.maxPainDur}
+      />
+    </div>
+    <div class="relative flex flex-row justify-between">
+      <p>0s</p>
+      <p class="absolute" style:margin-left={lowerBoundOffset}>5s</p>
+      <p>{globalVars.maxPainDur}s</p>
+    </div>
+    <div class="mt-[-1em]">
+      <p class="text-xl">Mutiplier: {multiplier}x</p>
+    </div>
+  </div>
+{/if}

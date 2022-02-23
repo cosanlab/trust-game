@@ -168,7 +168,7 @@
 {#if submitted}
   <Loading text={"Waiting for other participants..."} />
 {:else}
-  <div class="w-1/2 mx-auto">
+  <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
         {#if switchToRatingScale}
