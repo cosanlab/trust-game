@@ -59,6 +59,7 @@ export const globalVars = {
   maxPainDur: 15,
   maxEndowment: 20,
   maxPossiblePainReduction: 10,
+  deliveryTimeBuffer: 1000,
   costConversion: {
     0.25: '4',
     0.5: '2',

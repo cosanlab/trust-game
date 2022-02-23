@@ -133,6 +133,10 @@
 
   async function goToThermode_Placement() {
     submitted = true;
+    // TODO: After some additional testing this probably needs to be re-written with
+    // transactions, or we should write to different fields otherwise 2 calls to
+    // saveData() from different users that are close in time seem to conflict
+
     // NOTE: This might be an inefficient way to update the data because we can't update
     // a specific array index in firestore directly, e.g. trials[0].D1_R. So we're
     // actually making a copy of the *entire* array, adding the fields we want, then

@@ -1,11 +1,12 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { updateUser, userStore } from "../utils.js";
+  import { updateUser, userStore, groupStore, globalVars } from "../utils.js";
 
   const dispatch = createEventDispatcher();
 
-  // TODO: Pain duration should be read from db
-  export let painDur = 5000;
+  const painDur =
+    $groupStore.trials[$groupStore.currentTrial].pain_dur * 1000 +
+    globalVars.deliveryTimeBuffer;
 
   function goToPost_Questions() {
     dispatch("to-post_questions");

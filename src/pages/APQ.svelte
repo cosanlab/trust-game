@@ -114,7 +114,6 @@
     ];
   }
 
-  // TODO: save data for real by looping over questions
   async function getNextTrial() {
     submitted = true;
     const data = {};
@@ -140,6 +139,7 @@
       data["trials"][$groupStore.currentTrial][key] = q.rating;
     });
 
+    // TODO: Probably need to re-write with transactions
     await saveData(data);
     dispatch("get-next-trial");
   }
