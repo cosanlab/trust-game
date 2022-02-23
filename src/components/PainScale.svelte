@@ -37,15 +37,6 @@
   // each time the user changes their rating
 </script>
 
-<style>
-  #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 border-black border rounded-full bg-yellow-300 border-solid;
-  }
-  #painDuration::-webkit-slider-thumb {
-    @apply appearance-none;
-  }
-</style>
-
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
   <h2 class="mb-4 text-2xl">{questionText}</h2>
@@ -99,3 +90,12 @@
     <p class="text-xl">Mutiplier: {multiplier}x</p>
   </div>
 </div>
+
+<style>
+  #ratingScale::-webkit-slider-thumb {
+    @apply appearance-none h-6 w-6 border-black border rounded-full bg-yellow-300 border-solid;
+  }
+  #painDuration::-webkit-slider-thumb {
+    @apply appearance-none;
+  }
+</style>
