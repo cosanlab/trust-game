@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { userStore, groupStore, saveData } from "../utils.js";
+  import { userStore, groupStore, saveAPQData } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
@@ -116,31 +116,7 @@
 
   async function getNextTrial() {
     submitted = true;
-    const data = {};
-    let prefix;
-    let suffix;
-    let key;
-    data["trials"] = $groupStore.trials;
-    if ($userStore.role === "decider1") {
-      prefix = "D1_";
-    } else if ($userStore.role === "decider2") {
-      prefix = "D2_";
-    } else {
-      prefix = "R_";
-    }
-    questions.forEach((q) => {
-      if (q.type.includes("other")) {
-        suffix = q.type.split("_")[1];
-        key = prefix === "D1_" ? "D2_" : "D1_";
-        key = `${prefix}${key}${suffix}`;
-      } else {
-        key = `${prefix}${q.type}`;
-      }
-      data["trials"][$groupStore.currentTrial][key] = q.rating;
-    });
-
-    // TODO: Probably need to re-write with transactions
-    await saveData(data);
+    await saveAPQData(questions);
     dispatch("get-next-trial");
   }
 </script>

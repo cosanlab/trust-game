@@ -1,12 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import {
-    updateUser,
-    userId,
-    userStore,
-    groupStore,
-    saveData,
-  } from "../utils.js";
+  import { userId, userStore, groupStore, saveName } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import Button from "../components/Button.svelte";
 
@@ -15,17 +9,7 @@
 
   async function goToPre_Questions() {
     submitted = true;
-    // Add a little logic to save their user name in the group document so other users
-    // have access to it
-    const obj = {};
-    if ($userStore.role === "decider1") {
-      obj["D1_name"] = $userStore.name;
-    } else if ($userStore.role === "decider2") {
-      obj["D2_name"] = $userStore.name;
-    } else if ($userStore.role === "receiver") {
-      obj["R_name"] = $userStore.name;
-    }
-    await saveData(obj);
+    await saveName($userStore.name);
     dispatch("to-pre_questions");
   }
 </script>

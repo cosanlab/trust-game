@@ -1,5 +1,5 @@
 <script>
-  import { saveData, groupStore, userStore } from "../utils";
+  import { groupStore, userStore, saveDebrief } from "../utils";
 
   import Button from "../components/Button.svelte";
   let submitted = false;
@@ -16,40 +16,16 @@
     feedback;
   async function debriefSubmit() {
     submitted = true;
-    if ($userStore.role == "decider1") {
-      await saveData({
-        d1_age: age,
-        d1_sex: sex,
-        d1_ethnicity: ethnicity,
-        d1_race: race,
-        d1_nativeLang: nativeLang,
-        d1_birth: birth,
-        d1_handed: handed,
-        d1_feedback: feedback,
-      });
-    } else if ($userStore.role == "decider2") {
-      await saveData({
-        d2_age: age,
-        d2_sex: sex,
-        d2_ethnicity: ethnicity,
-        d2_race: race,
-        d2_nativeLang: nativeLang,
-        d2_birth: birth,
-        d2_handed: handed,
-        d2_feedback: feedback,
-      });
-    } else {
-      await saveData({
-        r_age: age,
-        r_sex: sex,
-        r_ethnicity: ethnicity,
-        r_race: race,
-        r_nativeLang: nativeLang,
-        r_birth: birth,
-        r_handed: handed,
-        r_feedback: feedback,
-      });
-    }
+    await saveDebrief({
+      age,
+      sex,
+      ethnicity,
+      race,
+      nativeLang,
+      birth,
+      handed,
+      feedback,
+    });
   }
 </script>
 

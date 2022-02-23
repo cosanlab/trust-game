@@ -15,8 +15,8 @@
     loggedIn,
     userId,
     initUser,
-    updateUser,
     resetGroupData,
+    reqStateChange,
   } from "./utils.js";
 
   // app pages and components
@@ -33,11 +33,9 @@
 
   // VARIABLES USED WITHIN App.svelte
   let unsubscribe_user, unsubscribe_group;
-  // These are states that the reciever *directly* controls without needing responses
-  // from the two deciders
-  const nonSyncStates = ["delivery", "post_questions"];
 
   // Data updating API explanation:
+  // See also database transaction write function in utils.js!
   // To ensure that we don't get any conflicts and race conditions when multipler users
   // write to the db close to simultaneously we always fallow 3 rules to ensure all
   // users are in-sync with the freshest data from the database
@@ -47,8 +45,8 @@
   // 2. Instead they should write *directly to the db* either by: dispatching
   //    events back up to App.svelte and hooking them up to updateState() below
   //    OR
-  //    Calling await saveData(groupId {field1: val, field2: val...}) imported from
-  //    utils.js (see BPQ.svelte for an example)
+  //    Awaiting one of the data saving functions, e.g. saveName, saveBPQData,
+  //    saveAPQData, saveDebrief from utils.js
   // 3. The $sveltestore should *only* be set by the real-time onSnapshot() listener,
   //    which subscribes to any database changes and "pushes" them to the $sveltestore
   //    which occurs within onMount() inside App.svelte
@@ -65,102 +63,15 @@
   // are never out of sync. They also "feel" the effect of the data change on
   // their UI at approx the same time as the other users.
   //
-  // COMMON USAGE PATTERNS
-  // The three common patterns inside a page will be:
-  // 1. User clicks button to advance to next state, but doesn't need to save data:
-  //      dispatch('to-nextState')
-  //      then handle it inside App.svelte with on:to-nextState
-  // 2. User clicks button, but needs to save data before advancing to next state e.g.
-  //    after making ratings:
-  //      await saveData()
-  //      dispatch('to-nextState')
-  //      then handle it inside App.svelte with on:to-nextState
-  // 3. User just needs to save data, but not advance state (e.g. multiple question
-  //    screens):
-  //      await saveData()
 
-  // UPDATE STATE
-  // Update the experiment state and write to firebase
-  // Checks to see if all participants are ready to transition from state A -> B each
-  // time the function runs. So only the *last* user to call this function actually
-  // initiates the state change
   async function updateState(newState) {
-    const docRef = doc(db, "groups", $groupStore.groupId);
-    const oldState = $groupStore.currentState;
-    try {
-      if (nonSyncStates.includes(newState)) {
-        console.log(
-          `Receiver is requesting direct state change: ${oldState} -> ${newState}`
-        );
-        const obj = {};
-        obj[`timings.${oldState}_${newState}`] = serverTimestamp();
-        obj["counter"] = [];
-        obj["currentState"] = newState;
-        await updateDoc(docRef, obj);
-      } else {
-        console.log(
-          `Participant: ${$userId} is requesting state change: ${oldState} -> ${newState}`
-        );
-        // Add the user to the counter if they're not already in it
-        if (!$groupStore.counter.includes($userStore.userId)) {
-          // Call update doc here directly
-          await updateDoc(docRef, {
-            counter: [...$groupStore.counter, $userStore.userId],
-          });
-        } else {
-          console.log("Ignoring duplicate request");
-        }
-        if ($groupStore.counter.length === 3) {
-          // Call update doc here directly
-          console.log(`Last request...initiating state change`);
-          const obj = {};
-          obj[`timings.${oldState}_${newState}`] = serverTimestamp();
-          obj["counter"] = [];
-          obj["currentState"] = newState;
-          await updateDoc(docRef, obj);
-        } else {
-          console.log(
-            `Still waiting for ${3 - $groupStore.counter.length} requests...`
-          );
-        }
-      }
-    } catch (error) {
-      console.error(error);
-    }
+    await reqStateChange(newState);
   }
 
   // Gets called when user submits their APQ responses
   async function getNextTrial() {
-    const docRef = doc(db, "groups", $groupStore.groupId);
-    console.log(`Participant: ${$userId} is requesting next trial`);
-    // Add the user to the counter if they're not already in it
-    if (!$groupStore.counter.includes($userStore.userId)) {
-      // Call update doc here directly
-      await updateDoc(docRef, {
-        counter: [...$groupStore.counter, $userStore.userId],
-      });
-    } else {
-      console.log("Ignoring duplicate request");
-    }
-    if ($groupStore.counter.length === 3) {
-      console.log(`Last request...progressing to next trial`);
-      // If incrementing the trial counter beyond the last trial just go to debrief
-      if ($groupStore.currentTrial + 1 === $groupStore.trials.length) {
-        await updateState("debrief");
-      } else {
-        const obj = {};
-        obj["currentTrial"] = $groupStore.currentTrial + 1;
-        obj["currentState"] = "pre_questions";
-        obj["counter"] = [];
-        await updateDoc(docRef, obj);
-      }
-      // Reset the breadcrumb UI
-      // resetStateDisplay();
-    } else {
-      console.log(
-        `Still waiting for ${3 - $groupStore.counter.length} requests...`
-      );
-    }
+    // The second argument here means also update the trial counter
+    await reqStateChange("pre_questions", true);
   }
 
   // When the app first starts up we check to see if the user is logged in and if they

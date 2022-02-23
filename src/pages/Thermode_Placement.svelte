@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { updateUser, userStore } from "../utils.js";
+  import { userStore } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import Button from "../components/Button.svelte";
 

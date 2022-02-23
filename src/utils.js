@@ -1,7 +1,7 @@
 // @ts-nocheck
 import { initializeApp } from "firebase/app";
 import { getStorage } from "firebase/storage";
-import { getFirestore, doc, setDoc, updateDoc } from "firebase/firestore";
+import { getFirestore, doc, setDoc, updateDoc, runTransaction, serverTimestamp } from "firebase/firestore";
 import { getAuth } from 'firebase/auth';
 import { writable, get } from 'svelte/store';
 
@@ -73,7 +73,6 @@ export const globalVars = {
 //############################
 // GLOBAL EXPERIMENT FUNCTIONS
 //############################
-// Add any functions here that you want to reuse throughout the app
 
 // Function to create a new user record in the database
 export const initUser = async (groupId, subId, role, name) => {
@@ -99,29 +98,23 @@ export const initUser = async (groupId, subId, role, name) => {
   }
 }
 
-// Function to update an existing user record in the database
-export const updateUser = async (userDoc) => {
+// Reset a group to the instructions and first trial
+// Doesn't erase their data
+export const resetGroupData = async () => {
+  const groupData = get(groupStore);
+  groupData.counter = [];
+  groupData.currentState = 'instructions'
+  groupData.currentTrial = 0
+  groupData.timings = {}
   try {
-    const docRef = doc(db, 'participants', userDoc.userId);
-    await setDoc(docRef, userDoc);
-
-    console.log(`user doc successfully updated: ${docRef.id}`);
+    const docRef = doc(db, 'groups', groupData.groupId);
+    await setDoc(docRef, groupData)
+    console.log('Successfully reset group data')
   } catch (error) {
-    console.error(`Error updating user document: ${userDoc.userId}:`, error);
+    console.error(`Error resetting group data:`, error)
   }
-};
 
-// Function to update an existing group record in the database
-export const saveData = async (data) => {
-  const { groupId } = get(groupStore)
-  try {
-    const docRef = doc(db, 'groups', groupId);
-    await updateDoc(docRef, data);
-    console.log(`Successfully saved data for group: ${groupId}`);
-  } catch (error) {
-    console.error(`Error saving data for group: ${groupId}:`, error);
-  }
-};
+}
 
 // Format the values the user inputted so that we encode each id as 000, 001...NNN, so
 // we can use them as unique document ideas up to 1000 subs.
@@ -155,30 +148,12 @@ export const formatUserId = (groupId, subId, role) => {
   }
 }
 
-// Create a test group with 2 trials for developing the app locally and adjusting the
-// data structure. For the real experiment, this will be uploaded by a python script
-// after part 1
-export const resetGroupData = async () => {
-  const groupData = get(groupStore);
-  groupData.counter = [];
-  groupData.currentState = 'instructions'
-  groupData.currentTrial = 0
-  groupData.timings = {}
-  try {
-    const docRef = doc(db, 'groups', groupData.groupId);
-    await setDoc(docRef, groupData)
-    console.log('Successfully reset group data')
-  } catch (error) {
-    console.error(`Error resetting group data:`, error)
-  }
-
-}
-
 // Rounds a float to 2 decimal places
 export const round2 = (val) => {
   return Math.round(val * 100) / 100
 }
 
+// Calculates pain duration based on choice made, executed reactively by PainScale.svelte
 export const calcPainDuration = (ratingString, multiplier, endowment) => {
 
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
@@ -193,3 +168,270 @@ export const calcPainDuration = (ratingString, multiplier, endowment) => {
     painDurationRounded, proportionOfEndowmentSpent
   }
 }
+
+//#####################################
+// DATABASE TRANSACTION WRITE FUNCTIONS
+//#####################################
+// These are functions that make use of firestore's runTransaction() feature
+// EXPLANATION:
+// When multiple users try to update the *same* data simulataneously, e.g. when
+// submitting their responses during a part of a trial, or indicating they're ready to
+// advance the experiment state, we can run into conflicts when these updates occur
+// simultaenously or close in time
+
+// This is particularly bad, when some of the data we're trying to update depends on
+// existing values in the database, e.g. the counter which keeps track of which and how
+// many users are ready to advance to the next state
+
+// In these situations, we don't want to rely on the value in the $groupStore, because
+// it's updated by onSnapShot(), which will push changes *immediately* even if those
+// values haven't been written to the db yet. That's because firestore first updates a
+// user's *local* copy of the db, which triggers the onSnapShot() function and
+// overwrites the groupStore. 
+
+// Similar to the issue with directly updating the groupStore as described in
+// App.svelte, a call to updateDoc will also update a user's groupStore before writing
+// to the database because groupStore is overwritten everytime onSnapShot() runs. So
+// whenever we want to make a write to the db that needs the *latest* data, we need to
+// wrap that write in runTransaction(). Inside this function we first perform a get()
+// for the latest data, then use those values before calling update(). runTransaction()
+// is designed to pay attention to if the data changes any time between get() and
+// update(), e.g. by another user. In this case, it'll re-run itself thus ensuring get()
+// has the latest data before running update()
+
+// Update the experiment state and write to firebase
+// Checks to see if all participants are ready to transition from state A -> B each
+// time the function runs. So only the *last* user to call this function actually
+// initiates the state change
+export const reqStateChange = async (newState, updateTrial = false) => {
+  const { groupId } = get(groupStore);
+  const { userId } = get(userStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+
+      // Get the latest data, rather than relying on the store
+      const document = await transaction.get(docRef);
+      if (!document.exists()) {
+        throw "Document does not exist!"
+      }
+      // Freshest data
+      const { counter, currentState } = document.data();
+      // States that receiver advances directly
+      const nonSyncStates = ["delivery", "post_questions"];
+
+      if (nonSyncStates.includes(newState)) {
+        console.log(
+          `Receiver is requesting direct state change: ${currentState} -> ${newState}`
+        );
+        const data = {};
+        data[`timings.${currentState}_${newState}`] = serverTimestamp();
+        data["counter"] = [];
+        data["currentState"] = newState;
+        await transaction.update(docRef, data);
+      } else {
+        console.log(
+          `Participant: ${userId} is requesting state change: ${currentState} -> ${newState}`
+        );
+        // Add the user to the counter if they're not already in it
+        if (!counter.includes(userId)) {
+          await transaction.update(docRef, { counter: [...counter, userId] })
+        } else {
+          console.log("Ignoring duplicate request");
+        }
+      }
+    })
+  } catch (error) {
+    console.error(`Error updating state to ${newState} for group: ${groupId}`, error)
+  }
+  // Use helper function to run a second transaction that checks the counter length and
+  // actually performs the state change if appropriate
+  await verifyStateChange(newState, updateTrial);
+}
+
+// Helper function called by reqStateChange that runs a follow-up transaction after the
+// reqStateChange transaction so we rely on freshes counter value in the db rather than
+// the value in any user's store which may be out-of-sync
+// Also has the benefit that if all 3 users have requested a state change, but it failed
+// for some reason, then any user can re-make that request without overwriting their
+// data and it will run sucdessfully 
+const verifyStateChange = async (newState, updateTrial = false) => {
+  const { groupId } = get(groupStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      // Get the latest data, rather than relying on the store
+      const document = await transaction.get(docRef)
+      if (!document.exists()) {
+        throw "Document does not exist!";
+      }
+      // Get latest counter
+      const { counter, currentState, currentTrial } = document.data();
+      if (counter.length === 3) {
+        console.log('Last request...initiating state change');
+        const obj = {};
+        obj[`timings.${currentState}_${newState}`] = serverTimestamp();
+        obj["counter"] = [];
+        obj["currentState"] = newState;
+        if (updateTrial) {
+          console.log(`Also getting next trial`);
+          obj["currentTrial"] = currentTrial + 1;
+        }
+        await transaction.update(docRef, obj);
+      } else {
+        console.log(`Still waiting for ${3 - counter.length} requests...`)
+      }
+    })
+  } catch (error) {
+    console.error(`Error verifying state change`, error)
+  }
+}
+
+// Save each user's name in the group doc
+export const saveName = async (name) => {
+  const { groupId } = get(groupStore);
+  const { role } = get(userStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const document = await transaction.get(docRef);
+      if (!document.exists()) {
+        throw "Document does not exist!";
+      }
+      const updateData = {};
+      if (role === 'decider1') {
+        updateData['D1_name'] = name;
+      } else if (role === 'decider2') {
+        updateData['D2_name'] = name
+      } else if (role === 'receiver') {
+        updateData['R_name'] = name
+      } else {
+        throw `${role} is an unknown role`
+      }
+      await transaction.update(docRef, updateData);
+      console.log(`Successfully added ${name} to db`)
+    })
+
+  } catch (error) {
+    console.error(`Error saving name for user: ${name}`, error)
+  }
+
+}
+
+// Save trial data for BPQ questions handling concurrent writes
+export const saveBPQData = async (questions) => {
+  const { groupId } = get(groupStore);
+  const { role } = get(userStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      // Get the latest data, rather than relying on the store
+      const document = await transaction.get(docRef)
+      if (!document.exists()) {
+        throw "Document does not exist!";
+      }
+      // Get the latest trial and current trial
+      const { trials, currentTrial } = document.data();
+      const data = { "trials": trials };
+      if (role === "decider1") {
+        data["trials"][currentTrial]["D1_R"] = questions[0].rating;
+        data["trials"][currentTrial]["D1_D2"] = questions[2].rating;
+        data["trials"][currentTrial]["D1_D2_close"] =
+          questions[4].rating;
+      } else if (role === "decider2") {
+        data["trials"][currentTrial]["D2_R"] = questions[0].rating;
+        data["trials"][currentTrial]["D2_D1"] = questions[2].rating;
+        data["trials"][currentTrial]["D2_D1_close"] =
+          questions[4].rating;
+      } else if (role === 'receiver') {
+        data["trials"][currentTrial]["R_D1"] = questions[0].rating;
+        data["trials"][currentTrial]["R_D2"] = questions[2].rating;
+      } else {
+        throw `${role} is an unknown role`
+      }
+      await transaction.update(docRef, data)
+      console.log(`Successfully saved BPQ data for: ${role}`)
+    })
+  } catch (error) {
+    console.error(`Error saving data for group: ${groupId}`, error)
+  }
+};
+
+export const saveAPQData = async (questions) => {
+  const { groupId } = get(groupStore);
+  const { role } = get(userStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const document = await transaction.get(docRef);
+      if (!document.exists()) {
+        throw "Document does not exist!";
+      }
+      // Get the latest trial and current trial
+      const { trials, currentTrial } = document.data();
+      const data = { "trials": trials };
+      let prefix;
+      let suffix;
+      let key;
+      if (role === "decider1") {
+        prefix = "D1_";
+      } else if (role === "decider2") {
+        prefix = "D2_";
+      } else if (role === 'receiver') {
+        prefix = "R_";
+      } else {
+        throw `${role} is an unknown role`
+      }
+      questions.forEach((q) => {
+        if (q.type.includes("other")) {
+          suffix = q.type.split("_")[1];
+          key = prefix === "D1_" ? "D2_" : "D1_";
+          key = `${prefix}${key}${suffix}`;
+        } else {
+          key = `${prefix}${q.type}`;
+        }
+        data["trials"][currentTrial][key] = q.rating;
+      });
+      await transaction.update(docRef, data)
+      console.log(`Successfully saved APQ data for: ${role}`)
+    })
+  } catch (error) {
+    console.error(`Error saving data for group: ${groupId}`, error)
+  }
+
+}
+
+export const saveDebrief = async (data) => {
+  const { groupId } = get(groupStore);
+  const { role } = get(userStore);
+  const docRef = doc(db, 'groups', groupId);
+  try {
+    await runTransaction(db, async (transaction) => {
+      const document = await transaction.get(docRef);
+      if (!document.exists()) {
+        throw "Document does not exist!";
+      }
+      const updateData = { 'debrief': {} };
+      if (role === 'decider1') {
+        updateData['debrief']['D1'] = data
+      } else if (role === 'decider2') {
+        updateData['debrief']['D2'] = data
+      } else if (role === 'receiver') {
+        updateData['debrief']['R'] = data
+      } else {
+        throw `${role} is an unknown role`
+      }
+      await transaction.update(docRef, updateData);
+      console.log("Successfully saved debrief data")
+    })
+
+  } catch (error) {
+    console.error(`Error saving debrief data`, error)
+  }
+
+}
+
+
+
+
+

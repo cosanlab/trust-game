@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { updateUser, userStore, groupStore, globalVars } from "../utils.js";
+  import { userStore, groupStore, globalVars } from "../utils.js";
 
   const dispatch = createEventDispatcher();
 
