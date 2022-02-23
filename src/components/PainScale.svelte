@@ -10,7 +10,7 @@
   export let rating;
   export let agency;
   export let endowment;
-  export let multiplier;
+  export let cost;
 
   $: agencyText = questionType === "other" ? "They" : "You";
   $: agencyEndowment = Math.round(agency * endowment);
@@ -24,7 +24,7 @@
 
   $: {
     const { painDurationRounded, proportionOfEndowmentSpent } =
-      calcPainDuration(rating, multiplier, endowment);
+      calcPainDuration(rating, cost, endowment);
     painDur = painDurationRounded;
     propSpent = proportionOfEndowmentSpent;
     painBarWidth = `${(painDur / globalVars.maxPainDur) * 100}%`;
@@ -108,7 +108,7 @@
       <p>{globalVars.maxPainDur}s</p>
     </div>
     <div class="mt-[-1em]">
-      <p class="text-xl">Mutiplier: {multiplier}x</p>
+      <p class="text-xl">Cost: {globalVars.costConversion[cost]}x</p>
     </div>
   </div>
 {/if}

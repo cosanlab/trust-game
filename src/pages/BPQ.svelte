@@ -34,8 +34,7 @@
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
   // Cost
-  let multiplier = $groupStore.trials[$groupStore.currentTrial].cost;
-  multiplier = globalVars.costConversion[multiplier];
+  let cost = $groupStore.trials[$groupStore.currentTrial].cost;
 
   // Just for deciders
   const selfAgency = $userStore.role === "decider1" ? agency1 : agency2;
@@ -63,7 +62,7 @@
         agency: selfAgency,
         questionType: "self",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `You actually spent:`,
@@ -71,7 +70,7 @@
         agency: selfAgency,
         questionType: "self",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `How much did you expect ${otherName} to spend?`,
@@ -79,7 +78,7 @@
         agency: otherAgency,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `${otherName} actually spent:`,
@@ -87,7 +86,7 @@
         agency: otherAgency,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `How close do you feel to ${otherName}?`,
@@ -102,7 +101,7 @@
         agency: agency1,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `${$groupStore.D1_name} actually spent:`,
@@ -110,7 +109,7 @@
         agency: agency1,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `How much did you expect ${$groupStore.D2_name} to spend?`,
@@ -118,7 +117,7 @@
         agency: agency2,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
       {
         questionText: `${$groupStore.D2_name} actually spent:`,
@@ -126,7 +125,7 @@
         agency: agency2,
         questionType: "other",
         endowment: endowment,
-        multiplier: multiplier,
+        cost: cost,
       },
     ];
   }
@@ -181,7 +180,7 @@
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}
-            multiplier={questions[currentQ].multiplier}
+            cost={questions[currentQ].cost}
             agency={questions[currentQ].agency}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}

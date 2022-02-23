@@ -155,10 +155,10 @@ export const round2 = (val) => {
 }
 
 // Calculates pain duration based on choice made, executed reactively by PainScale.svelte
-export const calcPainDuration = (ratingString, multiplier, endowment) => {
+export const calcPainDuration = (ratingString, cost, endowment) => {
 
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
-  let painReduction = proportionOfEndowmentSpent * multiplier * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment)
+  let painReduction = proportionOfEndowmentSpent * cost * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment)
 
   // Don't let them reduce pain duraction more than the max possible reduction
   painReduction = painReduction > globalVars.maxPossiblePainReduction ? globalVars.maxPossiblePainReduction : painReduction;
