@@ -1,12 +1,10 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { userStore } from "../utils.js";
+  import { userStore, groupStore } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import Button from "../components/Button.svelte";
 
-  // TODO: We need to randomize site across trials, but this will happen in the upload
-  // script to replace this with a read from the database
-  export let site = 1;
+  let site = $groupStore.trials[$groupStore.currentTrial].site;
 
   const dispatch = createEventDispatcher();
 
