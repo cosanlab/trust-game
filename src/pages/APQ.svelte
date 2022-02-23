@@ -1,6 +1,6 @@
 <script>
   import { createEventDispatcher } from "svelte";
-  import { userStore, groupStore, saveAPQData } from "../utils.js";
+  import { userStore, groupStore, saveAPQData, globalVars } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
@@ -18,8 +18,8 @@
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-  let r9 = 50;
-  let r10 = 50;
+  let r9 = 0.5 * globalVars.receiverEndowmentPerTrial;
+  let r10 = 0.5 * globalVars.receiverEndowmentPerTrial;
   // Other decider's name just for deciders
   const otherName =
     $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
@@ -100,7 +100,6 @@
         type: "D2_gratitude",
         rating: r8,
       },
-      // TODO: Replace with different rating scale?
       {
         questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
         type: "D1_compensate",
@@ -126,10 +125,25 @@
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
-      {#each questions as { questionText, rating }}
-        <div class="my-10">
-          <Rating {questionText} bind:rating />
-        </div>
+      {#each questions as question}
+        {#if question.questionText.includes("compensate")}
+          <div class="my-10">
+            <Rating
+              questionText={question.questionText}
+              bind:rating={question.rating}
+              max={globalVars.receiverEndowmentPerTrial}
+              leftText={"$0"}
+              rightText={`$${globalVars.receiverEndowmentPerTrial}`}
+            />
+          </div>
+        {:else}
+          <div class="my-10">
+            <Rating
+              questionText={question.questionText}
+              bind:rating={question.rating}
+            />
+          </div>
+        {/if}
       {/each}
 
       <Button on:click={getNextTrial}>Next</Button>

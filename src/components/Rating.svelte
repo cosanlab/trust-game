@@ -10,6 +10,9 @@
   export let labelText = "";
   export let leftText = "Not at all";
   export let rightText = "Extremely";
+  export let step = ".1";
+  export let min = "0";
+  export let max = "100";
 
   // OUTPUTS:
   // When using this component use bind:rating={someVariable} to get access to the
@@ -32,9 +35,9 @@
     name="ratingScale"
     class="w-full h-2 bg-black outline-none appearance-none slider"
     type="range"
-    step=".1"
-    min="0"
-    max="100"
+    {step}
+    {min}
+    {max}
     bind:value={rating}
     {disabled}
     on:change

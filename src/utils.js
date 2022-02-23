@@ -54,17 +54,18 @@ export const stateDisplay = writable([])
 // import { globalVars } from '../utils.js';
 // console.log(globalVars.time)
 export const globalVars = {
-  time: 5,
+  time: 5, // display time of choice
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 20,
   maxPossiblePainReduction: 10,
-  deliveryTimeBuffer: 1000,
+  deliveryTimeBuffer: 1000, // additional time to wait for stimulation to finish
   costConversion: {
     0.25: '4',
     0.5: '2',
     1: '1'
-  }
+  },
+  receiverEndowmentPerTrial: Math.round(100 / 36) // total endowment/number of trials
 };
 
 
