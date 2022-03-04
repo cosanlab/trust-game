@@ -52,7 +52,7 @@
     <p class="text-xl">
       {agencyText} were not able to spend any money from ${endowment}
     </p>
-    <p class="mb-2 text-lg italic">0% spending power</p>
+    <p class="mb-2 text-lg italic">0% deciding power</p>
   </div>
 {:else}
   <!-- Money scale -->
@@ -62,7 +62,7 @@
       >{agencyText} were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
     >
     <p class="mb-2 text-lg italic">
-      {Math.round(agency * 100)}% spending power
+      {Math.round(agency * 100)}% deciding power
     </p>
     <input
       id="ratingScale"

@@ -18,8 +18,8 @@
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-  let r9 = 0.5 * globalVars.receiverEndowmentPerTrial;
-  let r10 = 0.5 * globalVars.receiverEndowmentPerTrial;
+  let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
+  let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
   // Other decider's name just for deciders
   const otherName =
     $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
@@ -76,19 +76,9 @@
         rating: r3,
       },
       {
-        questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_anger",
-        rating: r4,
-      },
-      {
         questionText: `How indebted do you feel towards ${$groupStore.D1_name}?`,
         type: "D1_indebted",
         rating: r5,
-      },
-      {
-        questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_indebted",
-        rating: r6,
       },
       {
         questionText: `How much gratitude do you feel towards ${$groupStore.D1_name}?`,
@@ -96,14 +86,24 @@
         rating: r7,
       },
       {
-        questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_gratitude",
-        rating: r8,
-      },
-      {
         questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
         type: "D1_compensate",
         rating: r9,
+      },
+      {
+        questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_anger",
+        rating: r4,
+      },
+      {
+        questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_indebted",
+        rating: r6,
+      },
+      {
+        questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
+        type: "D2_gratitude",
+        rating: r8,
       },
       {
         questionText: `How much do you want to compensate ${$groupStore.D2_name}?`,
@@ -125,22 +125,28 @@
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
-      {#each questions as question}
+      {#each questions as question, i}
+        {#if i === 2 || i == 6}
+          <hr class="w-full my-16 border-black border-dashed" />
+        {/if}
         {#if question.questionText.includes("compensate")}
-          <div class="my-10">
+          <div class="my-8">
             <Rating
               questionText={question.questionText}
               bind:rating={question.rating}
-              max={globalVars.receiverEndowmentPerTrial}
+              min={"0"}
+              max={globalVars.receiverEndowmentPerTrial / 2}
               leftText={"$0"}
-              rightText={`$${globalVars.receiverEndowmentPerTrial}`}
+              step={".01"}
+              rightText={`$${globalVars.receiverEndowmentPerTrial / 2}`}
             />
           </div>
         {:else}
-          <div class="my-10">
+          <div class="my-8">
             <Rating
               questionText={question.questionText}
               bind:rating={question.rating}
+              step={"1"}
             />
           </div>
         {/if}

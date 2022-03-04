@@ -65,7 +65,7 @@ export const globalVars = {
     0.5: '2',
     1: '1'
   },
-  receiverEndowmentPerTrial: Math.round(100 / 36) // total endowment/number of trials
+  receiverEndowmentPerTrial: 2 //  36 trials * $2/trial = $72 theoretical max
 };
 
 

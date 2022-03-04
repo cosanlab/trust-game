@@ -10,8 +10,8 @@
   export let labelText = "";
   export let leftText = "Not at all";
   export let rightText = "Extremely";
-  export let step = ".1";
-  export let min = "0";
+  export let step = ".01";
+  export let min = "1";
   export let max = "100";
 
   // OUTPUTS:
