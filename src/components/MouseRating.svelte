@@ -1,13 +1,12 @@
 <script>
   // Just like Rating.svelte, but syncs the slider position with the mouse, so it
   // doesn't require a user to click and/or drag
-  import { globalVars, calcPainDuration } from "../utils.js";
+  import { globalVars, calcPainDuration, round2 } from "../utils.js";
   import { onMount } from "svelte";
 
   // INPUTS:
   export let questionText = "Question text here";
   export let rating = 50;
-  export let logging = true;
   export let disabled = false;
   export let labelText = "";
   export let leftText = "Not at all";
@@ -37,12 +36,16 @@
   const mouseMove = (ev) => {
     rating = Math.min(
       parseInt(max),
-      Math.max(
-        parseInt(min),
-        parseInt((1 - (end - ev.clientX) / length) * parseInt(max))
-      )
+      Math.max(parseInt(min), (1 - (end - ev.clientX) / length) * parseInt(max))
     );
-    if (logging) {
+    // If the component is a 100-pt rating scale convert ratings to integers, otherwise
+    // round to the nearest 100th decimal place
+    if (parseInt(max) === 100) {
+      rating = Math.round(rating);
+    } else {
+      rating = round2(rating);
+    }
+    if (import.meta.env.DEV) {
       console.log(rating);
     }
   };

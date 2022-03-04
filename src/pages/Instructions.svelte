@@ -26,16 +26,6 @@
 {:else}
   <div class="flex flex-col items-center">
     <h1 class="mb-4 text-2xl">Instructions for Part 2</h1>
-    {#if import.meta.env.DEV}
-      <h2 class="text-xl">
-        <span class="font-bold">I am: </span>
-        <span class="italic">{$userId}</span>
-      </h2>
-      <h2 class="text-xl">
-        <span class="font-bold">My group is in state: </span>
-        <span class="italic">{$groupStore.currentState}</span>
-      </h2>
-    {/if}
     <p class="w-1/2 mb-4 text-left">
       In this part of the experiment, a random selection of <span
         class="font-bold">{$groupStore.trials.length} decisions</span

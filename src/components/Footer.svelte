@@ -4,7 +4,7 @@ was just created -->
 <script>
   import { getAuth, signOut } from "firebase/auth";
   import { createEventDispatcher } from "svelte";
-  import { userStore, loggedIn, userId } from "../utils.js";
+  import { userStore, groupStore, loggedIn, userId } from "../utils.js";
   const dispatch = createEventDispatcher();
 
   // Change to your email
@@ -37,6 +37,12 @@ was just created -->
   class:bg-gray-600={!import.meta.env.DEV}
 >
   <div>If you have questions please ask the experimenter</div>
+  {#if import.meta.env.DEV}
+    <div class="inline-flex ml-2">
+      <div class="mr-4">Role: {$userStore.role}</div>
+      <div>State: {$groupStore.currentState}</div>
+    </div>
+  {/if}
   <div>
     <button
       class="px-4 py-1 text-xs font-bold bg-blue-500 rounded"

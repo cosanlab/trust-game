@@ -8,8 +8,7 @@
     globalVars,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import PainScale from "../components/PainScale.svelte";
-  import Rating from "../components/Rating.svelte";
+  import MousePainScale from "../components/MousePainScale.svelte";
   import MouseRating from "../components/MouseRating.svelte";
   import Button from "../components/Button.svelte";
 
@@ -177,7 +176,7 @@
             bind:rating={questions[currentQ].rating}
           />
         {:else}
-          <PainScale
+          <MousePainScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}
