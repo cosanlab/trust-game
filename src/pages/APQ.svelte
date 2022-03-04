@@ -2,7 +2,7 @@
   import { createEventDispatcher } from "svelte";
   import { userStore, groupStore, saveAPQData, globalVars } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import Rating from "../components/Rating.svelte";
+  import MouseRating from "../components/MouseRating.svelte";
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
@@ -131,7 +131,7 @@
         {/if}
         {#if question.questionText.includes("compensate")}
           <div class="my-8">
-            <Rating
+            <MouseRating
               questionText={question.questionText}
               bind:rating={question.rating}
               min={"0"}
@@ -143,7 +143,7 @@
           </div>
         {:else}
           <div class="my-8">
-            <Rating
+            <MouseRating
               questionText={question.questionText}
               bind:rating={question.rating}
               step={"1"}
