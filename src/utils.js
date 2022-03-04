@@ -154,6 +154,9 @@ export const round2 = (val) => {
   return Math.round(val * 100) / 100
 }
 
+export const roundHalf = (val) => {
+  return Math.round(val * 2) / 2;
+}
 // Calculates pain duration based on choice made, executed reactively by PainScale.svelte
 export const calcPainDuration = (ratingString, cost, endowment) => {
 

@@ -1,11 +1,11 @@
 <script>
   import { createEventDispatcher, onMount } from "svelte";
-  import { userStore, groupStore, globalVars } from "../utils.js";
+  import { userStore, groupStore, globalVars, roundHalf } from "../utils.js";
 
   const dispatch = createEventDispatcher();
 
   const painDur =
-    $groupStore.trials[$groupStore.currentTrial].pain_dur * 1000 +
+    roundHalf($groupStore.trials[$groupStore.currentTrial].pain_dur) * 1000 +
     globalVars.deliveryTimeBuffer;
 
   function goToPost_Questions() {
