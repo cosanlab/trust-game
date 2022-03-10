@@ -13,7 +13,6 @@
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
-  const displayTime = 5000; // how long to show real choices for
   let submitted = false;
   let disableInput = false;
   let currentQ = 0;
@@ -144,9 +143,9 @@
       currentQ = currentQ + 1;
       // If they're at the 2nd or 4th, we're just showing them a choice, no rating
       if (currentQ === 1 || currentQ === 3) {
-        showButton = false;
+        // showButton = false;
         disableInput = true;
-        setTimeout(getNextQuestion, displayTime);
+        // setTimeout(getNextQuestion, displayTime);
       } else if (
         // Otherwise for the last question for deciders we're using a 100pt scale
         ($userStore.role === "decider1" || $userStore.role === "decider2") &&

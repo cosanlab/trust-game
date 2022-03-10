@@ -54,7 +54,6 @@ export const stateDisplay = writable([])
 // import { globalVars } from '../utils.js';
 // console.log(globalVars.time)
 export const globalVars = {
-  time: 5, // display time of choice
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 5,
@@ -106,7 +105,6 @@ export const resetGroupData = async () => {
   groupData.counter = [];
   groupData.currentState = 'instructions'
   groupData.currentTrial = 0
-  groupData.timings = {}
   try {
     const docRef = doc(db, 'groups', groupData.groupId);
     await setDoc(docRef, groupData)
@@ -229,7 +227,6 @@ export const reqStateChange = async (newState, updateTrial = false) => {
           `Receiver is requesting direct state change: ${currentState} -> ${newState}`
         );
         const data = {};
-        data[`timings.${currentState}_${newState}`] = serverTimestamp();
         data["counter"] = [];
         data["currentState"] = newState;
         await transaction.update(docRef, data);
@@ -274,7 +271,6 @@ const verifyStateChange = async (newState, updateTrial = false) => {
       if (counter.length === 3) {
         console.log('Last request...initiating state change');
         const obj = {};
-        obj[`timings.${currentState}_${newState}`] = serverTimestamp();
         obj["counter"] = [];
         obj["currentState"] = newState;
         if (updateTrial) {
