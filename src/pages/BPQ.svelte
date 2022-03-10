@@ -8,8 +8,8 @@
     globalVars,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import MousePainScale from "../components/MousePainScale.svelte";
-  import MouseRating from "../components/MouseRating.svelte";
+  import PainScale from "../components/PainScale.svelte";
+  import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
@@ -171,12 +171,12 @@
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
         {#if switchToRatingScale}
-          <MouseRating
+          <Rating
             questionText={questions[currentQ].questionText}
             bind:rating={questions[currentQ].rating}
           />
         {:else}
-          <MousePainScale
+          <PainScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}

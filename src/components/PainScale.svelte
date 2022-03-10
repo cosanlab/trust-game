@@ -1,7 +1,7 @@
 <script>
   // Component that draws a rating scale and synchronized pain duration bar to the
   // screen
-  import { globalVars, calcPainDuration } from "../utils.js";
+  import { globalVars, calcPainDuration, round2 } from "../utils.js";
 
   // INPUTS:
   export let disabled = false;
@@ -46,30 +46,41 @@
   }
 </style>
 
-{#if agency == 0}
-  <div class="flex flex-col px-2 justify-items-center">
-    <h2 class="mb-4 text-2xl">{questionText}</h2>
+<!-- <div class="flex flex-col px-2 justify-items-center">
+  <h2 class="mb-4 text-2xl">{questionText}</h2>
     <p class="text-xl">
       {agencyText} were not able to spend any money from ${endowment}
     </p>
     <p class="mb-2 text-lg italic">0% deciding power</p>
-  </div>
+  </div> -->
+<div class="flex flex-col px-2 justify-items-center">
+  <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
+  <p class="mb-2 text-lg">
+    {agencyText} were responsible for: {Math.round(agency * 100)}%
+  </p>
+  <p class="mb-2 text-lg">
+    Cost of reducing pain: {globalVars.costConversion[cost]}x
+  </p>
+  <h2 class="my-4 text-2xl">{questionText}</h2>
+</div>
+{#if agency == 0}
+  <p class="mb-2 text-xl italic">
+    {agencyText} were not responsible for any money
+  </p>
 {:else}
   <!-- Money scale -->
   <div class="flex flex-col px-2 justify-items-center">
-    <h2 class="mb-4 text-2xl">{questionText}</h2>
     <label for="ratingScale" class="mb-2 text-xl"
-      >{agencyText} were able to spend a maximum of ${agencyEndowment} of ${endowment}</label
+      >{agencyText} would keep: ${round2(
+        endowment - propSpent * endowment
+      )}</label
     >
-    <p class="mb-2 text-lg italic">
-      {Math.round(agency * 100)}% deciding power
-    </p>
     <input
       id="ratingScale"
       name="ratingScale"
       class="w-full h-2 bg-black outline-none appearance-none slider"
       type="range"
-      step=".1"
+      step=".01"
       min="0"
       max={agencyEndowment}
       bind:value={rating}
@@ -78,7 +89,7 @@
     />
     <div class="flex flex-row justify-between">
       <p>$0</p>
-      <p>${agencyEndowment}</p>
+      <p>${agencyEndowment} of ${endowment}</p>
     </div>
   </div>
 
@@ -106,9 +117,6 @@
       <p>0s</p>
       <p class="absolute" style:margin-left={lowerBoundOffset}>5s</p>
       <p>{globalVars.maxPainDur}s</p>
-    </div>
-    <div class="mt-[-1em]">
-      <p class="text-xl">Cost: {globalVars.costConversion[cost]}x</p>
     </div>
   </div>
 {/if}

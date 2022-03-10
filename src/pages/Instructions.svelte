@@ -58,7 +58,7 @@
         per trial. During the <span class="font-bold">Post-Stimulation</span>
         phase, you can choose how much of this endowment to compensate each Decider.
         This is optional, and any money you don't spend each trial will awarded to
-        you as a bonus payment the end of the experiment. <br />
+        you as a bonus payment at the end of the experiment. <br />
       </p>
       <p class="w-1/3 mb-4 text-center">
         <span class="font-bold">Only you</span> are aware about your option to compensate

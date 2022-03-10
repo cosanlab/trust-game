@@ -57,12 +57,12 @@ export const globalVars = {
   time: 5, // display time of choice
   minPainDur: 5,
   maxPainDur: 15,
-  maxEndowment: 20,
+  maxEndowment: 5,
   maxPossiblePainReduction: 10,
-  deliveryTimeBuffer: 1000, // additional time to wait for stimulation to finish
+  deliveryTimeBuffer: 3000, // additional time to wait for stimulation to finish
   costConversion: {
-    0.25: '4',
     0.5: '2',
+    0.75: '1.5',
     1: '1'
   },
   receiverEndowmentPerTrial: 2 //  36 trials * $2/trial = $72 theoretical max
