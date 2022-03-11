@@ -35,7 +35,7 @@
         gid === 1 &&
         ((role === "decider1" && sid === 1) ||
           (role === "decider2" && sid === 2) ||
-          (role === "receiver" && side === 3))
+          (role === "receiver" && sid === 3))
       ) {
         return true;
       }
