@@ -32,7 +32,7 @@
     // groupId = 1, followed by 1, 2, 3 for D1, D2, R
     if (sid <= 3) {
       if (
-        groupId === 1 &&
+        gid === 1 &&
         ((role === "decider1" && sid === 1) ||
           (role === "decider2" && sid === 2) ||
           (role === "receiver" && side === 3))
