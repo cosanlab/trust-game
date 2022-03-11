@@ -267,15 +267,21 @@ const verifyStateChange = async (newState, updateTrial = false) => {
         throw "Document does not exist!";
       }
       // Get latest counter
-      const { counter, currentState, currentTrial } = document.data();
+      const { counter, currentTrial, trials } = document.data();
+      const maxTrials = trials.length;
       if (counter.length === 3) {
         console.log('Last request...initiating state change');
         const obj = {};
         obj["counter"] = [];
         obj["currentState"] = newState;
         if (updateTrial) {
-          console.log(`Also getting next trial`);
-          obj["currentTrial"] = currentTrial + 1;
+          if (currentTrial + 1 === maxTrials) {
+            console.log("At last trial...going to debrief")
+            obj["currentState"] = 'debrief'
+          } else {
+            console.log(`Also getting next trial`);
+            obj["currentTrial"] = currentTrial + 1;
+          }
         }
         await transaction.update(docRef, obj);
       } else {
