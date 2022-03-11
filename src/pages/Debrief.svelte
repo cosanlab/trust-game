@@ -1,19 +1,40 @@
 <script>
-  import { groupStore, userStore, saveDebrief } from "../utils";
+  import { groupStore, userStore, saveDebrief, globalVars } from "../utils";
+  import { onMount } from "svelte";
 
   import Button from "../components/Button.svelte";
   let submitted = false;
-  let age,
-    sex,
-    male,
-    female,
-    other,
-    race,
-    ethnicity,
-    nativeLang,
-    birth,
-    handed,
-    feedback;
+  let age, sex, male, female, other, race, ethnicity, nativeLang, birth, handed;
+
+  let bonus = 0;
+  const recieverTotalBonus =
+    $groupStore.trials.length * globalVars.receiverEndowmentPerTrial;
+
+  function calculateBonus() {
+    if ($userStore.role === "decider1") {
+      $groupStore.trials.forEach(
+        ({ endowment, D1_agency, D1_spent, R_D1_compensate }) => {
+          R_D1_compensate = R_D1_compensate === undefined ? 0 : R_D1_compensate;
+          bonus += endowment * D1_agency - D1_spent + R_D1_compensate;
+        }
+      );
+    } else if ($userStore.role === "decider2") {
+      $groupStore.trials.forEach(
+        ({ endowment, D2_agency, D2_spent, R_D2_compensate }) => {
+          R_D2_compensate = R_D2_compensate === undefined ? 0 : R_D2_compensate;
+          bonus += endowment * D2_agency - D2_spent + R_D2_compensate;
+        }
+      );
+    } else if ($userStore.role === "receiver") {
+      $groupStore.trials.forEach(({ R_D1_compensate, R_D2_compensate }) => {
+        R_D1_compensate = R_D1_compensate === undefined ? 0 : R_D1_compensate;
+        R_D2_compensate = R_D2_compensate === undefined ? 0 : R_D2_compensate;
+        recieverTotalBonus -= R_D1_compensate + R_D2_compensate;
+      });
+      bonus = recieverTotalBonus;
+    }
+  }
+
   async function debriefSubmit() {
     submitted = true;
     await saveDebrief({
@@ -24,18 +45,18 @@
       nativeLang,
       birth,
       handed,
-      feedback,
     });
   }
+
+  onMount(calculateBonus);
 </script>
 
-{#if submitted}
+<div class="w-full max-w-md mb-6">
   <div class="text-center">
     <h1 class="mb-4 text-2xl">Thanks for participating!</h1>
-    <p>Use the reset button in the footer to reset user data</p>
+    <p class="italic">You earned a bonus of: ${Math.round(bonus)}</p>
   </div>
-{:else}
-  <div class="w-full max-w-md mb-6">
+  {#if !submitted}
     <form
       class="px-8 pt-6 pb-8 mb-4 bg-white rounded shadow-md"
       on:submit|preventDefault={debriefSubmit}
@@ -67,7 +88,7 @@
           >
           <option value="male">Male</option>
           <option value="female">Female</option>
-          <option value="female">Female</option>
+          <option value="other">Other</option>
         </select>
       </div>
       <div class="mb-4">
@@ -159,24 +180,9 @@
           <option value="Left">Left-Handed</option>
         </select>
       </div>
-      <div class="mb-6">
-        <label
-          class="block mb-2 text-sm font-bold text-gray-700"
-          for="feedback"
-        >
-          Feedback
-        </label>
-        <input
-          class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          id="feedback"
-          type="text"
-          placeholder="Let the Experimenters know if you have any feedback!"
-          bind:value={feedback}
-        />
-      </div>
       <div class="text-center">
         <Button type={"submit"} color={"blue"}>Submit</Button>
       </div>
     </form>
-  </div>
-{/if}
+  {/if}
+</div>
