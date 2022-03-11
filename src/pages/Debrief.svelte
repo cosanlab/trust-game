@@ -7,7 +7,7 @@
   let age, sex, male, female, other, race, ethnicity, nativeLang, birth, handed;
 
   let bonus = 0;
-  const recieverTotalBonus =
+  let recieverTotalBonus =
     $groupStore.trials.length * globalVars.receiverEndowmentPerTrial;
 
   function calculateBonus() {
