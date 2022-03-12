@@ -13,7 +13,7 @@
   export let cost;
 
   $: agencyText = questionType === "other" ? "They" : "You";
-  $: agencyEndowment = Math.round(agency * endowment);
+  $: agencyEndowment = agency * endowment;
 
   let painDur, propSpent, painBarWidth;
   // For the painbar UI, what % containing div do we want to draw the vertical bar of 5s
@@ -24,7 +24,7 @@
 
   $: {
     const { painDurationRounded, proportionOfEndowmentSpent } =
-      calcPainDuration(rating, cost, endowment);
+      calcPainDuration(rating, cost, agencyEndowment);
     painDur = painDurationRounded;
     propSpent = proportionOfEndowmentSpent;
     painBarWidth = `${(painDur / globalVars.maxPainDur) * 100}%`;
@@ -72,7 +72,7 @@
   <div class="flex flex-col px-2 justify-items-center">
     <label for="ratingScale" class="mb-2 text-xl"
       >{agencyText} would keep: ${round2(
-        endowment - propSpent * endowment
+        agencyEndowment - propSpent * agencyEndowment
       )}</label
     >
     <input
