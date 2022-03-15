@@ -4,7 +4,6 @@
 
   import Button from "../components/Button.svelte";
   let submitted = false;
-  let age, sex, male, female, other, race, ethnicity, nativeLang, birth, handed;
 
   let bonus = 0;
   let recieverTotalBonus =
@@ -35,17 +34,22 @@
     }
   }
 
-  async function debriefSubmit() {
+  async function debriefSubmit(e) {
+    const formData = new FormData(e.target);
+
     submitted = true;
-    await saveDebrief({
-      age,
-      sex,
-      ethnicity,
-      race,
-      nativeLang,
-      birth,
-      handed,
-    });
+    const data = {
+      age: formData.get("age"),
+      sex: formData.get("sex"),
+      ethnicity: formData.get("ethnicity"),
+      race: formData.get("race"),
+      nativeLang: formData.get("nativeLang"),
+      birth: formData.get("birth"),
+      handed: formData.get("handed"),
+      bonus: bonus,
+    };
+
+    await saveDebrief(data);
   }
 
   onMount(calculateBonus);
@@ -69,8 +73,8 @@
           class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
           id="age"
           type="text"
+          name="age"
           placeholder="Type your age in years"
-          bind:value={age}
         />
       </div>
       <div class="mb-4">
@@ -80,7 +84,6 @@
         <select
           id="sex"
           name="sex"
-          bind:value={sex}
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
           <option value=""
@@ -98,7 +101,6 @@
         <select
           id="race"
           name="race"
-          bind:value={race}
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
           <option value=""
@@ -126,7 +128,6 @@
         <select
           id="ethnicity"
           name="ethnicity"
-          bind:value={ethnicity}
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
           <option value=""
@@ -147,8 +148,8 @@
           class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
           id="nativeLang"
           type="text"
+          name="nativeLang"
           placeholder="What is your native language"
-          bind:value={nativeLang}
         />
       </div>
       <div class="mb-6">
@@ -159,8 +160,8 @@
           class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
           id="birth"
           type="text"
+          name="birth"
           placeholder="Type your birth date in the format DD/MM/YYYY"
-          bind:value={birth}
         />
       </div>
       <div class="mb-4">
@@ -170,7 +171,6 @@
         <select
           id="handed"
           name="handed"
-          bind:value={handed}
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
           <option value=""
