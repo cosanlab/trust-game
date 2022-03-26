@@ -350,8 +350,8 @@ export const saveBPQData = async (questions) => {
         data["trials"][currentTrial]["D2_D1_close"] =
           questions[4].rating;
       } else if (role === 'receiver') {
-        data["trials"][currentTrial]["R_D1"] = questions[0].rating;
-        data["trials"][currentTrial]["R_D2"] = questions[2].rating;
+        data["trials"][currentTrial]["R_D1"] = questions[0][0].rating;
+        data["trials"][currentTrial]["R_D2"] = questions[0][1].rating;
       } else {
         throw `${role} is an unknown role`
       }

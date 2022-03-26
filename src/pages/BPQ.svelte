@@ -93,39 +93,45 @@
       },
     ];
   } else {
+    // For Receiver we show expectation and actual questions for both deciders
+    // simulatenously
     questions = [
-      {
-        questionText: `How much did you expect ${$groupStore.D1_name} to spend?`,
-        rating: r_d1,
-        agency: agency1,
-        questionType: "other",
-        endowment: endowment,
-        cost: cost,
-      },
-      {
-        questionText: `${$groupStore.D1_name} actually spent:`,
-        rating: actualChoice1,
-        agency: agency1,
-        questionType: "other",
-        endowment: endowment,
-        cost: cost,
-      },
-      {
-        questionText: `How much did you expect ${$groupStore.D2_name} to spend?`,
-        rating: r_d2,
-        agency: agency2,
-        questionType: "other",
-        endowment: endowment,
-        cost: cost,
-      },
-      {
-        questionText: `${$groupStore.D2_name} actually spent:`,
-        rating: actualChoice2,
-        agency: agency2,
-        questionType: "other",
-        endowment: endowment,
-        cost: cost,
-      },
+      [
+        {
+          questionText: `How much did you expect ${$groupStore.D1_name} to spend?`,
+          rating: r_d1,
+          agency: agency1,
+          questionType: "other",
+          endowment: endowment,
+          cost: cost,
+        },
+        {
+          questionText: `How much did you expect ${$groupStore.D2_name} to spend?`,
+          rating: r_d2,
+          agency: agency2,
+          questionType: "other",
+          endowment: endowment,
+          cost: cost,
+        },
+      ],
+      [
+        {
+          questionText: `${$groupStore.D1_name} actually spent:`,
+          rating: actualChoice1,
+          agency: agency1,
+          questionType: "other",
+          endowment: endowment,
+          cost: cost,
+        },
+        {
+          questionText: `${$groupStore.D2_name} actually spent:`,
+          rating: actualChoice2,
+          agency: agency2,
+          questionType: "other",
+          endowment: endowment,
+          cost: cost,
+        },
+      ],
     ];
   }
 
@@ -174,6 +180,27 @@
             questionText={questions[currentQ].questionText}
             bind:rating={questions[currentQ].rating}
           />
+        {:else if $userStore.role === "receiver"}
+          <PainScale
+            bind:rating={questions[currentQ][0].rating}
+            questionText={questions[currentQ][0].questionText}
+            endowment={questions[currentQ][0].endowment}
+            cost={questions[currentQ][0].cost}
+            agency={questions[currentQ][0].agency}
+            questionType={questions[currentQ][0].questionType}
+            disabled={disableInput}
+          />
+          <hr class="w-full my-8 border-black border-dashed" />
+          <PainScale
+            bind:rating={questions[currentQ][1].rating}
+            questionText={questions[currentQ][1].questionText}
+            endowment={questions[currentQ][1].endowment}
+            cost={questions[currentQ][1].cost}
+            agency={questions[currentQ][1].agency}
+            questionType={questions[currentQ][1].questionType}
+            disabled={disableInput}
+          />
+          <hr class="w-full my-4 border-white" />
         {:else}
           <PainScale
             bind:rating={questions[currentQ].rating}

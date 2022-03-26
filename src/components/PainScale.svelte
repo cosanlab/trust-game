@@ -39,20 +39,31 @@
 
 <style>
   #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 border-black border rounded-full bg-yellow-300 border-solid;
+    @apply appearance-none h-6 w-6 rounded-full border-solid;
   }
   #painDuration::-webkit-slider-thumb {
     @apply appearance-none;
   }
+  .enabled {
+    @apply bg-black border;
+  }
+  .enabled::-webkit-slider-thumb {
+    @apply bg-yellow-300 border-black;
+  }
+  .disabled {
+    @apply bg-gray-500;
+  }
+  .disabled::-webkit-slider-thumb {
+    @apply bg-yellow-500 border-gray-500 border-2;
+  }
+  .enabled-bar {
+    @apply bg-yellow-300;
+  }
+  .disabled-bar {
+    @apply bg-yellow-400;
+  }
 </style>
 
-<!-- <div class="flex flex-col px-2 justify-items-center">
-  <h2 class="mb-4 text-2xl">{questionText}</h2>
-    <p class="text-xl">
-      {agencyText} were not able to spend any money from ${endowment}
-    </p>
-    <p class="mb-2 text-lg italic">0% deciding power</p>
-  </div> -->
 <div class="flex flex-col px-2 justify-items-center">
   <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
   <p class="mb-2 text-lg">
@@ -79,6 +90,8 @@
       id="ratingScale"
       name="ratingScale"
       class="w-full h-2 bg-black outline-none appearance-none slider"
+      class:disabled
+      class:enabled={!disabled}
       type="range"
       step=".01"
       min="0"
@@ -97,7 +110,9 @@
   <div class="flex flex-col px-2 justify-items-center">
     <label for="painDuration" class="text-xl">Pain Duration: {painDur}s</label>
     <div
-      class="relative flex items-center w-full h-6 border-2 border-black border-solid justify-items-start"
+      class="relative flex items-center w-full h-6 border-2 border-solid justify-items-start"
+      class:border-black={!disabled}
+      class:border-gray-500={disabled}
     >
       <div
         class="absolute w-1 h-6 bg-black"
@@ -107,6 +122,8 @@
         type="range"
         id="painDuration"
         name="painDuration"
+        class:disabled-bar={disabled}
+        class:enabled-bar={!disabled}
         style:width={painBarWidth}
         class="h-4 bg-yellow-300 border-none outline-none appearance-none"
         min="0"
