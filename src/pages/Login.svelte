@@ -22,39 +22,39 @@
   // from trying to do the experiment
 
   function verifySubId() {
-    let gid = parseInt(groupId);
-    let sid = parseInt(subId);
+    // let gid = parseInt(groupId);
+    // let sid = parseInt(subId);
 
-    // For test groups skip verification
-    if (gid === 0) return true;
+    // // For test groups skip verification
+    // if (gid === 0) return true;
 
-    // For subIds < 3 make sure the role assignments are correct
-    // groupId = 1, followed by 1, 2, 3 for D1, D2, R
-    if (sid <= 3) {
-      if (
-        gid === 1 &&
-        ((role === "decider1" && sid === 1) ||
-          (role === "decider2" && sid === 2) ||
-          (role === "receiver" && sid === 3))
-      ) {
-        return true;
-      }
-    }
-    // For subIds > 3 make sure the role assignments are correct
-    // D1's id should be divisible by 3 with a remainder of 1 e.g. sid = 4, 7, 10, etc
-    // D2's id should be divisible by 3 with a remainder of 2 e.g. sid = 5, 8, 11, etc
-    // R's id should be divisible by 3 with a remainder of 0 e.g. sid = 6, 9, 12, etc
-    if (sid > 3) {
-      if (
-        (role === "decider1" && 3 % sid === 1) ||
-        (role === "decider2" && 3 % sid === 2) ||
-        (role === "receiver" && 3 % sid === 0)
-      ) {
-        return true;
-      }
-    }
+    // // For subIds < 3 make sure the role assignments are correct
+    // // groupId = 1, followed by 1, 2, 3 for D1, D2, R
+    // if (sid <= 3) {
+    //   if (
+    //     gid === 1 &&
+    //     ((role === "decider1" && sid === 1) ||
+    //       (role === "decider2" && sid === 2) ||
+    //       (role === "receiver" && sid === 3))
+    //   ) {
+    //     return true;
+    //   }
+    // }
+    // // For subIds > 3 make sure the role assignments are correct
+    // // D1's id should be divisible by 3 with a remainder of 1 e.g. sid = 4, 7, 10, etc
+    // // D2's id should be divisible by 3 with a remainder of 2 e.g. sid = 5, 8, 11, etc
+    // // R's id should be divisible by 3 with a remainder of 0 e.g. sid = 6, 9, 12, etc
+    // if (sid > 3) {
+    //   if (
+    //     (role === "decider1" && 3 % sid === 1) ||
+    //     (role === "decider2" && 3 % sid === 2) ||
+    //     (role === "receiver" && 3 % sid === 0)
+    //   ) {
+    //     return true;
+    //   }
+    // }
     // Default is to fail verification
-    return false;
+    return true;
   }
 
   async function login() {
