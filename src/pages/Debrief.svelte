@@ -39,12 +39,14 @@
 
     submitted = true;
     const data = {
+      name: formData.get("name"),
       age: formData.get("age"),
-      sex: formData.get("sex"),
-      ethnicity: formData.get("ethnicity"),
-      race: formData.get("race"),
-      nativeLang: formData.get("nativeLang"),
       birth: formData.get("birth"),
+      birthCity: formData.get("birthCity"),
+      nativeLang: formData.get("nativeLang"),
+      sex: formData.get("sex"),
+      race: formData.get("race"),
+      ethnicity: formData.get("ethnicity"),
       handed: formData.get("handed"),
       bonus: bonus,
     };
@@ -66,6 +68,18 @@
       on:submit|preventDefault={debriefSubmit}
     >
       <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="name">
+          Name
+        </label>
+        <input
+          class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          id="name"
+          type="text"
+          name="name"
+          placeholder="Type your FULL name (including middle name)"
+        />
+      </div>
+      <div class="mb-4">
         <label class="block mb-2 text-sm font-bold text-gray-700" for="age">
           Age
         </label>
@@ -78,6 +92,48 @@
         />
       </div>
       <div class="mb-4">
+        <label class="block mb-2 text-sm font-bold text-gray-700" for="birth">
+          Birth Date
+        </label>
+        <input
+          type="date"
+          name="birth"
+          id="birth"
+          min="1988-01-01"
+          class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          for="birthCity"
+          class="block mb-2 text-sm font-bold text-gray-700"
+        >
+          Birth Location
+        </label>
+        <input
+          class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          id="birthCity"
+          type="text"
+          name="birthCity"
+          placeholder="City, state, country (like in passport/visa)"
+        />
+      </div>
+      <div class="mb-4">
+        <label
+          class="block mb-2 text-sm font-bold text-gray-700"
+          for="nativeLang"
+        >
+          Native Language
+        </label>
+        <input
+          class="w-full px-3 py-2 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
+          id="nativeLang"
+          type="text"
+          name="nativeLang"
+          placeholder="What is your native language"
+        />
+      </div>
+      <div class="mb-4">
         <label class="block mb-2 text-sm font-bold text-gray-700" for="sex">
           Gender
         </label>
@@ -86,9 +142,7 @@
           name="sex"
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
-          <option value=""
-            >Select the Gender that most accurately describes you</option
-          >
+          <option value="">--gender assigned at birth--</option>
           <option value="male">Male</option>
           <option value="female">Female</option>
           <option value="other">Other</option>
@@ -103,9 +157,7 @@
           name="race"
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
-          <option value=""
-            >Select the race that most accurately describes you</option
-          >
+          <option value="">--choose your race--</option>
           <option value="Asian">Asian / Asian-American</option>
           <option value="Black">Black / African-American</option>
           <option value="Native-American"
@@ -130,39 +182,10 @@
           name="ethnicity"
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
-          <option value=""
-            >Select the Ethnicity that most accurately describes you</option
-          >
+          <option value="">--choose your ethnicity--</option>
           <option value="Hispanic">Hispanic</option>
           <option value="Not-Hispanic">Not Hispanic</option>
         </select>
-      </div>
-      <div class="mb-6">
-        <label
-          class="block mb-2 text-sm font-bold text-gray-700"
-          for="nativeLang"
-        >
-          Native Language
-        </label>
-        <input
-          class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          id="nativeLang"
-          type="text"
-          name="nativeLang"
-          placeholder="What is your native language"
-        />
-      </div>
-      <div class="mb-6">
-        <label class="block mb-2 text-sm font-bold text-gray-700" for="birth">
-          Birth Date
-        </label>
-        <input
-          class="w-full px-3 py-2 mb-3 leading-tight text-gray-700 border rounded shadow appearance-none focus:outline-none focus:shadow-outline"
-          id="birth"
-          type="text"
-          name="birth"
-          placeholder="Type your birth date in the format DD/MM/YYYY"
-        />
       </div>
       <div class="mb-4">
         <label class="block mb-2 text-sm font-bold text-gray-700" for="handed">
@@ -173,9 +196,7 @@
           name="handed"
           class="w-full px-3 py-2 leading-tight border rounded shadow focus:outline-none focus:shadow-outline"
         >
-          <option value=""
-            >Select the Handedness that most accurately describes you</option
-          >
+          <option value="">--choose your dominant hand--</option>
           <option value="Right">Right-Handed</option>
           <option value="Left">Left-Handed</option>
         </select>
