@@ -1,3 +1,15 @@
+<!-- #TODO: Single outcome screen that shows how much each person made based upon the
+previous phase. Only rendering differences are in the amount of money. 
+If accept:
+Investor money earned = endowment - offer 
+Trustee money earned = offer
+If reject:
+Both get 0
+
+Also need to render rating scales, with the question wording being different:
+Trustee: how angry/satisfied
+Investor: how guilty/satisfied
+-->
 <script>
   import { createEventDispatcher } from "svelte";
   import { userStore, groupStore, saveAPQData, globalVars } from "../utils.js";

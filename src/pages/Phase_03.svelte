@@ -1,3 +1,5 @@
+<!-- #TODO: update so that investor sees a "waiting for trustee" screen and the trustee
+see's a binary choice to accept/reject -->
 <script>
   import { createEventDispatcher, onMount } from "svelte";
   import { userStore, groupStore, globalVars, roundHalf } from "../utils.js";

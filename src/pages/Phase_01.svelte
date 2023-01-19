@@ -1,3 +1,5 @@
+<!-- #TODO: Update this so both roles see the *same* information and it auto-advances to
+the next phase based on a timer of N seconds using setTimeout() -->
 <script>
   import { createEventDispatcher } from "svelte";
   import {

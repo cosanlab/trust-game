@@ -1,3 +1,6 @@
+<!-- #TODO: Borrow conditional logic from Phase_01.svelte, to render an offer rating
+scale for the investor and expectation rating scale for the receiver. Really the only UI
+differences are in the phrasing of the question since the rating scale is actually identical-->
 <script>
   import { createEventDispatcher } from "svelte";
   import { userStore, groupStore, roundHalf } from "../utils.js";
