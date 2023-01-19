@@ -12,7 +12,7 @@
   const dispatch = createEventDispatcher();
 
   function goToDelivery() {
-    dispatch("to-delivery");
+    dispatch("to-phase-03");
   }
 </script>
 

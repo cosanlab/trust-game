@@ -22,10 +22,10 @@
   // app pages and components
   import Login from "./pages/Login.svelte";
   import Instructions from "./pages/Instructions.svelte";
-  import Pre_Questions from "./pages/BPQ.svelte";
-  import Thermode_Placement from "./pages/Thermode_Placement.svelte";
-  import Delivery from "./pages/Delivery.svelte";
-  import Post_Questions from "./pages/APQ.svelte";
+  import Phase_01 from "./pages/Phase_01.svelte";
+  import Phase_02 from "./pages/Phase_02.svelte";
+  import Phase_03 from "./pages/Phase_03.svelte";
+  import Phase_04 from "./pages/Phase_04.svelte";
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
   import Footer from "./components/Footer.svelte";
@@ -135,17 +135,15 @@ determine what page a user should be on. -->
     <!-- Main experiment loop -->
     <StatusHeader />
     {#if $groupStore.currentState === "instructions"}
-      <Instructions on:to-pre_questions={() => updateState("pre_questions")} />
-    {:else if $groupStore.currentState === "pre_questions"}
-      <Pre_Questions
-        on:to-thermode_placement={() => updateState("thermode_placement")}
-      />
-    {:else if $groupStore.currentState === "thermode_placement"}
-      <Thermode_Placement on:to-delivery={() => updateState("delivery")} />
-    {:else if $groupStore.currentState === "delivery"}
-      <Delivery on:to-post_questions={() => updateState("post_questions")} />
-    {:else if $groupStore.currentState === "post_questions"}
-      <Post_Questions on:get-next-trial={getNextTrial} />
+      <Instructions on:to-phase-01={() => updateState("phase-01")} />
+    {:else if $groupStore.currentState === "phase-01"}
+      <Phase_01 on:to-phase-02={() => updateState("phase-02")} />
+    {:else if $groupStore.currentState === "phase-02"}
+      <Phase_02 on:to-phase-03={() => updateState("phase-03")} />
+    {:else if $groupStore.currentState === "phase-03"}
+      <Phase_03 on:to-phase-04={() => updateState("phase-04")} />
+    {:else if $groupStore.currentState === "phase-04"}
+      <Phase_04 on:get-next-trial={getNextTrial} />
     {:else if $groupStore.currentState === "debrief"}
       <Debrief />
     {/if}

@@ -14,10 +14,10 @@
   let submitted = false;
   const dispatch = createEventDispatcher();
 
-  async function goToPre_Questions() {
+  async function goto_phase_01() {
     submitted = true;
     await saveName($userStore.name);
-    dispatch("to-pre_questions");
+    dispatch("to-phase-01");
   }
 </script>
 
@@ -67,6 +67,6 @@
         experiment.
       </p>
     {/if}
-    <Button on:click={goToPre_Questions}>Next</Button>
+    <Button on:click={goto_phase_01}>Next</Button>
   </div>
 {/if}

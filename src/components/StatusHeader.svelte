@@ -4,13 +4,13 @@
   import { groupStore } from "../utils";
 
   const stateDisplay = [
-    { name: "pre_questions", display: "Pre-Stimulation" },
+    { name: "phase-01", display: "Investor gets endowment" },
     {
-      name: "thermode_placement",
-      display: "Thermode Placement",
+      name: "phase-02",
+      display: "Investor makes offer",
     },
-    { name: "delivery", display: "Stimulation" },
-    { name: "post_questions", display: "Post-Stimulation" },
+    { name: "phase-03", display: "Trustee accepts/rejects offer" },
+    { name: "phase-04", display: "Trial Outcome" },
   ];
 </script>
 

@@ -9,13 +9,7 @@
     globalVars.deliveryTimeBuffer;
 
   function goToPost_Questions() {
-    dispatch("to-post_questions");
-  }
-
-  if ($userStore.role === "receiver") {
-    onMount(() => {
-      setTimeout(goToPost_Questions, painDur);
-    });
+    dispatch("to-phase-04");
   }
 </script>
 

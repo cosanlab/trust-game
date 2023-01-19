@@ -138,7 +138,7 @@
   async function goToThermode_Placement() {
     submitted = true;
     await saveBPQData(questions);
-    dispatch("to-thermode_placement");
+    dispatch("to-phase-02");
   }
 
   async function getNextQuestion() {
@@ -180,7 +180,7 @@
             questionText={questions[currentQ].questionText}
             bind:rating={questions[currentQ].rating}
           />
-        {:else if $userStore.role === "receiver"}
+        {:else if $userStore.role === "investor"}
           <PainScale
             bind:rating={questions[currentQ][0].rating}
             questionText={questions[currentQ][0].questionText}
