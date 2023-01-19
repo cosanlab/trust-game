@@ -10,9 +10,9 @@ This is a webapp that runs a mock interactive Trust Game between 2 people. It's 
 
 ## Trial Phase schematic
 
-1. Investor and Trustee both see endowment information
-2. Investor makes offer "rating" and Trustee makes expectation "rating"
-3. Trustee make binary accept or reject choice
+1. Investor receives endowment and makes decision; Trustee sees endowment make prediction rating.
+2. Investor makes 1st order expectation rating; Trustee make prediction rating and 2nd order expectation rating
+3. Trustee makes decision
 4. Both see trial outcome
 
 

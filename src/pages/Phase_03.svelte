@@ -1,5 +1,17 @@
-<!-- #TODO: update so that investor sees a "waiting for trustee" screen and the trustee
-see's a binary choice to accept/reject -->
+<!-- #TODO: update so that investor sees a "waiting for trustee" screen. Trustee makes
+rating to give back on the *calculated* number scale
+
+
+Data needed:
+- Investor decision in phase 1
+- Multiplier -> globals in utils.js
+
+Data stored/modified:
+- Trustee decision
+- Trustee earned = offer from phase 1 * multiplier - returned
+- Investor earned = kept in phase 1 + returned by Trustee (after multiplier)
+
+-->
 <script>
   import { createEventDispatcher, onMount } from "svelte";
   import { userStore, groupStore, globalVars, roundHalf } from "../utils.js";

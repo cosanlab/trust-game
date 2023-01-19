@@ -3,9 +3,9 @@
   // update dynamically
 
   const stateDisplay = [
-    "Investor gets endowment",
     "Investor makes offer",
-    "Trustee accepts/rejects offer",
+    "Expectation ratings",
+    "Trustee makes return decision",
     "Trial Outcome",
   ];
 </script>

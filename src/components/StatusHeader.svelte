@@ -4,12 +4,12 @@
   import { groupStore } from "../utils";
 
   const stateDisplay = [
-    { name: "phase-01", display: "Investor gets endowment" },
+    { name: "phase-01", display: "Investor makes offer" },
     {
       name: "phase-02",
-      display: "Investor makes offer",
+      display: "Expectation ratings",
     },
-    { name: "phase-03", display: "Trustee accepts/rejects offer" },
+    { name: "phase-03", display: "Trustee makes return decision" },
     { name: "phase-04", display: "Trial Outcome" },
   ];
 </script>

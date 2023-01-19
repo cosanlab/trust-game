@@ -1,5 +1,22 @@
-<!-- #TODO: Update this so both roles see the *same* information and it auto-advances to
-the next phase based on a timer of N seconds using setTimeout() -->
+<!-- #TODO: Update this so Investor sees endowment and makes a decision to share. The
+slider should show BOTH the *calculated* amount as well as the *original* amount:
+- original == whatever the endowment is in the database 
+- calculate = original * multiplier
+
+Trustee sees the same, but makes a prediction about how much they think the Investor
+will give them.
+
+So only real logic in UI is the difference in question phrasing
+
+
+Data needed:
+- Investor Endowment -> DB
+- Multiplier -> globals in utils.js
+
+Data stored/modified:
+- Investor choice
+- Trustee prediction
+-->
 <script>
   import { createEventDispatcher } from "svelte";
   import {

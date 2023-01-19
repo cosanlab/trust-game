@@ -1,14 +1,23 @@
 <!-- #TODO: Single outcome screen that shows how much each person made based upon the
-previous phase. Only rendering differences are in the amount of money. 
-If accept:
-Investor money earned = endowment - offer 
-Trustee money earned = offer
-If reject:
-Both get 0
+previous phase in addition to the expectation outcomes. Only rendering differences are:
 
-Also need to render rating scales, with the question wording being different:
+- the amount of money based on role
+- phase 2's expectation ratings 
+
+Check with Luke:
+We could also need to render rating scales, with the question wording being different:
 Trustee: how angry/satisfied
 Investor: how guilty/satisfied
+
+Data needed:
+- Investor expectation from phase 2 -> DB
+- Trustee expectation from phase 2 -> DB
+- Investor earned from phase 3 -> DB
+- Trustee earned from phase 3 -> DB
+
+Data stored/modified:
+- Investor anger/satisfcation
+- Trustee guilt/satisfcation
 -->
 <script>
   import { createEventDispatcher } from "svelte";
