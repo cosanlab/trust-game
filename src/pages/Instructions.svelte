@@ -27,13 +27,14 @@
   <div class="flex flex-col items-center">
     <h1 class="mb-4 text-2xl">Instructions for Part 2</h1>
     <p class="w-1/2 mb-4 text-left">
-      In this part of the experiment, a random selection of <span
-        class="font-bold">{$groupStore.trials.length} decisions</span
+      In this experiment demo, a random selection of <span class="font-bold"
+        >{$groupStore.trials.length} trials</span
       >
-      made by Deciders in part 1 will be enacted on the Receiver. Each trial will
-      progress through several phases indicated by the diagram below:
+      of a Trust Game will be played by you and your partner. Each trial will progress
+      through several phases indicated by the diagram below:
     </p>
     <StatusHeaderExample />
+    <!-- #TODO: Update instructions text as needed to clarify phases above -->
     <p class="w-1/2 my-4 text-left">
       Each trial will begin by asking you some questions during the <span
         class="font-bold">Pre-Stimulation</span
@@ -48,7 +49,7 @@
       <span class="font-bold">{$groupStore.trials.length} trials</span>.
     </p>
 
-    {#if $userStore.role === "receiver"}
+    {#if $userStore.role === "trustee"}
       <hr class="w-1/2 my-2 border border-black border-dashed" />
       <p class="w-1/2 mt-4 text-left">
         As the Receiver, you will have the opportunity to compensate each

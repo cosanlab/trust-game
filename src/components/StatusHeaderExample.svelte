@@ -3,13 +3,10 @@
   // update dynamically
 
   const stateDisplay = [
-    { name: "pre_questions", display: "Pre-Stimulation" },
-    {
-      name: "thermode_placement",
-      display: "Thermode Placement",
-    },
-    { name: "delivery", display: "Stimulation" },
-    { name: "post_questions", display: "Post-Stimulation" },
+    "Investor gets endowment",
+    "Investor makes offer",
+    "Trustee accepts/rejects offer",
+    "Trial Outcome",
   ];
 </script>
 
@@ -28,9 +25,9 @@
 
 <div class="flex">
   <ul class="steps">
-    {#each stateDisplay as { name, display }}
+    {#each stateDisplay as name}
       <li class="step">
-        {display}
+        {name}
       </li>
     {/each}
   </ul>
