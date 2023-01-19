@@ -13,15 +13,16 @@ import { writable, get } from 'svelte/store';
 
 // Copy and paste your firebase config here:
 const firebaseConfig = {
-  apiKey: "AIzaSyD9udIO5ap006xab7tb2bZ6s5C7Kc4m7YM",
-  authDomain: "max-thesis.firebaseapp.com",
-  projectId: "max-thesis",
-  storageBucket: "max-thesis.appspot.com",
-  messagingSenderId: "658200948450",
-  appId: "1:658200948450:web:15a5eff940daf56b3378bb"
+  apiKey: "AIzaSyCUQMcJo6brxVX2Jf7r0Hublw7SyLj2xBY",
+  authDomain: "trust-game-844b3.firebaseapp.com",
+  projectId: "trust-game-844b3",
+  storageBucket: "trust-game-844b3.appspot.com",
+  messagingSenderId: "841005706064",
+  appId: "1:841005706064:web:3f33629cbe2594247e9a55"
 };
 
-initializeApp(firebaseConfig);
+// Initialize firebase
+const app = initializeApp(firebaseConfig);
 
 // Export database variables for use elsewhere in the app
 // Exporting them from this file after initializing the database connection above
