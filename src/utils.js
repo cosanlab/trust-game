@@ -257,7 +257,7 @@ const verifyStateChange = async (newState, updateTrial = false) => {
       // Get latest counter
       const { counter, currentTrial, trials } = document.data();
       const maxTrials = trials.length;
-      if (counter.length === 3) {
+      if (counter.length === 2) {
         console.log('Last request...initiating state change');
         const obj = {};
         obj["counter"] = [];
@@ -273,7 +273,7 @@ const verifyStateChange = async (newState, updateTrial = false) => {
         }
         await transaction.update(docRef, obj);
       } else {
-        console.log(`Still waiting for ${3 - counter.length} requests...`);
+        console.log(`Still waiting for ${2 - counter.length} requests...`);
       }
     });
   } catch (error) {
