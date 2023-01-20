@@ -8,7 +8,6 @@ will give them.
 
 So only real logic in UI is the difference in question phrasing
 
-
 Data needed:
 - Investor Endowment -> DB
 - Multiplier -> globals in utils.js
@@ -78,44 +77,14 @@ Data stored/modified:
         questionType: "self",
         endowment: endowment,
       },
-      {
-        questionText: `You actually spent:`,
-        rating: selfChoice,
-        questionType: "self",
-        endowment: endowment,
-      },
-      {
-        questionText: `How much did you expect ${otherName} to spend?`,
-        rating: d_t,
-        questionType: "other",
-        endowment: endowment,
-      },
-      {
-        questionText: `${otherName} actually spent:`,
-        rating: otherChoice,
-        questionType: "other",
-        endowment: endowment,
-      },
-      {
-        questionText: `How close do you feel to ${otherName}?`,
-        rating: closeness,
-      },
     ];
   } else {
-    // For Trustee we show expectation and actual questions simultaneously
+    // For Trustee we ask how much they expect the investor to share with them
     questions = [
       [
         {
-          questionText: `How much did you expect ${$groupStore.I_name} to spend?`,
-          rating: r_d1,
-          questionType: "other",
-          endowment: endowment,
-        },
-      ],
-      [
-        {
-          questionText: `${$groupStore.I_name} actually spent:`,
-          rating: actualChoice1,
+          questionText: `How much do you expect ${$groupStore.I_name} to give to you?`,
+          rating: d_t,
           questionType: "other",
           endowment: endowment,
         },
@@ -181,13 +150,13 @@ Data stored/modified:
           />
           <hr class="w-full my-8 border-black border-dashed" />
           <hr class="w-full my-4 border-white" />
-        {:else}
-          <!-- $userStore.role === "trustee" -->
+        {:else if $userStore.role === "trustee"}
+          <!-- Q from WASI: why need to index when trustee but no need for investor...? -->
           <PainScale
-            bind:rating={questions[currentQ].rating}
-            questionText={questions[currentQ].questionText}
-            endowment={questions[currentQ].endowment}
-            questionType={questions[currentQ].questionType}
+            bind:rating={questions[currentQ][0].rating}
+            questionText={questions[currentQ][0].questionText}
+            endowment={questions[currentQ][0].endowment}
+            questionType={questions[currentQ][0].questionType}
             disabled={disableInput}
           />
         {/if}
