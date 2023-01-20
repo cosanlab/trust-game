@@ -49,18 +49,12 @@ Data stored/modified:
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
 
-  // Just for deciders
-  const selfChoice =
-    $userStore.role === "investor" ? actualChoice1 : actualChoice2;
-  const otherChoice =
-    $userStore.role === "investor" ? actualChoice2 : actualChoice1;
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
   let i_r = 0.5 * endowment; // investor's rating
   let t_r = 0.5 * endowment; // trustee's rating
-  let closeness = 50; // decider closeness
 
   if ($userStore.role == "investor") {
     questions = [
@@ -98,24 +92,9 @@ Data stored/modified:
       await goto_phase_02();
     } else {
       currentQ = currentQ + 1;
-      // If they're at the 2nd or 4th, we're just showing them a choice, no rating
-      if (currentQ === 1 || currentQ === 3) {
-        // showButton = false;
-        disableInput = true;
-        // setTimeout(getNextQuestion, displayTime);
-      } else if (
-        // Otherwise for the last question for deciders we're using a 100pt scale
-        $userStore.role === "investor" &&
-        currentQ === questions.length - 1
-      ) {
-        showButton = true;
-        switchToRatingScale = true;
-        disableInput = false;
-      } else {
-        showButton = true;
-        switchToRatingScale = false;
-        disableInput = false;
-      }
+      showButton = true;
+      switchToRatingScale = false;
+      disableInput = false;
     }
   }
 </script>
