@@ -43,9 +43,6 @@ Data stored/modified:
   let questions;
 
   // GET TRIAL DATA
-  let actualChoice1 = 0;
-  let actualChoice2 = 0;
-
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
 
