@@ -305,7 +305,7 @@ export const saveName = async (name) => {
 };
 
 // Save trial data for BPQ questions handling concurrent writes
-export const saveBPQData = async (questions) => {
+export const saveQData = async (questions) => {
   const { groupId } = get(groupStore);
   const { role } = get(userStore);
   const docRef = doc(db, 'groups', groupId);
@@ -319,24 +319,16 @@ export const saveBPQData = async (questions) => {
       // Get the latest trial and current trial
       const { trials, currentTrial } = document.data();
       const data = { "trials": trials };
-      if (role === "decider1") {
-        data["trials"][currentTrial]["D1_R"] = questions[0].rating;
-        data["trials"][currentTrial]["D1_D2"] = questions[2].rating;
-        data["trials"][currentTrial]["D1_D2_close"] =
-          questions[4].rating;
-      } else if (role === "decider2") {
-        data["trials"][currentTrial]["D2_R"] = questions[0].rating;
-        data["trials"][currentTrial]["D2_D1"] = questions[2].rating;
-        data["trials"][currentTrial]["D2_D1_close"] =
-          questions[4].rating;
-      } else if (role === 'receiver') {
-        data["trials"][currentTrial]["R_D1"] = questions[0][0].rating;
-        data["trials"][currentTrial]["R_D2"] = questions[0][1].rating;
+      console.log("data", data)
+      if (role === "investor") {
+          data["trials"][currentTrial]["I_R"] = questions[0].rating;
+      } else if (role === 'trustee') {
+          data["trials"][currentTrial]["T_R"] = questions[0].rating;
       } else {
         throw `${role} is an unknown role`;
       }
       await transaction.update(docRef, data);
-      console.log(`Successfully saved BPQ data for: ${role}`);
+      console.log(`Successfully saved Q data for: ${role}`);
     });
   } catch (error) {
     console.error(`Error saving data for group: ${groupId}`, error);
