@@ -73,7 +73,7 @@ Data stored/modified:
   if ($userStore.role == "investor") {
     questions = [
       {
-        questionText: `How much do you think ${$groupStore.T_name} expected you to spend?`,
+        questionText: `How much do you want to give to ${$groupStore.T_name}?`,
         rating: d_i,
         questionType: "self",
         endowment: endowment,
