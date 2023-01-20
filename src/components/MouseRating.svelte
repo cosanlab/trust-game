@@ -1,7 +1,7 @@
 <script>
   // Just like Rating.svelte, but syncs the slider position with the mouse, so it
   // doesn't require a user to click and/or drag
-  import { globalVars, calcPainDuration, round2 } from "../utils.js";
+  import { globalVars, calcPropSpent, round2 } from "../utils.js";
   import { onMount } from "svelte";
 
   // INPUTS:
@@ -60,21 +60,6 @@
   });
 </script>
 
-<style>
-  #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 border-black border rounded-full border-solid;
-  }
-  .active::-webkit-slider-thumb {
-    @apply bg-green-400;
-  }
-  .inactive::-webkit-slider-thumb {
-    @apply bg-blue-400;
-  }
-  .hideThumb::-webkit-slider-thumb {
-    @apply invisible;
-  }
-</style>
-
 <!-- svelte-ignore a11y-mouse-events-have-key-events -->
 <div
   class="flex flex-col px-2 justify-items-center"
@@ -104,3 +89,18 @@
     <p>{rightText}</p>
   </div>
 </div>
+
+<style>
+  #ratingScale::-webkit-slider-thumb {
+    @apply appearance-none h-6 w-6 border-black border rounded-full border-solid;
+  }
+  .active::-webkit-slider-thumb {
+    @apply bg-green-400;
+  }
+  .inactive::-webkit-slider-thumb {
+    @apply bg-blue-400;
+  }
+  .hideThumb::-webkit-slider-thumb {
+    @apply invisible;
+  }
+</style>

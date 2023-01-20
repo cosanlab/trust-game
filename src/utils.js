@@ -156,19 +156,13 @@ export const round2 = (val) => {
 export const roundHalf = (val) => {
   return Math.round(val * 2) / 2;
 };
-// Calculates pain duration based on choice made, executed reactively by PainScale.svelte
-export const calcPainDuration = (ratingString, cost, endowment) => {
-
+// Calculates propSpent on choice made, executed reactively by PainScale.svelte
+export const calcPropSpent = (ratingString, endowment) => {
+  console.log("ratingString", ratingString)
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
-  let painReduction = proportionOfEndowmentSpent * cost * globalVars.maxPossiblePainReduction * (endowment / globalVars.maxEndowment);
-
-  // Don't let them reduce pain duraction more than the max possible reduction
-  painReduction = painReduction > globalVars.maxPossiblePainReduction ? globalVars.maxPossiblePainReduction : painReduction;
-
-  const painDuration = globalVars.maxPainDur - painReduction;
-  const painDurationRounded = round2(painDuration);
+  console.log("proportionOfEndowmentSpent", proportionOfEndowmentSpent)
   return {
-    painDurationRounded, proportionOfEndowmentSpent
+    proportionOfEndowmentSpent
   };
 };
 
