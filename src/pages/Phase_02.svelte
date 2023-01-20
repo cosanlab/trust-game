@@ -20,7 +20,7 @@ Data stored/modified:
     globalVars,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import PainScale from "../components/PainScale.svelte";
+  import EndowmentScale from "../components/EndowmentScale.svelte";
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 
@@ -102,7 +102,7 @@ Data stored/modified:
             bind:rating={questions[currentQ].rating}
           />
         {:else if $userStore.role === "investor"}
-          <PainScale
+          <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}
@@ -112,7 +112,7 @@ Data stored/modified:
           <hr class="w-full my-8 border-black border-dashed" />
           <hr class="w-full my-4 border-white" />
         {:else if $userStore.role === "trustee"}
-          <PainScale
+          <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}

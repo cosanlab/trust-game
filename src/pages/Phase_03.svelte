@@ -22,7 +22,7 @@ Data stored/modified:
     globalVars,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import PainScale from "../components/PainScale.svelte";
+  import PainScale from "../components/EndowmentScale.svelte";
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 

@@ -16,7 +16,6 @@
   let propSpent;
   $: {
     const { proportionOfEndowmentSpent } = calcPropSpent(rating, endowment);
-    console.log("proportionOfEndowmentSpent", proportionOfEndowmentSpent);
     propSpent = proportionOfEndowmentSpent;
   }
   // OUTPUTS:

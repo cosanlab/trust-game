@@ -26,8 +26,7 @@ Data stored/modified:
     globalVars,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import PainScale from "../components/PainScale.svelte";
-  import Rating from "../components/Rating.svelte";
+  import EndowmentScale from "../components/EndowmentScale.svelte";
   import Button from "../components/Button.svelte";
 
   console.log("userStore", $userStore);
@@ -39,41 +38,24 @@ Data stored/modified:
   let disableInput = false;
   let currentQ = 0;
   let showButton = true;
-  let switchToRatingScale = false;
   let questions;
 
   // GET TRIAL DATA
-  let agency1 = 1;
-  let actualChoice1 = 0;
-  let agency2 = 1;
-  let actualChoice2 = 0;
-
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
 
-  // Just for deciders
-  const selfAgency = $userStore.role === "investor" ? agency1 : agency2;
-  const otherAgency = $userStore.role === "trustee" ? agency2 : agency1;
-  const selfChoice =
-    $userStore.role === "investor" ? actualChoice1 : actualChoice2;
-  const otherChoice =
-    $userStore.role === "investor" ? actualChoice2 : actualChoice1;
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
-  let d_i = 0.5 * (selfAgency * endowment); // either decider's expectation of receiver
-  let d_t = 0.5 * (otherAgency * endowment); // either decider's expectation of other
-  let closeness = 50; // decider closeness
-  // Receiver expectations
-  let r_d1 = 0.5 * (agency1 * endowment);
-  let r_d2 = 0.5 * (agency2 * endowment);
+  let d_i = 0.5 * endowment;
+  let d_t = 0.5 * endowment;
 
   if ($userStore.role == "investor") {
     questions = [
       {
         questionText: `How much do you want to give to ${$groupStore.T_name}?`,
-        rating: d_i,
+        rating: d_t,
         questionType: "self",
         endowment: endowment,
       },
@@ -83,7 +65,7 @@ Data stored/modified:
     questions = [
       {
         questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
-        rating: d_t,
+        rating: d_i,
         questionType: "other",
         endowment: endowment,
       },
@@ -105,24 +87,8 @@ Data stored/modified:
       await goto_phase_02();
     } else {
       currentQ = currentQ + 1;
-      // If they're at the 2nd or 4th, we're just showing them a choice, no rating
-      if (currentQ === 1 || currentQ === 3) {
-        // showButton = false;
-        disableInput = true;
-        // setTimeout(getNextQuestion, displayTime);
-      } else if (
-        // Otherwise for the last question for deciders we're using a 100pt scale
-        $userStore.role === "investor" &&
-        currentQ === questions.length - 1
-      ) {
-        showButton = true;
-        switchToRatingScale = true;
-        disableInput = false;
-      } else {
-        showButton = true;
-        switchToRatingScale = false;
-        disableInput = false;
-      }
+      showButton = true;
+      disableInput = false;
     }
   }
 </script>
@@ -133,13 +99,8 @@ Data stored/modified:
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
-        {#if switchToRatingScale}
-          <Rating
-            questionText={questions[currentQ].questionText}
-            bind:rating={questions[currentQ].rating}
-          />
-        {:else if $userStore.role === "investor"}
-          <PainScale
+        {#if $userStore.role === "investor"}
+          <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}
@@ -149,8 +110,7 @@ Data stored/modified:
           <hr class="w-full my-8 border-black border-dashed" />
           <hr class="w-full my-4 border-white" />
         {:else if $userStore.role === "trustee"}
-          <!-- Q from WASI: why need to index when trustee but no need for investor...? -->
-          <PainScale
+          <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}

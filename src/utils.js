@@ -156,11 +156,9 @@ export const round2 = (val) => {
 export const roundHalf = (val) => {
   return Math.round(val * 2) / 2;
 };
-// Calculates propSpent on choice made, executed reactively by PainScale.svelte
+// Calculates propSpent on choice made, executed reactively by EndowmentScale.svelte
 export const calcPropSpent = (ratingString, endowment) => {
-  console.log("ratingString", ratingString)
   const proportionOfEndowmentSpent = parseFloat(ratingString) / endowment;
-  console.log("proportionOfEndowmentSpent", proportionOfEndowmentSpent)
   return {
     proportionOfEndowmentSpent
   };
