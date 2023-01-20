@@ -40,7 +40,7 @@ Data stored/modified:
 
   // GET TRIAL DATA
   // Shared endowment
-  let endowment = $groupStore.trials[$groupStore.currentTrial].I_R;
+  let endowment = $groupStore.trials[$groupStore.currentTrial].I_R1;
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
