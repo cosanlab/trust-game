@@ -327,9 +327,9 @@ export const saveQData = async (questions) => {
       // --W
       if (currentState === "phase-01") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_R"] = questions[0].rating;
+          data["trials"][currentTrial]["I_R1"] = questions[0].rating;
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_R"] = questions[0].rating;
+          data["trials"][currentTrial]["T_R1"] = questions[0].rating;
         } else {
           throw `${role} is an unknown role`;
         }
@@ -342,17 +342,15 @@ export const saveQData = async (questions) => {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-03") {
-        if (role === "investor") {
-          data["trials"][currentTrial]["I_E"] = questions[0].rating;
-        } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_E"] = questions[0].rating;
+        if (role === 'trustee') {
+          data["trials"][currentTrial]["T_R2"] = questions[0].rating;
         } else {
           throw `${role} is an unknown role`;
         }
       }
 
       await transaction.update(docRef, data);
-      console.log(`Successfully saved BPQ data for: ${role}`);
+      console.log(`Successfully saved Q data for: ${role}`);
     });
   } catch (error) {
     console.error(`Error saving data for group: ${groupId}`, error);

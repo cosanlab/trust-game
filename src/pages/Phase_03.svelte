@@ -13,22 +13,100 @@ Data stored/modified:
 
 -->
 <script>
-  import { createEventDispatcher, onMount } from "svelte";
-  import { userStore, groupStore, globalVars, roundHalf } from "../utils.js";
+  import { createEventDispatcher } from "svelte";
+  import {
+    userStore,
+    groupStore,
+    saveQData,
+    round2,
+    globalVars,
+  } from "../utils.js";
+  import Loading from "../components/Loading.svelte";
+  import PainScale from "../components/PainScale.svelte";
+  import Rating from "../components/Rating.svelte";
+  import Button from "../components/Button.svelte";
+
+  console.log("userStore", $userStore);
+  console.log("groupStore", $groupStore);
+  console.log("globalVars", globalVars);
 
   const dispatch = createEventDispatcher();
+  let submitted = false;
+  let disableInput = false;
+  let currentQ = 0;
+  let showButton = true;
+  let switchToRatingScale = false;
+  let questions;
 
-  const painDur =
-    roundHalf($groupStore.trials[$groupStore.currentTrial].pain_dur) * 1000 +
-    globalVars.deliveryTimeBuffer;
+  // GET TRIAL DATA
+  // Shared endowment
+  let endowment = $groupStore.trials[$groupStore.currentTrial].I_R;
 
-  function goToPost_Questions() {
+  const otherName =
+    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
+
+  // Now setup rating scales
+  let t_r = 0.5 * endowment; // trustee's rating
+
+  if ($userStore.role == "trustee") {
+    questions = [
+      {
+        questionText: `How much will you return to ${$groupStore.I_name}?`,
+        rating: t_r,
+        questionType: "self",
+        endowment: endowment,
+      },
+    ];
+  }
+
+  console.log("questions", questions);
+
+  async function goto_phase_04() {
+    submitted = true;
+    await saveQData(questions);
     dispatch("to-phase-04");
+  }
+
+  async function getNextQuestion() {
+    console.log("currentQ", currentQ);
+    // If they're done answering move to next state
+    if (currentQ === questions.length - 1) {
+      await goto_phase_04();
+    } else {
+      currentQ = currentQ + 1;
+      showButton = true;
+      switchToRatingScale = false;
+      disableInput = false;
+    }
   }
 </script>
 
-<div class="flex h-screen text-center">
-  <div class="m-auto">
-    <h1 class="mb-4 text-2xl">Stimulation is now being delivered</h1>
+{#if submitted}
+  <Loading text={"Waiting for other participants..."} />
+{:else}
+  <div class="w-3/5 mx-auto">
+    <div class="min-w-full pb-32 text-center">
+      <div class="my-10">
+        {#if switchToRatingScale}
+          <Rating
+            questionText={questions[currentQ].questionText}
+            bind:rating={questions[currentQ].rating}
+          />
+        {:else if $userStore.role === "investor"}
+          <Loading text={"Waiting for Trustee..."} />
+        {:else if $userStore.role === "trustee"}
+          <PainScale
+            bind:rating={questions[currentQ].rating}
+            questionText={questions[currentQ].questionText}
+            endowment={questions[currentQ].endowment}
+            questionType={questions[currentQ].questionType}
+            disabled={disableInput}
+          />
+        {/if}
+        {#if showButton}
+          <Button on:click={getNextQuestion}>Next</Button>
+        {/if}
+      </div>
+    </div>
   </div>
-</div>
+{/if}
