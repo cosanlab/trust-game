@@ -33,7 +33,6 @@ Data stored/modified:
   let disableInput = false;
   let currentQ = 0;
   let showButton = true;
-  let switchToRatingScale = false;
   let questions;
 
   // GET TRIAL DATA
@@ -96,12 +95,7 @@ Data stored/modified:
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
-        {#if switchToRatingScale}
-          <Rating
-            questionText={questions[currentQ].questionText}
-            bind:rating={questions[currentQ].rating}
-          />
-        {:else if $userStore.role === "investor"}
+        {#if $userStore.role === "investor"}
           <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
@@ -109,8 +103,6 @@ Data stored/modified:
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
           />
-          <hr class="w-full my-8 border-black border-dashed" />
-          <hr class="w-full my-4 border-white" />
         {:else if $userStore.role === "trustee"}
           <EndowmentScale
             bind:rating={questions[currentQ].rating}

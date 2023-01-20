@@ -61,7 +61,7 @@ Data stored/modified:
       },
     ];
   } else {
-    // For Trustee we ask how much they expect the investor to share with them
+    // For Trustee we ask how much they predict the investor to share with them
     questions = [
       {
         questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
@@ -107,8 +107,6 @@ Data stored/modified:
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
           />
-          <hr class="w-full my-8 border-black border-dashed" />
-          <hr class="w-full my-4 border-white" />
         {:else if $userStore.role === "trustee"}
           <EndowmentScale
             bind:rating={questions[currentQ].rating}

@@ -75,7 +75,6 @@ Data stored/modified:
     } else {
       currentQ = currentQ + 1;
       showButton = true;
-      switchToRatingScale = false;
       disableInput = false;
     }
   }
@@ -87,12 +86,7 @@ Data stored/modified:
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
-        {#if switchToRatingScale}
-          <Rating
-            questionText={questions[currentQ].questionText}
-            bind:rating={questions[currentQ].rating}
-          />
-        {:else if $userStore.role === "investor"}
+        {#if $userStore.role === "investor"}
           <Loading text={"Waiting for Trustee..."} />
         {:else if $userStore.role === "trustee"}
           <PainScale
