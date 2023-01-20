@@ -83,7 +83,7 @@ Data stored/modified:
     questions = [
       [
         {
-          questionText: `How much do you expect ${$groupStore.I_name} to give to you?`,
+          questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
           rating: d_t,
           questionType: "other",
           endowment: endowment,

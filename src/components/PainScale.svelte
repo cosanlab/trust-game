@@ -52,8 +52,8 @@
     on:change
   />
   <div class="flex flex-row justify-between">
-    <p>${agencyEndowment} of ${endowment}</p>
     <p>$0</p>
+    <p>${agencyEndowment} of ${endowment}</p>
   </div>
 </div>
 
