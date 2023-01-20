@@ -70,17 +70,17 @@ Data stored/modified:
 
   console.log("questions", questions);
 
-  async function goto_phase_02() {
+  async function goto_phase_03() {
     submitted = true;
     await saveQData(questions);
-    dispatch("to-phase-02");
+    dispatch("to-phase-03");
   }
 
   async function getNextQuestion() {
     console.log("currentQ", currentQ);
     // If they're done answering move to next state
     if (currentQ === questions.length - 1) {
-      await goto_phase_02();
+      await goto_phase_03();
     } else {
       currentQ = currentQ + 1;
       showButton = true;
