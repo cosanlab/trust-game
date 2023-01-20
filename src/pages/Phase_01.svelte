@@ -81,14 +81,12 @@ Data stored/modified:
   } else {
     // For Trustee we ask how much they expect the investor to share with them
     questions = [
-      [
-        {
-          questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
-          rating: d_t,
-          questionType: "other",
-          endowment: endowment,
-        },
-      ],
+      {
+        questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
+        rating: d_t,
+        questionType: "other",
+        endowment: endowment,
+      },
     ];
   }
 
@@ -153,10 +151,10 @@ Data stored/modified:
         {:else if $userStore.role === "trustee"}
           <!-- Q from WASI: why need to index when trustee but no need for investor...? -->
           <PainScale
-            bind:rating={questions[currentQ][0].rating}
-            questionText={questions[currentQ][0].questionText}
-            endowment={questions[currentQ][0].endowment}
-            questionType={questions[currentQ][0].questionType}
+            bind:rating={questions[currentQ].rating}
+            questionText={questions[currentQ].questionText}
+            endowment={questions[currentQ].endowment}
+            questionType={questions[currentQ].questionType}
             disabled={disableInput}
           />
         {/if}
