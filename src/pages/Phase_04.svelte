@@ -41,12 +41,12 @@ Data stored/modified:
   let r8 = 50;
   let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
   let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-  // Other decider's name just for deciders
+
   const otherName =
-    $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
+    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Initialize all the question texts
-  if ($userStore.role == "decider1" || $userStore.role === "decider2") {
+  if ($userStore.role == "investor" || $userStore.role === "trustee") {
     questions = [
       {
         questionText: "How guilty did you feel?",
@@ -77,59 +77,6 @@ Data stored/modified:
         questionText: "How satisfied are you with the decision?",
         type: "satisfied",
         rating: r6,
-      },
-    ];
-  } else {
-    questions = [
-      {
-        questionText: "How much pain did you feel?",
-        type: "pain",
-        rating: r1,
-      },
-      {
-        questionText: "How satisfied are you with the decision?",
-        type: "satisfied",
-        rating: r2,
-      },
-      {
-        questionText: `How angry do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_anger",
-        rating: r3,
-      },
-      {
-        questionText: `How indebted do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_indebted",
-        rating: r5,
-      },
-      {
-        questionText: `How much gratitude do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_gratitude",
-        rating: r7,
-      },
-      {
-        questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
-        type: "D1_compensate",
-        rating: r9,
-      },
-      {
-        questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_anger",
-        rating: r4,
-      },
-      {
-        questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_indebted",
-        rating: r6,
-      },
-      {
-        questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_gratitude",
-        rating: r8,
-      },
-      {
-        questionText: `How much do you want to compensate ${$groupStore.D2_name}?`,
-        type: "D2_compensate",
-        rating: r10,
       },
     ];
   }
