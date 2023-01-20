@@ -123,16 +123,19 @@ Data stored/modified:
     ];
   }
 
-  async function goToThermode_Placement() {
+  console.log("questions", questions);
+
+  async function goto_phase_02() {
     submitted = true;
     await saveBPQData(questions);
     dispatch("to-phase-02");
   }
 
   async function getNextQuestion() {
+    console.log("currentQ", currentQ);
     // If they're done answering move to next state
     if (currentQ === questions.length - 1) {
-      await goToThermode_Placement();
+      await goto_phase_02();
     } else {
       currentQ = currentQ + 1;
       // If they're at the 2nd or 4th, we're just showing them a choice, no rating
@@ -142,7 +145,7 @@ Data stored/modified:
         // setTimeout(getNextQuestion, displayTime);
       } else if (
         // Otherwise for the last question for deciders we're using a 100pt scale
-        ($userStore.role === "decider1" || $userStore.role === "decider2") &&
+        $userStore.role === "investor" &&
         currentQ === questions.length - 1
       ) {
         showButton = true;
@@ -170,24 +173,13 @@ Data stored/modified:
           />
         {:else if $userStore.role === "investor"}
           <PainScale
-            bind:rating={questions[currentQ][0].rating}
-            questionText={questions[currentQ][0].questionText}
-            endowment={questions[currentQ][0].endowment}
-            cost={questions[currentQ][0].cost}
-            agency={questions[currentQ][0].agency}
-            questionType={questions[currentQ][0].questionType}
+            bind:rating={questions[currentQ].rating}
+            questionText={questions[currentQ].questionText}
+            endowment={questions[currentQ].endowment}
+            questionType={questions[currentQ].questionType}
             disabled={disableInput}
           />
           <hr class="w-full my-8 border-black border-dashed" />
-          <PainScale
-            bind:rating={questions[currentQ][1].rating}
-            questionText={questions[currentQ][1].questionText}
-            endowment={questions[currentQ][1].endowment}
-            cost={questions[currentQ][1].cost}
-            agency={questions[currentQ][1].agency}
-            questionType={questions[currentQ][1].questionType}
-            disabled={disableInput}
-          />
           <hr class="w-full my-4 border-white" />
         {:else}
           <!-- $userStore.role === "trustee" -->
@@ -195,8 +187,6 @@ Data stored/modified:
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}
-            cost={questions[currentQ].cost}
-            agency={questions[currentQ].agency}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
           />
