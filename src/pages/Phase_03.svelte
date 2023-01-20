@@ -25,6 +25,7 @@ Data stored/modified:
   import PainScale from "../components/EndowmentScale.svelte";
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
+  import EndowmentScale from "../components/EndowmentScale.svelte";
 
   console.log("userStore", $userStore);
   console.log("groupStore", $groupStore);
@@ -57,6 +58,8 @@ Data stored/modified:
         endowment: endowment,
       },
     ];
+  } else if ($userStore.role == "investor") {
+    getNextQuestion();
   }
 
   console.log("questions", questions);
@@ -70,7 +73,10 @@ Data stored/modified:
   async function getNextQuestion() {
     console.log("currentQ", currentQ);
     // If they're done answering move to next state
-    if (currentQ === questions.length - 1) {
+    if ($userStore.role === "investor") {
+      showButton = false;
+      await goto_phase_04();
+    } else if (currentQ === questions.length - 1) {
       await goto_phase_04();
     } else {
       currentQ = currentQ + 1;
@@ -89,7 +95,7 @@ Data stored/modified:
         {#if $userStore.role === "investor"}
           <Loading text={"Waiting for Trustee..."} />
         {:else if $userStore.role === "trustee"}
-          <PainScale
+          <EndowmentScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
             endowment={questions[currentQ].endowment}

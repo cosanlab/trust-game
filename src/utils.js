@@ -342,6 +342,8 @@ export const saveQData = async (questions) => {
       } else if (currentState === "phase-03") {
         if (role === 'trustee') {
           data["trials"][currentTrial]["T_R2"] = questions[0].rating;
+        } else if (role === 'investor') {
+          console.log("investor waiting for trustee")
         } else {
           throw `${role} is an unknown role`;
         }
