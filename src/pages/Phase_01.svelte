@@ -31,6 +31,10 @@ Data stored/modified:
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 
+  console.log("userStore", $userStore);
+  console.log("groupStore", $groupStore);
+  console.log("globalVars", globalVars);
+
   const dispatch = createEventDispatcher();
   let submitted = false;
   let disableInput = false;
@@ -40,71 +44,57 @@ Data stored/modified:
   let questions;
 
   // GET TRIAL DATA
-  // Agency and choices; we'll only use 1 for the deciders but both for the receiver
-  let agency1 = $groupStore.trials[$groupStore.currentTrial].D1_agency;
-  let actualChoice1 = round2(
-    $groupStore.trials[$groupStore.currentTrial].D1_spent
-  );
-  let agency2 = $groupStore.trials[$groupStore.currentTrial].D2_agency;
-  let actualChoice2 = round2(
-    $groupStore.trials[$groupStore.currentTrial].D2_spent
-  );
+  let agency1 = 1;
+  let actualChoice1 = 0;
+  let agency2 = 1;
+  let actualChoice2 = 0;
+
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
-  // Cost
-  let cost = $groupStore.trials[$groupStore.currentTrial].cost;
 
   // Just for deciders
-  const selfAgency = $userStore.role === "decider1" ? agency1 : agency2;
-  const otherAgency = $userStore.role === "decider1" ? agency2 : agency1;
+  const selfAgency = $userStore.role === "investor" ? agency1 : agency2;
+  const otherAgency = $userStore.role === "trustee" ? agency2 : agency1;
   const selfChoice =
-    $userStore.role === "decider1" ? actualChoice1 : actualChoice2;
+    $userStore.role === "investor" ? actualChoice1 : actualChoice2;
   const otherChoice =
-    $userStore.role === "decider1" ? actualChoice2 : actualChoice1;
+    $userStore.role === "investor" ? actualChoice2 : actualChoice1;
   const otherName =
-    $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
+    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
-  let d_r = 0.5 * (selfAgency * endowment); // either decider's expectation of receiver
-  let d_d = 0.5 * (otherAgency * endowment); // either decider's expectation of other
+  let d_i = 0.5 * (selfAgency * endowment); // either decider's expectation of receiver
+  let d_t = 0.5 * (otherAgency * endowment); // either decider's expectation of other
   let closeness = 50; // decider closeness
   // Receiver expectations
   let r_d1 = 0.5 * (agency1 * endowment);
   let r_d2 = 0.5 * (agency2 * endowment);
 
-  if ($userStore.role == "decider1" || $userStore.role === "decider2") {
+  if ($userStore.role == "investor") {
     questions = [
       {
-        questionText: `How much do you think ${$groupStore.R_name} expected you to spend?`,
-        rating: d_r,
-        agency: selfAgency,
+        questionText: `How much do you think ${$groupStore.T_name} expected you to spend?`,
+        rating: d_i,
         questionType: "self",
         endowment: endowment,
-        cost: cost,
       },
       {
         questionText: `You actually spent:`,
         rating: selfChoice,
-        agency: selfAgency,
         questionType: "self",
         endowment: endowment,
-        cost: cost,
       },
       {
         questionText: `How much did you expect ${otherName} to spend?`,
-        rating: d_d,
-        agency: otherAgency,
+        rating: d_t,
         questionType: "other",
         endowment: endowment,
-        cost: cost,
       },
       {
         questionText: `${otherName} actually spent:`,
         rating: otherChoice,
-        agency: otherAgency,
         questionType: "other",
         endowment: endowment,
-        cost: cost,
       },
       {
         questionText: `How close do you feel to ${otherName}?`,
@@ -112,43 +102,22 @@ Data stored/modified:
       },
     ];
   } else {
-    // For Receiver we show expectation and actual questions for both deciders
-    // simulatenously
+    // For Trustee we show expectation and actual questions simultaneously
     questions = [
       [
         {
-          questionText: `How much did you expect ${$groupStore.D1_name} to spend?`,
+          questionText: `How much did you expect ${$groupStore.I_name} to spend?`,
           rating: r_d1,
-          agency: agency1,
           questionType: "other",
           endowment: endowment,
-          cost: cost,
-        },
-        {
-          questionText: `How much did you expect ${$groupStore.D2_name} to spend?`,
-          rating: r_d2,
-          agency: agency2,
-          questionType: "other",
-          endowment: endowment,
-          cost: cost,
         },
       ],
       [
         {
-          questionText: `${$groupStore.D1_name} actually spent:`,
+          questionText: `${$groupStore.I_name} actually spent:`,
           rating: actualChoice1,
-          agency: agency1,
           questionType: "other",
           endowment: endowment,
-          cost: cost,
-        },
-        {
-          questionText: `${$groupStore.D2_name} actually spent:`,
-          rating: actualChoice2,
-          agency: agency2,
-          questionType: "other",
-          endowment: endowment,
-          cost: cost,
         },
       ],
     ];
@@ -221,6 +190,7 @@ Data stored/modified:
           />
           <hr class="w-full my-4 border-white" />
         {:else}
+          <!-- $userStore.role === "trustee" -->
           <PainScale
             bind:rating={questions[currentQ].rating}
             questionText={questions[currentQ].questionText}
