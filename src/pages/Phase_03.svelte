@@ -41,21 +41,22 @@ Data stored/modified:
 
   // GET TRIAL DATA
   // Shared endowment
-  let endowment = $groupStore.trials[$groupStore.currentTrial].I_R1;
+  let endowment = $groupStore.trials[$groupStore.currentTrial].I_CHOICE;
+  let multiplier = globalVars.multiplier;
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
-  let t_r = 0.5 * endowment; // trustee's rating
+  let t_choice = 0.5 * (endowment * multiplier); // trustee's rating
 
   if ($userStore.role == "trustee") {
     questions = [
       {
         questionText: `How much will you return to ${$groupStore.I_name}?`,
-        rating: t_r,
+        rating: t_choice,
         questionType: "self",
-        endowment: endowment,
+        endowment: endowment * multiplier,
       },
     ];
   } else if ($userStore.role == "investor") {

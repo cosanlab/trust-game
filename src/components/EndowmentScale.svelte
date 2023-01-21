@@ -1,7 +1,7 @@
 <script>
   // Component that draws a rating scale and synchronized pain duration bar to the
   // screen
-  import { globalVars, calcPropSpent, round2 } from "../utils.js";
+  import { globalVars, calcPropSpent, round2, groupStore } from "../utils.js";
 
   // INPUTS:
   export let disabled = false;
@@ -57,10 +57,15 @@
     <p>${endowment} of ${endowment}</p>
   </div>
   <label for="ratingScale" class="mb-2 text-xl"
-    >{otherText} could receive up to: ${round2(
-      propSpent * endowment * multiplier
-    )}</label
+    >{whoText} would give: ${round2(propSpent * endowment)}</label
   >
+  {#if $groupStore.currentState === "phase-01"}
+    <label for="ratingScale" class="mb-2 text-xl"
+      >You could receive up to: ${round2(
+        propSpent * endowment * multiplier
+      )}</label
+    >
+  {/if}
 </div>
 
 <style>

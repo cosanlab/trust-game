@@ -38,21 +38,23 @@ Data stored/modified:
   // GET TRIAL DATA
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
+  let investedAmount = $groupStore.trials[$groupStore.currentTrial].I_CHOICE;
+  let multiplier = globalVars.multiplier;
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
-  let i_r = 0.5 * endowment; // investor's rating
-  let t_r = 0.5 * endowment; // trustee's rating
+  let i_predict = 0.5 * (investedAmount * multiplier); // investor's rating
+  let t_expect = 0.5 * (investedAmount * multiplier); // trustee's rating
 
   if ($userStore.role == "investor") {
     questions = [
       {
         questionText: `How much do you think ${$groupStore.T_name} will return to you?`,
-        rating: i_r,
+        rating: i_predict,
         questionType: "other",
-        endowment: endowment,
+        endowment: investedAmount * multiplier,
       },
     ];
   } else {
@@ -60,9 +62,9 @@ Data stored/modified:
     questions = [
       {
         questionText: `How much do you think ${$groupStore.I_name} expects you to return to them?`,
-        rating: t_r,
+        rating: t_expect,
         questionType: "self",
-        endowment: endowment,
+        endowment: investedAmount * multiplier,
       },
     ];
   }
