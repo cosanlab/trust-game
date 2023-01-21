@@ -356,10 +356,16 @@ export const saveQData = async (questions) => {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-04") {
-        if (role === 'trustee') {
-          console.log("TODO")
-        } else if (role === 'investor') {
-          console.log("TODO")
+        if (role === 'trustee' || role === 'investor') {
+          let self = role === "trustee" ? "T" : "I"
+          let other = self === "T" ? "I" : "T"
+
+          data["trials"][currentTrial][`${self}_GUILT`] = questions[0].rating;
+          data["trials"][currentTrial][`${self}_ANGY`] = questions[1].rating;
+          data["trials"][currentTrial][`${self}_PREDICT_${other}_GUILT`] = questions[2].rating;
+          data["trials"][currentTrial][`${self}_PREDICT_${other}_ANGY`] = questions[3].rating;
+          data["trials"][currentTrial][`${self}_CLOSE`] = questions[4].rating;
+          data["trials"][currentTrial][`${self}_SATISFIED`] = questions[5].rating;
         } else {
           throw `${role} is an unknown role`;
         }
