@@ -61,9 +61,8 @@
   >
   {#if $groupStore.currentState === "phase-01"}
     <label for="ratingScale" class="mb-2 text-xl"
-      >You could receive up to: ${round2(
-        propSpent * endowment * multiplier
-      )}</label
+      >You could receive up to ${round2(propSpent * endowment * multiplier)} after
+      the multiplier is applied</label
     >
   {/if}
 </div>
