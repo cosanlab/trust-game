@@ -36,15 +36,17 @@ Data stored/modified:
   let submitted = false;
 
   // GET TRIAL DATA
+  let currentTrial = $groupStore.currentTrial;
+  let totalTrials = $groupStore.trials.length;
+
   // Shared endowment
-  let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
-  let I_expectation =
-    $groupStore.trials[$groupStore.currentTrial].I_1ST_ORDER_EXPECTATION;
-  let T_prediction = $groupStore.trials[$groupStore.currentTrial].T_PREDICTION;
-  let I_earnings = $groupStore.trials[$groupStore.currentTrial].I_EARNED;
-  let T_earnings = $groupStore.trials[$groupStore.currentTrial].T_EARNED;
-  let I_received = $groupStore.trials[$groupStore.currentTrial].T_CHOICE;
-  let T_received = $groupStore.trials[$groupStore.currentTrial].I_CHOICE;
+  let endowment = $groupStore.trials[currentTrial].endowment;
+  let I_expectation = $groupStore.trials[currentTrial].I_1ST_ORDER_EXPECTATION;
+  let T_prediction = $groupStore.trials[currentTrial].T_PREDICTION;
+  let I_earnings = $groupStore.trials[currentTrial].I_EARNED;
+  let T_earnings = $groupStore.trials[currentTrial].T_EARNED;
+  let I_received = $groupStore.trials[currentTrial].T_CHOICE;
+  let T_received = $groupStore.trials[currentTrial].I_CHOICE;
 
   const earnings = $userStore.role === "investor" ? I_earnings : T_earnings;
   const expectFromOther =
@@ -118,9 +120,16 @@ Data stored/modified:
   }
 
   async function getNextTrial() {
-    submitted = true;
-    await saveQData(questions);
-    dispatch("get-next-trial");
+    if ($groupStore.currentTrial < totalTrials - 1) {
+      submitted = true;
+      await saveQData(questions);
+      console.log("finished phase-04");
+      dispatch("get-next-trial");
+    } else {
+      submitted = true;
+      await saveQData(questions);
+      dispatch("debrief");
+    }
   }
 </script>
 

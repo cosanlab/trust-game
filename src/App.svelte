@@ -71,7 +71,7 @@
   // Gets called when user submits their APQ responses
   async function getNextTrial() {
     // The second argument here means also update the trial counter
-    await reqStateChange("pre_questions", true);
+    await reqStateChange("phase-01", true);
   }
 
   // When the app first starts up we check to see if the user is logged in and if they

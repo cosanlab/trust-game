@@ -322,8 +322,7 @@ export const saveQData = async (questions) => {
       console.log("questions", questions)
       console.log("currentTrial", currentTrial)
 
-      // I know this is spaghetti but it (seemingly) gets the job done
-      // --W
+      // TO E FROM W: I know this is spaghetti but it (seemingly) gets the job done
       if (currentState === "phase-01") {
         if (role === "investor") {
           data["trials"][currentTrial]["I_CHOICE"] = questions[0].rating;
