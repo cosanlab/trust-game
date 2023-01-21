@@ -60,7 +60,6 @@
 <div class="w-full max-w-md mb-6">
   <div class="text-center">
     <h1 class="mb-4 text-2xl">Thanks for participating!</h1>
-    <p class="italic">You earned a bonus of: ${Math.round(bonus)}</p>
   </div>
   {#if !submitted}
     <form
