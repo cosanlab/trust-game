@@ -56,8 +56,9 @@ Data stored/modified:
     $userStore.role === "investor" ? I_expectation : T_prediction;
   const receivedAmount =
     $userStore.role === "investor" ? I_received : T_received;
-  const keptAmount =
-    $userStore.role === "investor" ? endowment - T_received : T_received;
+  const keptAmount = round2(
+    $userStore.role === "investor" ? endowment - T_received : T_received
+  );
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
@@ -123,16 +124,10 @@ Data stored/modified:
   }
 
   async function getNextTrial() {
-    if ($groupStore.currentTrial < totalTrials - 1) {
-      submitted = true;
-      await saveQData(questions);
-      console.log("finished phase-04");
-      dispatch("get-next-trial");
-    } else {
-      submitted = true;
-      await saveQData(questions);
-      dispatch("debrief");
-    }
+    submitted = true;
+    await saveQData(questions);
+    console.log("finished phase-04");
+    dispatch("get-next-trial");
   }
 </script>
 
