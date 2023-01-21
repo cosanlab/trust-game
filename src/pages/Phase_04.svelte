@@ -56,7 +56,7 @@ Data stored/modified:
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
-  const outcomeText =
+  const outcomeExplanation =
     $userStore.role === "investor"
       ? `You started with $${endowment} and gave $${T_received} to ${otherName}, keeping $${keptAmount} for yourself.
         With the multiplier, ${otherName} then had $${
@@ -67,7 +67,7 @@ Data stored/modified:
       : `${otherName} started with $${endowment}. You expected $${expectFromOther} but received $${receivedAmount} from ${otherName}.
         With the multiplier, you then had $${
           receivedAmount * globalVars.multiplier
-        } and gave $${I_received} to ${otherName},
+        }. ${otherName} expected $${I_expectation} from you but you gave $${I_received} to ${otherName},
         resulting in a total earnings of $${earnings} for this trial.`;
 
   let questions;
@@ -85,13 +85,13 @@ Data stored/modified:
   if ($userStore.role == "investor" || $userStore.role === "trustee") {
     questions = [
       {
-        questionText: "How guilty did you feel?",
+        questionText: "How guilty do you feel?",
         type: "guilt",
         rating: r1,
       },
       {
-        questionText: "How responsible did you feel?",
-        type: "responsible",
+        questionText: "How angry do you feel?",
+        type: "angry",
         rating: r2,
       },
       {
@@ -100,8 +100,8 @@ Data stored/modified:
         rating: r3,
       },
       {
-        questionText: `How responsible do you think ${otherName} feels?`,
-        type: "other_responsible",
+        questionText: `How angry do you think ${otherName} feels?`,
+        type: "other_angry",
         rating: r4,
       },
       {
@@ -110,7 +110,7 @@ Data stored/modified:
         rating: r5,
       },
       {
-        questionText: "How satisfied are you with the decision?",
+        questionText: "How satisfied are you with this outcome?",
         type: "satisfied",
         rating: r6,
       },
@@ -129,8 +129,11 @@ Data stored/modified:
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
+      <p class="mb-1 text-4xl">
+        You earned ${earnings} for this trial!
+      </p>
       <p class="mb-1 text-lg">
-        {outcomeText}
+        {outcomeExplanation}
       </p>
 
       {#each questions as question, i}
