@@ -10,8 +10,11 @@
   export let rating;
   export let endowment;
 
-  $: agencyText = questionType === "other" ? "They" : "You";
-  $: agencyEndowment = endowment;
+  $: whoText = questionType === "other" ? "They" : "You";
+  $: otherText = questionType === "other" ? "You" : "They";
+  $: endowmentAmount = endowment;
+
+  let multiplier = globalVars.multiplier;
 
   let propSpent;
   $: {
@@ -27,14 +30,13 @@
 
 <div class="flex flex-col px-2 justify-items-center">
   <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
+  <p class="mb-2 text-lg">Multiplier: {globalVars.multiplier}</p>
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
   <label for="ratingScale" class="mb-2 text-xl"
-    >{agencyText} would keep: ${round2(
-      agencyEndowment - propSpent * agencyEndowment
-    )}</label
+    >{whoText} would keep: ${round2(endowment - propSpent * endowment)}</label
   >
   <input
     id="ratingScale"
@@ -45,15 +47,20 @@
     type="range"
     step=".01"
     min="0"
-    max={agencyEndowment}
+    max={endowment}
     bind:value={rating}
     {disabled}
     on:change
   />
   <div class="flex flex-row justify-between">
     <p>$0</p>
-    <p>${agencyEndowment} of ${endowment}</p>
+    <p>${endowment} of ${endowment}</p>
   </div>
+  <label for="ratingScale" class="mb-2 text-xl"
+    >{otherText} could receive up to: ${round2(
+      propSpent * endowment * multiplier
+    )}</label
+  >
 </div>
 
 <style>

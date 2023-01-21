@@ -55,6 +55,7 @@ export const stateDisplay = writable([]);
 // import { globalVars } from '../utils.js';
 // console.log(globalVars.time)
 export const globalVars = {
+  multiplier: 4,
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 5,
@@ -325,23 +326,27 @@ export const saveQData = async (questions) => {
       // --W
       if (currentState === "phase-01") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_R1"] = questions[0].rating;
+          data["trials"][currentTrial]["I_CHOICE"] = questions[0].rating;
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_R1"] = questions[0].rating;
+          data["trials"][currentTrial]["T_PREDICTION"] = questions[0].rating;
         } else {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-02") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_E"] = questions[0].rating;
+          data["trials"][currentTrial]["I_1ST_ORDER_EXPECTATION"] = questions[0].rating;
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_E"] = questions[0].rating;
+          data["trials"][currentTrial]["T_2ND_ORDER_EXPECTATION"] = questions[0].rating;
         } else {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-03") {
         if (role === 'trustee') {
-          data["trials"][currentTrial]["T_R2"] = questions[0].rating;
+          let t_choice = questions[0].rating;
+          data["trials"][currentTrial]["T_CHOICE"] = t_choice;
+          data["trials"][currentTrial]["T_EARNED"] = t_choice;
+          data["trials"][currentTrial]["I_EARNED"] = questions[0].rating;
+
         } else if (role === 'investor') {
           console.log("investor waiting for trustee")
         } else {

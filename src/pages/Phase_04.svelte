@@ -39,8 +39,11 @@ Data stored/modified:
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-  let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-  let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
+  // let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
+  // let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
+
+  let endowment_I_E = $groupStore.trials[$groupStore.currentTrial].I_E;
+  let endowment_T_E = $groupStore.trials[$groupStore.currentTrial].T_E;
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;

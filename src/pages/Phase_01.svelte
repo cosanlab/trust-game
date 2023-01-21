@@ -48,14 +48,14 @@ Data stored/modified:
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Now setup rating scales
-  let d_i = 0.5 * endowment;
-  let d_t = 0.5 * endowment;
+  let i_choice = 0.5 * endowment;
+  let t_predict = 0.5 * endowment;
 
   if ($userStore.role == "investor") {
     questions = [
       {
-        questionText: `How much do you want to give to ${$groupStore.T_name}?`,
-        rating: d_t,
+        questionText: `How much of the $${endowment} do you want to invest in ${$groupStore.T_name}?`,
+        rating: i_choice,
         questionType: "self",
         endowment: endowment,
       },
@@ -65,7 +65,7 @@ Data stored/modified:
     questions = [
       {
         questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
-        rating: d_i,
+        rating: t_predict,
         questionType: "other",
         endowment: endowment,
       },
