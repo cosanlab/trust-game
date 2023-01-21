@@ -22,7 +22,7 @@
 </script>
 
 {#if submitted}
-  <Loading text={"Waiting for other participants..."} />
+  <Loading text={"Waiting for your partner..."} />
 {:else}
   <div class="flex flex-col items-center">
     <h1 class="mb-4 text-2xl">Instructions for Part 2</h1>
