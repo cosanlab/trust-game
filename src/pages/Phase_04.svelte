@@ -38,12 +38,37 @@ Data stored/modified:
   // GET TRIAL DATA
   // Shared endowment
   let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
-  // let I_expectation =
-  //   $groupStore.trials[$groupStore.currentTrial].I_1ST_ORDER_EXPECTATION;
-  // let T_expectation =
-  //   $groupStore.trials[$groupStore.currentTrial].T_2ND_ORDER_EXPECTATION;
-  // let I_earnings = $groupStore.trials[$groupStore.currentTrial].I_EARNED;
-  // let T_earnings = $groupStore.trials[$groupStore.currentTrial].T_EARNED;
+  let I_expectation =
+    $groupStore.trials[$groupStore.currentTrial].I_1ST_ORDER_EXPECTATION;
+  let T_prediction = $groupStore.trials[$groupStore.currentTrial].T_PREDICTION;
+  let I_earnings = $groupStore.trials[$groupStore.currentTrial].I_EARNED;
+  let T_earnings = $groupStore.trials[$groupStore.currentTrial].T_EARNED;
+  let I_received = $groupStore.trials[$groupStore.currentTrial].T_CHOICE;
+  let T_received = $groupStore.trials[$groupStore.currentTrial].I_CHOICE;
+
+  const earnings = $userStore.role === "investor" ? I_earnings : T_earnings;
+  const expectFromOther =
+    $userStore.role === "investor" ? I_expectation : T_prediction;
+  const receivedAmount =
+    $userStore.role === "investor" ? I_received : T_received;
+  const keptAmount =
+    $userStore.role === "investor" ? endowment - T_received : T_received;
+  const otherName =
+    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
+
+  const outcomeText =
+    $userStore.role === "investor"
+      ? `You started with $${endowment} and gave $${T_received} to ${otherName}, keeping $${keptAmount} for yourself.
+        With the multiplier, ${otherName} then had $${
+          T_received * globalVars.multiplier
+        }. You expected $${expectFromOther} but received $${receivedAmount} from ${otherName},
+        resulting in a total earnings of $${earnings}
+        for this trial.`
+      : `${otherName} started with $${endowment}. You expected $${expectFromOther} but received $${receivedAmount} from ${otherName}.
+        With the multiplier, you then had $${
+          receivedAmount * globalVars.multiplier
+        } and gave $${I_received} to ${otherName},
+        resulting in a total earnings of $${earnings} for this trial.`;
 
   let questions;
   // Initialize all scales to their mid-point assumpting they're 100pt scales
@@ -55,9 +80,6 @@ Data stored/modified:
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-
-  const otherName =
-    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
   // Initialize all the question texts
   if ($userStore.role == "investor" || $userStore.role === "trustee") {
@@ -107,6 +129,10 @@ Data stored/modified:
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
+      <p class="mb-1 text-lg">
+        {outcomeText}
+      </p>
+
       {#each questions as question, i}
         {#if i === 2 || i == 6}
           <hr class="w-full my-16 border-black border-dashed" />
