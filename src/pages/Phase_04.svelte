@@ -10,10 +10,10 @@ Trustee: how angry/satisfied
 Investor: how guilty/satisfied
 
 Data needed:
-- Investor expectation from phase 2 -> DB
-- Trustee expectation from phase 2 -> DB
-- Investor earned from phase 3 -> DB
-- Trustee earned from phase 3 -> DB
+- [x] Investor expectation from phase 2 -> DB
+- [x] Trustee expectation from phase 2 -> DB
+- [x] Investor earned from phase 3 -> DB
+- [x] Trustee earned from phase 3 -> DB
 
 Data stored/modified:
 - Investor anger/satisfcation
@@ -21,13 +21,29 @@ Data stored/modified:
 -->
 <script>
   import { createEventDispatcher } from "svelte";
-  import { userStore, groupStore, saveAPQData, globalVars } from "../utils.js";
+  import {
+    userStore,
+    groupStore,
+    saveAPQData,
+    globalVars,
+    saveQData,
+  } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import MouseRating from "../components/MouseRating.svelte";
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
   let submitted = false;
+
+  // GET TRIAL DATA
+  // Shared endowment
+  let endowment = $groupStore.trials[$groupStore.currentTrial].endowment;
+  // let I_expectation =
+  //   $groupStore.trials[$groupStore.currentTrial].I_1ST_ORDER_EXPECTATION;
+  // let T_expectation =
+  //   $groupStore.trials[$groupStore.currentTrial].T_2ND_ORDER_EXPECTATION;
+  // let I_earnings = $groupStore.trials[$groupStore.currentTrial].I_EARNED;
+  // let T_earnings = $groupStore.trials[$groupStore.currentTrial].T_EARNED;
 
   let questions;
   // Initialize all scales to their mid-point assumpting they're 100pt scales
@@ -39,11 +55,6 @@ Data stored/modified:
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-  // let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-  // let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-
-  let endowment_I_E = $groupStore.trials[$groupStore.currentTrial].I_E;
-  let endowment_T_E = $groupStore.trials[$groupStore.currentTrial].T_E;
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
@@ -86,7 +97,7 @@ Data stored/modified:
 
   async function getNextTrial() {
     submitted = true;
-    await saveAPQData(questions);
+    await saveQData(questions);
     dispatch("get-next-trial");
   }
 </script>

@@ -9,12 +9,12 @@ will give them.
 So only real logic in UI is the difference in question phrasing
 
 Data needed:
-- Investor Endowment -> DB
-- Multiplier -> globals in utils.js
+- [x] Investor Endowment -> DB
+- [x] Multiplier -> globals in utils.js
 
 Data stored/modified:
-- Investor choice
-- Trustee prediction
+- [x] Investor choice
+- [x] Trustee prediction
 -->
 <script>
   import { createEventDispatcher } from "svelte";

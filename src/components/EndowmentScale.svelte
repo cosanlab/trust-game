@@ -84,10 +84,4 @@
   .disabled::-webkit-slider-thumb {
     @apply bg-yellow-500 border-gray-500 border-2;
   }
-  .enabled-bar {
-    @apply bg-yellow-300;
-  }
-  .disabled-bar {
-    @apply bg-yellow-400;
-  }
 </style>

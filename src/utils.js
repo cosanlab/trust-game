@@ -342,13 +342,24 @@ export const saveQData = async (questions) => {
         }
       } else if (currentState === "phase-03") {
         if (role === 'trustee') {
-          let t_choice = questions[0].rating;
-          data["trials"][currentTrial]["T_CHOICE"] = t_choice;
-          data["trials"][currentTrial]["T_EARNED"] = t_choice;
-          data["trials"][currentTrial]["I_EARNED"] = questions[0].rating;
+          let endowment = data["trials"][currentTrial].endowment;
+          let t_choice = questions[0].rating; // how much T chooses to give to I (of the invested amount * multiplier)
+          let i_choice = data["trials"][currentTrial]["I_CHOICE"]; // how much of endowment I chose to invest in T from phase-01
+
+          data["trials"][currentTrial]["T_CHOICE"] = t_choice; // how much T returned to I
+          data["trials"][currentTrial]["T_EARNED"] = ((i_choice * globalVars.multiplier) - t_choice);
+          data["trials"][currentTrial]["I_EARNED"] = (endowment - i_choice) + t_choice; // should be: (endowment - I_CHOICE) + T_CHOICE
 
         } else if (role === 'investor') {
           console.log("investor waiting for trustee")
+        } else {
+          throw `${role} is an unknown role`;
+        }
+      } else if (currentState === "phase-04") {
+        if (role === 'trustee') {
+          console.log("TODO")
+        } else if (role === 'investor') {
+          console.log("TODO")
         } else {
           throw `${role} is an unknown role`;
         }
