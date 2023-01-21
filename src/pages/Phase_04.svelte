@@ -27,6 +27,7 @@ Data stored/modified:
     saveAPQData,
     globalVars,
     saveQData,
+    round2,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import MouseRating from "../components/MouseRating.svelte";
@@ -48,7 +49,9 @@ Data stored/modified:
   let I_received = $groupStore.trials[currentTrial].T_CHOICE;
   let T_received = $groupStore.trials[currentTrial].I_CHOICE;
 
-  const earnings = $userStore.role === "investor" ? I_earnings : T_earnings;
+  const earnings = round2(
+    $userStore.role === "investor" ? I_earnings : T_earnings
+  );
   const expectFromOther =
     $userStore.role === "investor" ? I_expectation : T_prediction;
   const receivedAmount =
