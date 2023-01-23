@@ -65,7 +65,7 @@ Data stored/modified:
     // For Trustee we ask how much they predict the investor to share with them
     questions = [
       {
-        questionText: `How much do you predict ${$groupStore.I_name} will give to you?`,
+        questionText: `How much do you predict ${$groupStore.I_name} will invest in you?`,
         rating: t_predict,
         questionType: "other",
         endowment: endowment,
