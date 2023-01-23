@@ -60,6 +60,9 @@
   const keptAmount = round2(
     $userStore.role === "investor" ? endowment - T_received : T_received
   );
+  // TODO: color-code based on info to enable quicker reading of multiple lines
+  // e.g. started is one color, expected is another
+  // maybe color-code names too
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
@@ -149,6 +152,7 @@
           <hr class="w-full my-16 border-black border-dashed" />
         {/if}
         {#if question.questionText.includes("compensate")}
+          <!-- TODO: swap MouseRating with standard Rating -->
           <div class="my-8">
             <MouseRating
               questionText={question.questionText}

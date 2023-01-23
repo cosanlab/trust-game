@@ -28,11 +28,15 @@
   // each time the user changes their rating
 </script>
 
+<!-- TODO: have the below be a prop to toggle visibility -->
 <div class="flex flex-col px-2 justify-items-center">
   <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
   <p class="mb-2 text-lg">Multiplier: {globalVars.multiplier}</p>
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
+<!-- TODO: simplify text:
+remove 'you/they would keep' and 'they/you would give' labels 
+above and below scale and instead put that info in the anchors of the scale itself -->
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
   <label for="ratingScale" class="mb-2 text-xl"
@@ -59,6 +63,8 @@
   <label for="ratingScale" class="mb-2 text-xl"
     >{whoText} would give: ${round2(propSpent * endowment)}</label
   >
+  <!-- TODO: make this adjustable dynamically based on role as well
+  e.g. 'they will receive' for investor and 'you would receive' for trustee -->
   {#if $groupStore.currentState === "phase-01"}
     <label for="ratingScale" class="mb-2 text-xl"
       >You could receive up to ${round2(propSpent * endowment * multiplier)} after

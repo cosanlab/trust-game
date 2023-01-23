@@ -92,6 +92,7 @@
 
 {#if submitted}
   <Loading text={"Waiting for your partner..."} />
+  <!-- TODO: where a prop for EndowmentScale would be helpful -->
 {:else}
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
