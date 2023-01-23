@@ -35,6 +35,7 @@
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
+  let showTrialParams = false;
   let submitted = false;
 
   // GET TRIAL DATA
@@ -165,6 +166,7 @@
             />
           </div>
         {:else}
+          <!-- TODO: swap MouseRating with standard Rating -->
           <div class="my-8">
             <MouseRating
               questionText={question.questionText}

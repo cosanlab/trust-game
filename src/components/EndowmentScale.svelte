@@ -4,6 +4,7 @@
   import { globalVars, calcPropSpent, round2, groupStore } from "../utils.js";
 
   // INPUTS:
+  export let visibleParams;
   export let disabled = false;
   export let questionText;
   export let questionType = "other";
@@ -28,10 +29,11 @@
   // each time the user changes their rating
 </script>
 
-<!-- TODO: have the below be a prop to toggle visibility -->
 <div class="flex flex-col px-2 justify-items-center">
-  <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
-  <p class="mb-2 text-lg">Multiplier: {globalVars.multiplier}</p>
+  {#if visibleParams}
+    <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
+    <p class="mb-2 text-lg">Multiplier: {globalVars.multiplier}</p>
+  {/if}
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
 <!-- TODO: simplify text:

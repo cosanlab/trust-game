@@ -1,14 +1,14 @@
-<!-- update so that investor sees a "waiting for trustee" screen. Trustee makes
-rating to give back on the *calculated* number scale
+<!-- Investor sees a "waiting for trustee" screen. 
+  Trustee makes rating to give back on the *calculated* number scale
 
-Data needed:
-- [x] Investor decision in phase 1
-- [x] Multiplier -> globals in utils.js
+  Data needed:
+  - [x] Investor decision in phase 1
+  - [x] Multiplier -> globals in utils.js
 
-Data stored/modified:
-- [x] Trustee decision
-- [x] Trustee earned = offer from phase 1 * multiplier - returned
-- [x] Investor earned = kept in phase 1 + returned by Trustee (after multiplier)
+  Data stored/modified:
+  - [x] Trustee decision
+  - [x] Trustee earned = offer from phase 1 * multiplier - returned
+  - [x] Investor earned = kept in phase 1 + returned by Trustee (after multiplier)
 
 -->
 <script>
@@ -31,6 +31,7 @@ Data stored/modified:
   console.log("globalVars", globalVars);
 
   const dispatch = createEventDispatcher();
+  let visibleTrialParams = false;
   let submitted = false;
   let disableInput = false;
   let currentQ = 0;
@@ -101,6 +102,7 @@ Data stored/modified:
             endowment={questions[currentQ].endowment}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
+            visibleParams={visibleTrialParams}
           />
         {/if}
         {#if showButton}

@@ -34,6 +34,7 @@
   console.log("globalVars", globalVars);
 
   const dispatch = createEventDispatcher();
+  let visibleTrialParams = true;
   let submitted = false;
   let disableInput = false;
   let currentQ = 0;
@@ -107,6 +108,7 @@
             endowment={questions[currentQ].endowment}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
+            visibleParams={visibleTrialParams}
           />
         {:else if $userStore.role === "trustee"}
           <EndowmentScale
@@ -115,6 +117,7 @@
             endowment={questions[currentQ].endowment}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
+            visibleParams={visibleTrialParams}
           />
         {/if}
         {#if showButton}

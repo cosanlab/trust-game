@@ -28,6 +28,7 @@
   console.log("globalVars", globalVars);
 
   const dispatch = createEventDispatcher();
+  let visibleTrialParams = false;
   let submitted = false;
   let disableInput = false;
   let currentQ = 0;
@@ -92,8 +93,8 @@
 
 {#if submitted}
   <Loading text={"Waiting for your partner..."} />
-  <!-- TODO: where a prop for EndowmentScale would be helpful -->
 {:else}
+  <!-- TODO: where a prop for EndowmentScale would be helpful -->
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
@@ -104,6 +105,7 @@
             endowment={questions[currentQ].endowment}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
+            visibleParams={visibleTrialParams}
           />
         {:else if $userStore.role === "trustee"}
           <EndowmentScale
@@ -112,6 +114,7 @@
             endowment={questions[currentQ].endowment}
             questionType={questions[currentQ].questionType}
             disabled={disableInput}
+            visibleParams={visibleTrialParams}
           />
         {/if}
         {#if showButton}
