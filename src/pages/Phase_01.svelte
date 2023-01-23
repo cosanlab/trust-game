@@ -1,20 +1,20 @@
-<!-- #TODO: Update this so Investor sees endowment and makes a decision to share. The
-slider should show BOTH the *calculated* amount as well as the *original* amount:
-- original == whatever the endowment is in the database 
-- calculate = original * multiplier
+<!-- Investor sees endowment and makes a decision to share. 
+  The slider should show BOTH the *calculated* amount as well as the *original* amount:
+  - original == whatever the endowment is in the database 
+  - calculate = original * multiplier
 
-Trustee sees the same, but makes a prediction about how much they think the Investor
-will give them.
+  Trustee sees the same, but makes a prediction about how much they think the Investor
+  will invest in (i.e. give to) them.
 
-So only real logic in UI is the difference in question phrasing
+  So only real logic in UI is the difference in question phrasing
 
-Data needed:
-- [x] Investor Endowment -> DB
-- [x] Multiplier -> globals in utils.js
+  Data needed:
+  - [x] Investor Endowment -> DB
+  - [x] Multiplier -> globals in utils.js
 
-Data stored/modified:
-- [x] Investor choice
-- [x] Trustee prediction
+  Data stored/modified:
+  - [x] Investor choice
+  - [x] Trustee prediction
 -->
 <script>
   import { createEventDispatcher } from "svelte";

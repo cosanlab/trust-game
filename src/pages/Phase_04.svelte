@@ -1,23 +1,24 @@
-<!-- #TODO: Single outcome screen that shows how much each person made based upon the
-previous phase in addition to the expectation outcomes. Only rendering differences are:
+<!-- Single outcome screen that shows how much each person made based upon the 
+  previous phase in addition to the expectation outcomes. 
 
-- the amount of money based on role
-- phase 2's expectation ratings 
+  Only rendering differences are:
+  - the amount of money based on role
+  - phase 2's expectation ratings 
 
-Check with Luke:
-We could also need to render rating scales, with the question wording being different:
-Trustee: how angry/satisfied
-Investor: how guilty/satisfied
+  TODO: Check with Luke:
+  We could also need to render rating scales, with the question wording being different:
+  Trustee: how angry/satisfied
+  Investor: how guilty/satisfied
 
-Data needed:
-- [x] Investor expectation from phase 2 -> DB
-- [x] Trustee expectation from phase 2 -> DB
-- [x] Investor earned from phase 3 -> DB
-- [x] Trustee earned from phase 3 -> DB
+  Data needed:
+  - [x] Investor expectation from phase 2 -> DB
+  - [x] Trustee expectation from phase 2 -> DB
+  - [x] Investor earned from phase 3 -> DB
+  - [x] Trustee earned from phase 3 -> DB
 
-Data stored/modified:
-- Investor anger/satisfcation
-- Trustee guilt/satisfcation
+  Data stored/modified:
+  - [x] Investor anger/satisfcation
+  - [x] Trustee guilt/satisfcation
 -->
 <script>
   import { createEventDispatcher } from "svelte";

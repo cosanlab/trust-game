@@ -1,15 +1,14 @@
-<!-- #TODO: update so that investor sees a "waiting for trustee" screen. Trustee makes
+<!-- update so that investor sees a "waiting for trustee" screen. Trustee makes
 rating to give back on the *calculated* number scale
 
-
 Data needed:
-- Investor decision in phase 1
-- Multiplier -> globals in utils.js
+- [x] Investor decision in phase 1
+- [x] Multiplier -> globals in utils.js
 
 Data stored/modified:
-- Trustee decision
-- Trustee earned = offer from phase 1 * multiplier - returned
-- Investor earned = kept in phase 1 + returned by Trustee (after multiplier)
+- [x] Trustee decision
+- [x] Trustee earned = offer from phase 1 * multiplier - returned
+- [x] Investor earned = kept in phase 1 + returned by Trustee (after multiplier)
 
 -->
 <script>

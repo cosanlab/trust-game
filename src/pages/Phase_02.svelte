@@ -1,14 +1,13 @@
-<!-- #TODO: Investor makes 1st order rating; Trustee makes 2nd order rating. Again UI
-diff is just in question phrasing.
+<!-- Investor makes 1st order rating; Trustee makes 2nd order rating. 
+  Again UI diff is just in question phrasing.
 
+  Data needed:
+  - [x] Investor Endowment -> DB
+  - [x] Multiplier -> globals in utils.js
 
-Data needed:
-- Investor Endowment -> DB
-- Multiplier -> globals in utils.js
-
-Data stored/modified:
-- Investor 1st order -- "i wonder how much trustee will return to me"
-- Trustee 2nd order -- "i wonder how much investor expects me to return to them"
+  Data stored/modified:
+  - [x] Investor 1st order -- "i wonder how much trustee will return to me"
+  - [x] Trustee 2nd order -- "i wonder how much investor expects me to return to them"
 -->
 <script>
   import { createEventDispatcher } from "svelte";
