@@ -65,12 +65,11 @@ above and below scale and instead put that info in the anchors of the scale itse
   <label for="ratingScale" class="mb-2 text-xl"
     >{whoText} would give: ${round2(propSpent * endowment)}</label
   >
-  <!-- TODO: make this adjustable dynamically based on role as well
-  e.g. 'they will receive' for investor and 'you would receive' for trustee -->
   {#if $groupStore.currentState === "phase-01"}
     <label for="ratingScale" class="mb-2 text-xl"
-      >You could receive up to ${round2(propSpent * endowment * multiplier)} after
-      the multiplier is applied</label
+      >{otherText} will receive up to ${round2(
+        propSpent * endowment * multiplier
+      )} after the multiplier is applied</label
     >
   {/if}
 </div>
