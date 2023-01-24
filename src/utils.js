@@ -346,8 +346,8 @@ export const saveQData = async (questions) => {
           let i_choice = data["trials"][currentTrial]["I_CHOICE"]; // how much of endowment I chose to invest in T from phase-01
 
           data["trials"][currentTrial]["T_CHOICE"] = t_choice; // how much T returned to I
-          data["trials"][currentTrial]["T_EARNED"] = ((i_choice * globalVars.multiplier) - t_choice);
-          data["trials"][currentTrial]["I_EARNED"] = (endowment - i_choice) + t_choice; // should be: (endowment - I_CHOICE) + T_CHOICE
+          data["trials"][currentTrial]["T_EARNED"] = round2(((i_choice * globalVars.multiplier) - t_choice));
+          data["trials"][currentTrial]["I_EARNED"] = round2((endowment - i_choice) + t_choice); // should be: (endowment - I_CHOICE) + T_CHOICE
 
         } else if (role === 'investor') {
           console.log("investor waiting for trustee")
