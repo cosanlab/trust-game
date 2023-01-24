@@ -36,14 +36,8 @@
   {/if}
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
-<!-- TODO: simplify text:
-remove 'you/they would keep' and 'they/you would give' labels 
-above and below scale and instead put that info in the anchors of the scale itself -->
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
-  <label for="ratingScale" class="mb-2 text-xl"
-    >{whoText} would keep: ${round2(endowment - propSpent * endowment)}</label
-  >
   <input
     id="ratingScale"
     name="ratingScale"
@@ -62,9 +56,10 @@ above and below scale and instead put that info in the anchors of the scale itse
     <p>$0</p>
     <p>${endowment} of ${endowment}</p>
   </div>
-  <label for="ratingScale" class="mb-2 text-xl"
-    >{whoText} would give: ${round2(propSpent * endowment)}</label
-  >
+  <div class="flex flex-row justify-between">
+    <p>{whoText} would keep: ${round2(endowment - propSpent * endowment)}</p>
+    <p>{whoText} would give: ${round2(propSpent * endowment)}</p>
+  </div>
   {#if $groupStore.currentState === "phase-01"}
     <label for="ratingScale" class="mb-2 text-xl"
       >{otherText} will receive up to ${round2(
