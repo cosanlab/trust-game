@@ -116,40 +116,40 @@
   let r8 = 50;
 
   // Initialize all the question texts
-  if ($userStore.role == "investor" || $userStore.role === "trustee") {
-    questions = [
-      {
-        questionText: "How guilty do you feel?",
-        type: "guilt",
-        rating: r1,
-      },
-      {
-        questionText: "How angry do you feel?",
-        type: "angry",
-        rating: r2,
-      },
-      {
-        questionText: `How guilty do you think ${outcomeExplanation.otherName} feels?`,
-        type: "other_guilt",
-        rating: r3,
-      },
-      {
-        questionText: `How angry do you think ${outcomeExplanation.otherName} feels?`,
-        type: "other_angry",
-        rating: r4,
-      },
-      {
-        questionText: `How close do you feel to ${outcomeExplanation.otherName}?`,
-        type: "close",
-        rating: r5,
-      },
-      {
-        questionText: "How satisfied are you with this outcome?",
-        type: "satisfied",
-        rating: r6,
-      },
-    ];
-  }
+  // if ($userStore.role == "investor" || $userStore.role === "trustee") {
+  //   questions = [
+  //     {
+  //       questionText: "How guilty do you feel?",
+  //       type: "guilt",
+  //       rating: r1,
+  //     },
+  //     {
+  //       questionText: "How angry do you feel?",
+  //       type: "angry",
+  //       rating: r2,
+  //     },
+  //     {
+  //       questionText: `How guilty do you think ${outcomeExplanation.otherName} feels?`,
+  //       type: "other_guilt",
+  //       rating: r3,
+  //     },
+  //     {
+  //       questionText: `How angry do you think ${outcomeExplanation.otherName} feels?`,
+  //       type: "other_angry",
+  //       rating: r4,
+  //     },
+  //     {
+  //       questionText: `How close do you feel to ${outcomeExplanation.otherName}?`,
+  //       type: "close",
+  //       rating: r5,
+  //     },
+  //     {
+  //       questionText: "How satisfied are you with this outcome?",
+  //       type: "satisfied",
+  //       rating: r6,
+  //     },
+  //   ];
+  // }
 
   async function getNextTrial() {
     submitted = true;
@@ -183,7 +183,7 @@
         {outcomeExplanation.investorExpected}
         {outcomeExplanation.trialResults}
       </p>
-      {#each questions as question, i}
+      <!-- {#each questions as question, i}
         {#if i === 2 || i == 6}
           <hr class="w-full my-16 border-black border-dashed" />
         {/if}
@@ -208,7 +208,7 @@
             />
           </div>
         {/if}
-      {/each}
+      {/each} -->
 
       <Button on:click={getNextTrial}>Next</Button>
     </div>
