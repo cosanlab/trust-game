@@ -154,7 +154,6 @@
   async function getNextTrial() {
     submitted = true;
     await saveQData(questions);
-    console.log("finished phase-04");
     dispatch("get-next-trial");
   }
 </script>

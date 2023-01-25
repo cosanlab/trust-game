@@ -26,10 +26,6 @@
   import Button from "../components/Button.svelte";
   import EndowmentScale from "../components/EndowmentScale.svelte";
 
-  console.log("userStore", $userStore);
-  console.log("groupStore", $groupStore);
-  console.log("globalVars", globalVars);
-
   const dispatch = createEventDispatcher();
   let visibleTrialParams = false;
   let submitted = false;
@@ -63,8 +59,6 @@
     getNextQuestion();
   }
 
-  console.log("questions", questions);
-
   async function goto_phase_04() {
     submitted = true;
     await saveQData(questions);
@@ -72,7 +66,6 @@
   }
 
   async function getNextQuestion() {
-    console.log("currentQ", currentQ);
     // If they're done answering move to next state
     if ($userStore.role === "investor") {
       showButton = false;

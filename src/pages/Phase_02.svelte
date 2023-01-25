@@ -23,10 +23,6 @@
   import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 
-  console.log("userStore", $userStore);
-  console.log("groupStore", $groupStore);
-  console.log("globalVars", globalVars);
-
   const dispatch = createEventDispatcher();
   let visibleTrialParams = false;
   let submitted = false;
@@ -69,8 +65,6 @@
     ];
   }
 
-  console.log("questions", questions);
-
   async function goto_phase_03() {
     submitted = true;
     await saveQData(questions);
@@ -78,7 +72,6 @@
   }
 
   async function getNextQuestion() {
-    console.log("currentQ", currentQ);
     // If they're done answering move to next state
     if (currentQ === questions.length - 1) {
       await goto_phase_03();
