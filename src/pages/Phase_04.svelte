@@ -164,10 +164,6 @@
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
-      <!-- <p class="mb-1 text-4xl">
-        You earned <span class:text-green-500="{role == 
-      'investor'}" class:text-red-500="{}">${earnings}</span> for this trial!
-      </p> -->
       <p class="mb-1 text-4xl">
         You earned <span class="text-green-500">${earnings}</span> for this trial!
       </p>
@@ -188,8 +184,6 @@
         {outcomeExplanation.investorExpected}
         {outcomeExplanation.trialResults}
       </p>
-      <!-- Svelte HTML evaluator -->
-      <!-- @html{eval} -->
       {#each questions as question, i}
         {#if i === 2 || i == 6}
           <hr class="w-full my-16 border-black border-dashed" />
