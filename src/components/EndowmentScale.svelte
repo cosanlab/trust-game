@@ -36,8 +36,15 @@
   {/if}
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
+
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
+  <div class="box">
+    <!-- {#if $groupStore.currentState === "phase-01"} -->
+    <h2 class="my-4 text-2xl">${round2(propSpent * endowment)}</h2>
+    <!-- {/if} -->
+  </div>
+
   <input
     id="ratingScale"
     name="ratingScale"
@@ -56,16 +63,10 @@
     <p>$0</p>
     <p>${endowment} of ${endowment}</p>
   </div>
-  <div class="flex flex-row justify-between">
+  <!-- <div class="flex flex-row justify-between">
     <p>{whoText} would keep: ${round2(endowment - propSpent * endowment)}</p>
     <p>{whoText} would give: ${round2(propSpent * endowment)}</p>
-  </div>
-  {#if $groupStore.currentState === "phase-01"}
-    <label for="ratingScale" class="mb-2 text-xl"
-      >{otherText} will receive ${round2(propSpent * endowment * multiplier)} after
-      the multiplier is applied</label
-    >
-  {/if}
+  </div> -->
 </div>
 
 <style>
@@ -83,5 +84,12 @@
   }
   .disabled::-webkit-slider-thumb {
     @apply bg-yellow-500 border-gray-500 border-2;
+  }
+  .box {
+    padding: 2%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 2px solid grey;
+    border-radius: 2px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
   }
 </style>
