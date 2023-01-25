@@ -57,7 +57,13 @@
     // For Trustee we ask how much they expect the investor to share with them
     questions = [
       {
-        questionText: `How much do you think ${$groupStore.I_name} expects you to return to them?`,
+        questionText: `${
+          $groupStore.I_name
+        } invested $${investedAmount} out of $${endowment}, which becomes $${
+          investedAmount * multiplier
+        }. How much do you think ${
+          $groupStore.I_name
+        } expects you to return to them?`,
         rating: t_expect,
         questionType: "self",
         endowment: investedAmount * multiplier,
