@@ -57,7 +57,7 @@ export const stateDisplay = writable([]);
 // import { globalVars } from '../utils.js';
 // console.log(globalVars.time)
 export const globalVars = {
-  multiplier: 4,
+  multiplier: 4, // TODO: have multiplier of 4 as default, but can vary this in a future hidden multiplier version
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 5,
@@ -357,15 +357,17 @@ export const saveQData = async (questions) => {
         }
       } else if (currentState === "phase-04") {
         if (role === 'trustee' || role === 'investor') {
-          let self = role === "trustee" ? "T" : "I"
-          let other = self === "T" ? "I" : "T"
+          console.log("finished phase-04")
 
-          data["trials"][currentTrial][`${self}_GUILT`] = questions[0].rating;
-          data["trials"][currentTrial][`${self}_ANGY`] = questions[1].rating;
-          data["trials"][currentTrial][`${self}_PREDICT_${other}_GUILT`] = questions[2].rating;
-          data["trials"][currentTrial][`${self}_PREDICT_${other}_ANGY`] = questions[3].rating;
-          data["trials"][currentTrial][`${self}_CLOSE`] = questions[4].rating;
-          data["trials"][currentTrial][`${self}_SATISFIED`] = questions[5].rating;
+          // let self = role === "trustee" ? "T" : "I"
+          // let other = self === "T" ? "I" : "T"
+
+          // data["trials"][currentTrial][`${self}_GUILT`] = questions[0].rating;
+          // data["trials"][currentTrial][`${self}_ANGY`] = questions[1].rating;
+          // data["trials"][currentTrial][`${self}_PREDICT_${other}_GUILT`] = questions[2].rating;
+          // data["trials"][currentTrial][`${self}_PREDICT_${other}_ANGY`] = questions[3].rating;
+          // data["trials"][currentTrial][`${self}_CLOSE`] = questions[4].rating;
+          // data["trials"][currentTrial][`${self}_SATISFIED`] = questions[5].rating;
         } else {
           throw `${role} is an unknown role`;
         }
