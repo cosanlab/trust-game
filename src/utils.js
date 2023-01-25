@@ -50,6 +50,8 @@ export const userId = writable(null);
 // Store to control the UI for what state the experiment is in
 export const stateDisplay = writable([]);
 
+// TODO: function for generating trials and binding to reset group button
+
 // Add any global variables you want to use elsewhere in the app
 // Then use them in another file by importing:
 // import { globalVars } from '../utils.js';
@@ -68,7 +70,6 @@ export const globalVars = {
   },
   receiverEndowmentPerTrial: 2 //  36 trials * $2/trial = $72 theoretical max
 };
-
 
 //############################
 
