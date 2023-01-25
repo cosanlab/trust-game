@@ -1,7 +1,7 @@
 <script>
   // Component that draws a rating scale and synchronized pain duration bar to the
   // screen
-  import { globalVars, calcPainDuration } from "../utils.js";
+  import { globalVars, calcPropSpent } from "../utils.js";
 
   // INPUTS:
   export let questionText;
@@ -20,12 +20,6 @@
   // You can also optionally listen for on:change={someFunction} to run someFunction
   // each time the user changes their rating
 </script>
-
-<style>
-  #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 border-black border rounded-full bg-blue-400 border-solid;
-  }
-</style>
 
 <div class="flex flex-col px-2 justify-items-center">
   <h2 class="mb-2 text-2xl">{questionText}</h2>
@@ -47,3 +41,9 @@
     <p>{rightText}</p>
   </div>
 </div>
+
+<style>
+  #ratingScale::-webkit-slider-thumb {
+    @apply appearance-none h-6 w-6 border-black border rounded-full bg-blue-400 border-solid;
+  }
+</style>

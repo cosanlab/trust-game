@@ -22,10 +22,10 @@
 </script>
 
 {#if submitted}
-  <Loading text={"Waiting for other participants..."} />
+  <Loading text={"Waiting for your partner..."} />
 {:else}
   <div class="flex flex-col items-center">
-    <h1 class="mb-4 text-2xl">Instructions for Part 2</h1>
+    <h1 class="mb-4 text-2xl">Instructions for The Trust Game</h1>
     <p class="w-1/2 mb-4 text-left">
       In this experiment demo, a random selection of <span class="font-bold"
         >{$groupStore.trials.length} trials</span
@@ -35,36 +35,49 @@
     </p>
     <StatusHeaderExample />
     <!-- #TODO: Update instructions text as needed to clarify phases above -->
-    <p class="w-1/2 my-4 text-left">
-      Each trial will begin by asking you some questions during the <span
-        class="font-bold">Pre-Stimulation</span
-      >
-      phase. Then the experimenter will setup the thermode on the Receiver during
-      the <span class="font-bold">Thermode Placement</span> phase. Next
-      stimulation will be delivered for the duration based on the Deciders'
-      combined choices in the <span class="font-bold">Stimulation</span> phase.
-      Lastly, you will answer some questions during the
-      <span class="font-bold">Post-Stimulation</span> phase. This sequence will
-      repeat for a total of
-      <span class="font-bold">{$groupStore.trials.length} trials</span>.
-    </p>
-
+    {#if $userStore.role === "investor"}
+      <hr class="w-1/2 my-2 border border-black border-dashed" />
+      <p class="w-1/2 mt-4 text-left">
+        <span class="font-bold">[Phase 1: Investor Makes an Offer]</span><br
+        />As the
+        <span class="underline">Investor</span>, you will be presented with an
+        amount of money, an endowment (e.g., $5), and must decide how much of it
+        to invest in your partner, the Trustee. You will keep what you don't
+        choose to invest. The amount you invest in your partner will then be
+        multiplied by a factor of {globalVars.multiplier}
+        before being sent. As an example, if you invest $1, your partner will receive
+        ${globalVars.multiplier}.<br /> <br />
+        <span class="font-bold">[Phase 2: Expectation Ratings]</span><br />You
+        will report how much of the money you expect your partner to return to
+        you. <br /><br />
+        <span class="font-bold">[Phase 3: Trustee Makes Return Decision]</span
+        ><br />
+        You will wait while your partner decides how much money to return to you.
+        <br /><br />
+        <span class="font-bold">[Phase 4: Trial Outcome]</span><br />You will
+        learn how much money you received and report how you feel about the
+        trial outcome.
+      </p>
+    {/if}
     {#if $userStore.role === "trustee"}
       <hr class="w-1/2 my-2 border border-black border-dashed" />
       <p class="w-1/2 mt-4 text-left">
-        As the Receiver, you will have the opportunity to compensate each
-        Decider for the choices they made and the resulting pain you
-        experienced. You will be allotted a total endowment of ${globalVars.receiverEndowmentPerTrial *
-          $groupStore.trials.length} for this part of the experiment split into ${globalVars.receiverEndowmentPerTrial}
-        per trial. During the <span class="font-bold">Post-Stimulation</span>
-        phase, you can choose how much of this endowment to compensate each Decider.
-        This is optional, and any money you don't spend each trial will awarded to
-        you as a bonus payment at the end of the experiment. <br />
-      </p>
-      <p class="w-1/3 mb-4 text-center">
-        <span class="font-bold">Only you</span> are aware about your option to compensate
-        Deciders on each trial. Please keep this information to yourself during the
-        experiment.
+        <span class="font-bold">[Phase 1: Investor Makes an Offer]</span><br />
+        Your partner, the Investor, will be presented with an amount of money, an
+        endowment (e.g., $5). Your partner will decide how much of it to invest in
+        you, the <span class="underline">Trustee</span>. The amount your partner
+        invests will be multiplied by a factor of {globalVars.multiplier}
+        before being given to you. As an example, if they choose to invest $1, keeping
+        $4 for themselves, you will receive ${globalVars.multiplier}.<br /><br
+        />
+        <span class="font-bold">[Phase 2: Expectation Ratings]</span><br />
+        You will report how much of the money you think your partner expects to receive
+        from you.<br /><br />
+        <span class="font-bold">[Phase 3: Trustee Makes Return Decision]</span
+        ><br />
+        You will decide how much money to return to your partner.<br /><br />
+        <span class="font-bold">[Phase 4: Trial Outcome]</span><br />
+        You will report how you feel about the trial outcome.
       </p>
     {/if}
     <Button on:click={goto_phase_01}>Next</Button>

@@ -1,7 +1,7 @@
 <script>
   // Component that draws a rating scale and synchronized pain duration bar to the
   // screen
-  import { globalVars, calcPainDuration, round2 } from "../utils.js";
+  import { globalVars, calcPropSpent, round2 } from "../utils.js";
 
   // INPUTS:
   export let disabled = false;
@@ -28,11 +28,8 @@
   )}%`;
 
   $: {
-    const { painDurationRounded, proportionOfEndowmentSpent } =
-      calcPainDuration(rating, cost, endowment);
-    painDur = painDurationRounded;
+    const { proportionOfEndowmentSpent } = calcPropSpent(rating, endowment);
     propSpent = proportionOfEndowmentSpent;
-    painBarWidth = `${(painDur / globalVars.maxPainDur) * 100}%`;
   }
 
   // Hide the thumb by default and only reveal it the first time a user mouses over the
@@ -74,24 +71,6 @@
   // To properly calculate their rating, we need to know the coordinates of the rating
   // scale *after* it gets drawn to the screen. So calculate that here
 </script>
-
-<style>
-  #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 border-black border rounded-full border-solid;
-  }
-  #painDuration::-webkit-slider-thumb {
-    @apply appearance-none;
-  }
-  .active::-webkit-slider-thumb {
-    @apply bg-green-400;
-  }
-  .inactive::-webkit-slider-thumb {
-    @apply bg-yellow-400;
-  }
-  .hideThumb::-webkit-slider-thumb {
-    @apply invisible;
-  }
-</style>
 
 {#if agency == 0}
   <div class="flex flex-col px-2 justify-items-center">
@@ -168,3 +147,21 @@
     </div>
   </div>
 {/if}
+
+<style>
+  #ratingScale::-webkit-slider-thumb {
+    @apply appearance-none h-6 w-6 border-black border rounded-full border-solid;
+  }
+  #painDuration::-webkit-slider-thumb {
+    @apply appearance-none;
+  }
+  .active::-webkit-slider-thumb {
+    @apply bg-green-400;
+  }
+  .inactive::-webkit-slider-thumb {
+    @apply bg-yellow-400;
+  }
+  .hideThumb::-webkit-slider-thumb {
+    @apply invisible;
+  }
+</style>

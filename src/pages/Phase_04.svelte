@@ -1,33 +1,108 @@
-<!-- #TODO: Single outcome screen that shows how much each person made based upon the
-previous phase in addition to the expectation outcomes. Only rendering differences are:
+<!-- Single outcome screen that shows how much each person made based upon the 
+  previous phase in addition to the expectation outcomes. 
 
-- the amount of money based on role
-- phase 2's expectation ratings 
+  Only rendering differences are:
+  - the amount of money based on role
+  - phase 2's expectation ratings 
 
-Check with Luke:
-We could also need to render rating scales, with the question wording being different:
-Trustee: how angry/satisfied
-Investor: how guilty/satisfied
+  TODO: Check with Luke:
+  We could also need to render rating scales, with the question wording being different:
+  Trustee: how angry/satisfied
+  Investor: how guilty/satisfied
 
-Data needed:
-- Investor expectation from phase 2 -> DB
-- Trustee expectation from phase 2 -> DB
-- Investor earned from phase 3 -> DB
-- Trustee earned from phase 3 -> DB
+  Data needed:
+  - [x] Investor expectation from phase 2 -> DB
+  - [x] Trustee expectation from phase 2 -> DB
+  - [x] Investor earned from phase 3 -> DB
+  - [x] Trustee earned from phase 3 -> DB
 
-Data stored/modified:
-- Investor anger/satisfcation
-- Trustee guilt/satisfcation
+  Data stored/modified:
+  - [x] Investor anger/satisfcation
+  - [x] Trustee guilt/satisfcation
 -->
 <script>
   import { createEventDispatcher } from "svelte";
-  import { userStore, groupStore, saveAPQData, globalVars } from "../utils.js";
+  import {
+    userStore,
+    groupStore,
+    saveAPQData,
+    globalVars,
+    saveQData,
+    round2,
+  } from "../utils.js";
   import Loading from "../components/Loading.svelte";
-  import MouseRating from "../components/MouseRating.svelte";
+  import Rating from "../components/Rating.svelte";
   import Button from "../components/Button.svelte";
 
   const dispatch = createEventDispatcher();
+  let showTrialParams = false;
   let submitted = false;
+
+  // GET TRIAL DATA
+  let currentTrial = $groupStore.currentTrial;
+  let totalTrials = $groupStore.trials.length;
+
+  // Shared endowment
+  let endowment = $groupStore.trials[currentTrial].endowment;
+
+  let I_expectation = $groupStore.trials[currentTrial].I_1ST_ORDER_EXPECTATION;
+  let T_prediction = $groupStore.trials[currentTrial].T_PREDICTION;
+  let I_earnings = $groupStore.trials[currentTrial].I_EARNED;
+  let T_earnings = $groupStore.trials[currentTrial].T_EARNED;
+  let I_received = $groupStore.trials[currentTrial].T_CHOICE;
+  let T_received = $groupStore.trials[currentTrial].I_CHOICE;
+  let trusteeReceivedMultiplied = T_received * globalVars.multiplier;
+
+  const earnings = round2(
+    $userStore.role === "investor" ? I_earnings : T_earnings
+  );
+  const expectedAmountFromOther =
+    $userStore.role === "investor" ? I_expectation : T_prediction;
+  const receivedAmount =
+    $userStore.role === "investor" ? I_received : T_received;
+  const keptAmount = round2(
+    $userStore.role === "investor" ? endowment - T_received : T_received
+  );
+
+  const otherName =
+    $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
+
+  const whoText = $userStore.role === "investor" ? "They" : "You";
+
+  const outcomeExplanation =
+    $userStore.role === "investor"
+      ? {
+          otherName: "You",
+          started: "started",
+          withEndowment: `with $${endowment}.`,
+          whoExpected1: `${otherName}`,
+          expected: "expected",
+          youExpectAmount: `$${T_prediction}`,
+          youActualReceived: `but received`,
+          youActualReceivedAmount: `$${T_received}`,
+          youActualReceivedFrom: `from you.`,
+          withMultiplier: `With the multiplier, ${whoText.toLowerCase()} then had `,
+          trusteeReceived: `$${trusteeReceivedMultiplied}.`,
+          whoExpected2: "You",
+          investorExpected: `$${I_expectation} from ${otherName} but they gave you $${I_received},`,
+          trialResults: `resulting in a total earnings of $${earnings} for this trial.`,
+        }
+      : {
+          otherName: otherName,
+          started: "started",
+          withEndowment: `with $${endowment}.`,
+          whoExpected1: whoText,
+          expected: "expected",
+          youExpectAmount: `$${T_prediction}`,
+          youActualReceived: `but received`,
+          youActualReceivedAmount: `$${T_received}`,
+          youActualReceivedFrom: `from ${otherName}.`,
+          withMultiplier: `With the multiplier, ${whoText.toLowerCase()} then had `,
+          trusteeReceived: `$${trusteeReceivedMultiplied}.`,
+          whoExpected2: "They",
+          investorExpected: `$${I_expectation} from you but you gave them $${I_received},`,
+          trialResults: `resulting in a total earnings of $${earnings} for this trial.`,
+        };
 
   let questions;
   // Initialize all scales to their mid-point assumpting they're 100pt scales
@@ -39,120 +114,82 @@ Data stored/modified:
   let r6 = 50;
   let r7 = 50;
   let r8 = 50;
-  let r9 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-  let r10 = 0.5 * (globalVars.receiverEndowmentPerTrial / 2);
-  // Other decider's name just for deciders
-  const otherName =
-    $userStore.role === "decider1" ? $groupStore.D2_name : $groupStore.D1_name;
 
   // Initialize all the question texts
-  if ($userStore.role == "decider1" || $userStore.role === "decider2") {
+  if ($userStore.role == "investor" || $userStore.role === "trustee") {
     questions = [
       {
-        questionText: "How guilty did you feel?",
+        questionText: "How guilty do you feel?",
         type: "guilt",
         rating: r1,
       },
       {
-        questionText: "How responsible did you feel?",
-        type: "responsible",
+        questionText: "How angry do you feel?",
+        type: "angry",
         rating: r2,
       },
       {
-        questionText: `How guilty do you think ${otherName} feels?`,
+        questionText: `How guilty do you think ${outcomeExplanation.otherName} feels?`,
         type: "other_guilt",
         rating: r3,
       },
       {
-        questionText: `How responsible do you think ${otherName} feels?`,
-        type: "other_responsible",
+        questionText: `How angry do you think ${outcomeExplanation.otherName} feels?`,
+        type: "other_angry",
         rating: r4,
       },
       {
-        questionText: `How close do you feel to ${otherName}?`,
+        questionText: `How close do you feel to ${outcomeExplanation.otherName}?`,
         type: "close",
         rating: r5,
       },
       {
-        questionText: "How satisfied are you with the decision?",
+        questionText: "How satisfied are you with this outcome?",
         type: "satisfied",
         rating: r6,
-      },
-    ];
-  } else {
-    questions = [
-      {
-        questionText: "How much pain did you feel?",
-        type: "pain",
-        rating: r1,
-      },
-      {
-        questionText: "How satisfied are you with the decision?",
-        type: "satisfied",
-        rating: r2,
-      },
-      {
-        questionText: `How angry do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_anger",
-        rating: r3,
-      },
-      {
-        questionText: `How indebted do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_indebted",
-        rating: r5,
-      },
-      {
-        questionText: `How much gratitude do you feel towards ${$groupStore.D1_name}?`,
-        type: "D1_gratitude",
-        rating: r7,
-      },
-      {
-        questionText: `How much do you want to compensate ${$groupStore.D1_name}?`,
-        type: "D1_compensate",
-        rating: r9,
-      },
-      {
-        questionText: `How angry you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_anger",
-        rating: r4,
-      },
-      {
-        questionText: `How indebted do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_indebted",
-        rating: r6,
-      },
-      {
-        questionText: `How much gratitude do you feel towards ${$groupStore.D2_name}?`,
-        type: "D2_gratitude",
-        rating: r8,
-      },
-      {
-        questionText: `How much do you want to compensate ${$groupStore.D2_name}?`,
-        type: "D2_compensate",
-        rating: r10,
       },
     ];
   }
 
   async function getNextTrial() {
     submitted = true;
-    await saveAPQData(questions);
+    await saveQData(questions);
     dispatch("get-next-trial");
   }
 </script>
 
 {#if submitted}
-  <Loading text={"Waiting for other participants..."} />
+  <Loading text={"Waiting for your partner..."} />
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
+      <p class="mb-1 text-4xl">
+        You earned <span class="text-green-500">${earnings}</span> for this trial!
+      </p>
+      <p class="mb-1 text-lg">
+        {outcomeExplanation.otherName}
+        <span class="text-green-500">{outcomeExplanation.started}</span>
+        {outcomeExplanation.withEndowment}
+        {outcomeExplanation.whoExpected1}
+        <span class="text-purple-500">{outcomeExplanation.expected}</span>
+        {outcomeExplanation.youExpectAmount}
+        {outcomeExplanation.youActualReceived}
+        {outcomeExplanation.youActualReceivedAmount}
+        {outcomeExplanation.youActualReceivedFrom}
+        {outcomeExplanation.withMultiplier}
+        {outcomeExplanation.trusteeReceived}
+        {outcomeExplanation.whoExpected2}
+        <span class="text-purple-500">{outcomeExplanation.expected}</span>
+        {outcomeExplanation.investorExpected}
+        {outcomeExplanation.trialResults}
+      </p>
       {#each questions as question, i}
         {#if i === 2 || i == 6}
           <hr class="w-full my-16 border-black border-dashed" />
         {/if}
         {#if question.questionText.includes("compensate")}
           <div class="my-8">
-            <MouseRating
+            <Rating
               questionText={question.questionText}
               bind:rating={question.rating}
               min={"0"}
@@ -164,7 +201,7 @@ Data stored/modified:
           </div>
         {:else}
           <div class="my-8">
-            <MouseRating
+            <Rating
               questionText={question.questionText}
               bind:rating={question.rating}
               step={"1"}
