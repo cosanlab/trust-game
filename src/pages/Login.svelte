@@ -5,7 +5,13 @@
     createUserWithEmailAndPassword,
   } from "firebase/auth";
 
-  import { userStore, initUser, userId, formatUserId } from "../utils";
+  import {
+    userStore,
+    initUser,
+    userId,
+    formatUserId,
+    saveName,
+  } from "../utils";
   import Button from "../components/Button.svelte";
 
   let name, subId, role, loginError;
@@ -22,6 +28,7 @@
   }
 
   async function login() {
+    console.log(name);
     setSubId();
     const auth = getAuth();
     // Convert their text input to NNN_NNN_role format
@@ -41,12 +48,15 @@
     localStorage.setItem("userId", $userId);
     try {
       await signInWithEmailAndPassword(auth, email, password);
+      await initUser(groupId_f, subId_f, role_f, name);
+      await saveName(name);
     } catch (error) {
       if (error.code === "auth/user-not-found") {
         console.log("no participant found...creating new account");
         await createUserWithEmailAndPassword(auth, email, password);
         await signInWithEmailAndPassword(auth, email, password);
         await initUser(groupId_f, subId_f, role_f, name);
+        await saveName(name);
       } else {
         loginError = error.code;
         console.error(error);
