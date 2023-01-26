@@ -45,8 +45,8 @@
   // Shared endowment
   let endowment = $groupStore.trials[currentTrial].endowment;
 
-  let I_expectation = $groupStore.trials[currentTrial].I_1ST_ORDER_EXPECTATION;
-  let T_prediction = $groupStore.trials[currentTrial].T_PREDICTION;
+  // let I_expectation = $groupStore.trials[currentTrial].I_1ST_ORDER_EXPECTATION;
+  // let T_prediction = $groupStore.trials[currentTrial].T_PREDICTION;
   let I_earnings = $groupStore.trials[currentTrial].I_EARNED;
   let T_earnings = $groupStore.trials[currentTrial].T_EARNED;
   let I_received = $groupStore.trials[currentTrial].T_CHOICE;
@@ -56,52 +56,42 @@
   const earnings = round2(
     $userStore.role === "investor" ? I_earnings : T_earnings
   );
-  const expectedAmountFromOther =
-    $userStore.role === "investor" ? I_expectation : T_prediction;
-  const receivedAmount =
-    $userStore.role === "investor" ? I_received : T_received;
-  const keptAmount = round2(
-    $userStore.role === "investor" ? endowment - T_received : T_received
-  );
+  // const expectedAmountFromOther =
+  //   $userStore.role === "investor" ? I_expectation : T_prediction;
+  // const receivedAmount =
+  //   $userStore.role === "investor" ? I_received : T_received;
+  // const keptAmount = round2(
+  //   $userStore.role === "investor" ? endowment - T_received : T_received
+  // );
 
   const otherName =
     $userStore.role === "investor" ? $groupStore.T_name : $groupStore.I_name;
 
-  const whoText = $userStore.role === "investor" ? "They" : "You";
-
   const outcomeExplanation =
     $userStore.role === "investor"
       ? {
-          otherName: "You",
-          started: "started",
-          withEndowment: `with $${endowment}.`,
-          whoExpected1: `${otherName}`,
-          expected: "expected",
-          youExpectAmount: `$${T_prediction}`,
-          youActualReceived: `but received`,
-          youActualReceivedAmount: `$${T_received}`,
-          youActualReceivedFrom: `from you.`,
-          withMultiplier: `With the multiplier, ${whoText.toLowerCase()} then had `,
-          trusteeReceived: `$${trusteeReceivedMultiplied}.`,
-          whoExpected2: "You",
-          investorExpected: `$${I_expectation} from ${otherName} but they gave you $${I_received},`,
-          trialResults: `resulting in a total earnings of $${earnings} for this trial.`,
+          investor: "You",
+          invested: "invested",
+          investmentAmount: `$${T_received}`,
+          outOf: `out of`,
+          endowment: `$${endowment},`,
+          multiplier: `which became $${trusteeReceivedMultiplied}.`,
+          trustee: `${otherName}`,
+          returned: `returned`,
+          returnedAmount: `$${I_received}.`,
+          outcome: `You get $${I_earnings} and ${otherName} gets $${T_earnings}.`,
         }
       : {
-          otherName: otherName,
-          started: "started",
-          withEndowment: `with $${endowment}.`,
-          whoExpected1: whoText,
-          expected: "expected",
-          youExpectAmount: `$${T_prediction}`,
-          youActualReceived: `but received`,
-          youActualReceivedAmount: `$${T_received}`,
-          youActualReceivedFrom: `from ${otherName}.`,
-          withMultiplier: `With the multiplier, ${whoText.toLowerCase()} then had `,
-          trusteeReceived: `$${trusteeReceivedMultiplied}.`,
-          whoExpected2: "They",
-          investorExpected: `$${I_expectation} from you but you gave them $${I_received},`,
-          trialResults: `resulting in a total earnings of $${earnings} for this trial.`,
+          investor: `${otherName}`,
+          invested: "invested",
+          investmentAmount: `$${T_received}`,
+          outOf: `out of`,
+          endowment: `$${endowment},`,
+          multiplier: `which became $${trusteeReceivedMultiplied}.`,
+          trustee: `You`,
+          returned: `returned`,
+          returnedAmount: `$${I_received}.`,
+          outcome: `You get $${T_earnings} and ${otherName} gets $${I_earnings}.`,
         };
 
   let questions;
@@ -167,10 +157,18 @@
         You earned <span class="text-green-500">${earnings}</span> for this trial!
       </p>
       <p class="mb-1 text-lg">
-        {outcomeExplanation.otherName}
-        <span class="text-green-500">{outcomeExplanation.started}</span>
-        {outcomeExplanation.withEndowment}
-        {outcomeExplanation.whoExpected1}
+        {outcomeExplanation.investor}
+        <span class="text-green-500">{outcomeExplanation.invested}</span>
+        {outcomeExplanation.investmentAmount}
+        {outcomeExplanation.outOf}
+        {outcomeExplanation.endowment}
+        {outcomeExplanation.multiplier}
+        {outcomeExplanation.trustee}
+        {outcomeExplanation.returned}
+        {outcomeExplanation.returnedAmount}
+        {outcomeExplanation.outcome}
+
+        <!-- {outcomeExplanation.whoExpected1}
         <span class="text-purple-500">{outcomeExplanation.expected}</span>
         {outcomeExplanation.youExpectAmount}
         {outcomeExplanation.youActualReceived}
@@ -181,8 +179,20 @@
         {outcomeExplanation.whoExpected2}
         <span class="text-purple-500">{outcomeExplanation.expected}</span>
         {outcomeExplanation.investorExpected}
-        {outcomeExplanation.trialResults}
+        {outcomeExplanation.trialResults} -->
       </p>
+      <!-- 
+          investor: "You",
+          invested: "invested",
+          investmentAmount: `$${T_received}`,
+          outOf: `out of`,
+          endowment: `$${endowment}.`,
+          multiplier: `which became $${trusteeReceivedMultiplied}.`,
+          trustee: `${otherName}`,
+          returned: `returned`,
+          returnedAmount: `$${I_received}.`,
+          outcome: `You get $${I_received} and ${otherName} gets $${T_received}.`, -->
+
       <!-- {#each questions as question, i}
         {#if i === 2 || i == 6}
           <hr class="w-full my-16 border-black border-dashed" />
