@@ -47,7 +47,9 @@
   if ($userStore.role == "investor") {
     questions = [
       {
-        questionText: `How much do you think ${$groupStore.T_name} will return to you?`,
+        questionText: `You invested $${investedAmount} out of $${endowment}, which became $${
+          investedAmount * multiplier
+        }. How much do you think ${$groupStore.T_name} will return to you?`,
         rating: i_predict,
         questionType: "other",
         endowment: investedAmount * multiplier,
@@ -59,7 +61,7 @@
       {
         questionText: `${
           $groupStore.I_name
-        } invested $${investedAmount} out of $${endowment}, which becomes $${
+        } invested $${investedAmount} out of $${endowment}, which became $${
           investedAmount * multiplier
         }. How much do you think ${
           $groupStore.I_name
