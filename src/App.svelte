@@ -30,6 +30,7 @@
   import Loading from "./components/Loading.svelte";
   import Footer from "./components/Footer.svelte";
   import StatusHeader from "./components/StatusHeader.svelte";
+  import PhaseFixation from "./pages/Phase_Fixation.svelte";
 
   // VARIABLES USED WITHIN App.svelte
   let unsubscribe_user, unsubscribe_group;
@@ -133,7 +134,9 @@ determine what page a user should be on. -->
     <Loading />
   {:else}
     <!-- Main experiment loop -->
-    <StatusHeader />
+    {#if $groupStore.currentState !== "phase-fixation"}
+      <StatusHeader />
+    {/if}
     {#if $groupStore.currentState === "instructions"}
       <Instructions on:to-phase-01={() => updateState("phase-01")} />
     {:else if $groupStore.currentState === "phase-01"}
@@ -143,10 +146,15 @@ determine what page a user should be on. -->
     {:else if $groupStore.currentState === "phase-03"}
       <Phase_03 on:to-phase-04={() => updateState("phase-04")} />
     {:else if $groupStore.currentState === "phase-04"}
-      <Phase_04 on:get-next-trial={getNextTrial} />
+      <Phase_04 on:to-phase-fixation={() => updateState("phase-fixation")} />
+    {:else if $groupStore.currentState === "phase-fixation"}
+      <PhaseFixation on:get-next-trial={getNextTrial} />
     {:else if $groupStore.currentState === "debrief"}
       <Debrief />
     {/if}
   {/if}
 </main>
-<Footer on:resetGroup={resetGroupData} />
+
+{#if $groupStore.currentState !== "phase-fixation"}
+  <Footer on:resetGroup={resetGroupData} />
+{/if}
