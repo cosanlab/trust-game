@@ -14,6 +14,8 @@ This is a webapp that runs a mock interactive Trust Game between 2 people. It's 
 2. Investor makes 1st order expectation rating; Trustee make prediction rating and 2nd order expectation rating
 3. Trustee makes decision
 4. Both see trial outcome
+5. Both rate how guilty they feel given partner's expectation as well as give counterfactual guilt rating
+6. Fixation
 
 
 ### One time CORS configuration
