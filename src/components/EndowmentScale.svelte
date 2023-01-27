@@ -36,6 +36,31 @@
   // each time the user changes their rating
 </script>
 
+<style>
+  #ratingScale::-webkit-slider-thumb {
+    @apply appearance-none h-6 w-6 rounded-full border-solid;
+  }
+  .enabled {
+    @apply bg-black border;
+  }
+  .enabled::-webkit-slider-thumb {
+    @apply bg-yellow-300 border-black;
+  }
+  .disabled {
+    @apply bg-gray-500;
+  }
+  .disabled::-webkit-slider-thumb {
+    @apply bg-yellow-500 border-gray-500 border-2;
+  }
+  .box {
+    padding: 2%;
+    background-color: rgba(255, 255, 255, 0.4);
+    border: 2px solid grey;
+    border-radius: 2px;
+    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
+  }
+</style>
+
 <div class="flex flex-col px-2 justify-items-center">
   {#if visibleParams}
     <p class="mb-2 text-xl">Shared endowment: ${endowment}</p>
