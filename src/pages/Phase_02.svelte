@@ -79,17 +79,17 @@
     dispatch("to-phase-03");
   }
 
-  async function getNextQuestion() {
-    // If they're done answering move to next state
-    if (currentQ === questions.length - 1) {
-      await goto_phase_03();
-    } else {
-      currentQ = currentQ + 1;
-      showButton = true;
-      switchToRatingScale = false;
-      disableInput = false;
-    }
-  }
+  // async function getNextQuestion() {
+  //   // If they're done answering move to next state
+  //   if (currentQ === questions.length - 1) {
+  //     await goto_phase_03();
+  //   } else {
+  //     currentQ = currentQ + 1;
+  //     showButton = true;
+  //     switchToRatingScale = false;
+  //     disableInput = false;
+  //   }
+  // }
 </script>
 
 {#if submitted}
@@ -98,27 +98,16 @@
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
-        {#if $userStore.role === "investor"}
-          <EndowmentScale
-            bind:rating={questions[currentQ].rating}
-            questionText={questions[currentQ].questionText}
-            endowment={questions[currentQ].endowment}
-            questionType={questions[currentQ].questionType}
-            disabled={disableInput}
-            visibleParams={visibleTrialParams}
-          />
-        {:else if $userStore.role === "trustee"}
-          <EndowmentScale
-            bind:rating={questions[currentQ].rating}
-            questionText={questions[currentQ].questionText}
-            endowment={questions[currentQ].endowment}
-            questionType={questions[currentQ].questionType}
-            disabled={disableInput}
-            visibleParams={visibleTrialParams}
-          />
-        {/if}
+        <EndowmentScale
+          bind:rating={questions[currentQ].rating}
+          questionText={questions[currentQ].questionText}
+          endowment={questions[currentQ].endowment}
+          questionType={questions[currentQ].questionType}
+          disabled={disableInput}
+          visibleParams={visibleTrialParams}
+        />
         {#if showButton}
-          <Button on:click={getNextQuestion}>Next</Button>
+          <Button on:click={goto_phase_03}>Next</Button>
         {/if}
       </div>
     </div>

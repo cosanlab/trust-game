@@ -73,20 +73,7 @@
   let r2 = 50;
 
   // Initialize all the question texts
-  if ($userStore.role == "investor") {
-    questions = [
-      {
-        questionText: `How guilty do you feel?`,
-        type: "guilt",
-        rating: r1,
-      },
-      {
-        questionText: `How guilty would you feel if you returned $${counterfactualAmount}?`,
-        type: "angry",
-        rating: r2,
-      },
-    ];
-  } else if ($userStore.role === "trustee") {
+  if ($userStore.role == "investor" || $userStore.role === "trustee") {
     questions = [
       {
         questionText: `How guilty do you feel?`,
@@ -113,7 +100,7 @@
 {:else}
   <div class="w-1/2 mx-auto">
     <div class="min-w-full pb-32 text-center">
-      <p class="mb-1 text-lg">
+      <p class="mb-1 text-2xl">
         {otherExpected}
       </p>
 

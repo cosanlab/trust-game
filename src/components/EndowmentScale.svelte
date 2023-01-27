@@ -37,17 +37,15 @@
 
 <div class="flex flex-col px-2 justify-items-center">
   {#if visibleParams}
-    <p class="mb-2 text-lg">Shared endowment: ${endowment}</p>
-    <p class="mb-2 text-lg">Multiplier: {globalVars.multiplier}</p>
+    <p class="mb-2 text-xl">Shared endowment: ${endowment}</p>
+    <p class="mb-2 text-xl">Multiplier: {globalVars.multiplier}</p>
   {/if}
   <h2 class="my-4 text-2xl">{questionText}</h2>
 </div>
 
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
-  <div class="box">
-    <h2 class="my-4 text-2xl">${rounded(propSpent * endowment)}</h2>
-  </div>
+  <h2 class="my-4 text-4xl font-bold">${rounded(propSpent * endowment)}</h2>
 
   <input
     id="ratingScale"
@@ -65,7 +63,7 @@
   />
   <div class="flex flex-row justify-between">
     <p>$0</p>
-    <p>${endowment} of ${endowment}</p>
+    <p>${endowment}</p>
   </div>
 </div>
 
