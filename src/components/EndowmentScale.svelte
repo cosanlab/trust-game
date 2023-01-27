@@ -1,7 +1,13 @@
 <script>
   // Component that draws a rating scale and synchronized pain duration bar to the
   // screen
-  import { globalVars, calcPropSpent, round2, groupStore } from "../utils.js";
+  import {
+    globalVars,
+    calcPropSpent,
+    rounded,
+    round2,
+    groupStore,
+  } from "../utils.js";
 
   // INPUTS:
   export let visibleParams;
@@ -40,9 +46,7 @@
 <!-- Money scale -->
 <div class="flex flex-col px-2 justify-items-center">
   <div class="box">
-    <!-- {#if $groupStore.currentState === "phase-01"} -->
-    <h2 class="my-4 text-2xl">${round2(propSpent * endowment)}</h2>
-    <!-- {/if} -->
+    <h2 class="my-4 text-2xl">${rounded(propSpent * endowment)}</h2>
   </div>
 
   <input
@@ -63,10 +67,6 @@
     <p>$0</p>
     <p>${endowment} of ${endowment}</p>
   </div>
-  <!-- <div class="flex flex-row justify-between">
-    <p>{whoText} would keep: ${round2(endowment - propSpent * endowment)}</p>
-    <p>{whoText} would give: ${round2(propSpent * endowment)}</p>
-  </div> -->
 </div>
 
 <style>
