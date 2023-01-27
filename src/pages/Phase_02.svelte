@@ -49,7 +49,7 @@
       {
         questionText: `You invested $${investedAmount} out of $${endowment}, which became $${
           investedAmount * multiplier
-        }. How much do you think ${$groupStore.T_name} will return to you?`,
+        }.\nHow much do you think ${$groupStore.T_name} will return to you?`,
         rating: i_predict,
         questionType: "other",
         endowment: investedAmount * multiplier,
@@ -63,7 +63,7 @@
           $groupStore.I_name
         } invested $${investedAmount} out of $${endowment}, which became $${
           investedAmount * multiplier
-        }. How much do you think ${
+        }.\nHow much do you think ${
           $groupStore.I_name
         } expects you to return to them?`,
         rating: t_expect,
@@ -95,7 +95,6 @@
 {#if submitted}
   <Loading text={"Waiting for your partner..."} />
 {:else}
-  <!-- TODO: where a prop for EndowmentScale would be helpful -->
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">

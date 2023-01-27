@@ -54,9 +54,10 @@
         ><br />
         You will wait while your partner decides how much money to return to you.
         <br /><br />
-        <span class="font-bold">[Phase 4: Trial Outcome]</span><br />You will
-        learn how much money you received and report how you feel about the
-        trial outcome.
+        <span class="font-bold">[Phase 4: Trial Outcome]</span><br />
+        You will learn the how much money you received.<br /><br />
+        <span class="font-bold">[Phase 5: Counterfactual rating]</span><br />
+        You will report how you feel about the trial outcome.
       </p>
     {/if}
     {#if $userStore.role === "trustee"}
@@ -77,6 +78,8 @@
         ><br />
         You will decide how much money to return to your partner.<br /><br />
         <span class="font-bold">[Phase 4: Trial Outcome]</span><br />
+        You will learn the how much money you received.<br /><br />
+        <span class="font-bold">[Phase 5: Counterfactual rating]</span><br />
         You will report how you feel about the trial outcome.
       </p>
     {/if}

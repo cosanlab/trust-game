@@ -24,6 +24,7 @@
     saveQData,
     round2,
     globalVars,
+    rounded,
   } from "../utils.js";
   import Loading from "../components/Loading.svelte";
   import EndowmentScale from "../components/EndowmentScale.svelte";

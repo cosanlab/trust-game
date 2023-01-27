@@ -6,9 +6,20 @@
     "Investor makes offer",
     "Expectation ratings",
     "Trustee makes return decision",
-    "Trial Outcome",
+    "Trial outcome",
+    "Counterfactual ratings",
   ];
 </script>
+
+<div class="flex">
+  <ul class="steps">
+    {#each stateDisplay as name}
+      <li class="step">
+        {name}
+      </li>
+    {/each}
+  </ul>
+</div>
 
 <style>
   .steps {
@@ -22,13 +33,3 @@
     @apply after:bg-violet-500 before:bg-violet-500 after:border-2 after:border-black;
   }
 </style>
-
-<div class="flex">
-  <ul class="steps">
-    {#each stateDisplay as name}
-      <li class="step">
-        {name}
-      </li>
-    {/each}
-  </ul>
-</div>

@@ -95,51 +95,6 @@
         };
 
   let questions;
-  // Initialize all scales to their mid-point assumpting they're 100pt scales
-  let r1 = 50;
-  let r2 = 50;
-  let r3 = 50;
-  let r4 = 50;
-  let r5 = 50;
-  let r6 = 50;
-  let r7 = 50;
-  let r8 = 50;
-
-  // Initialize all the question texts
-  // if ($userStore.role == "investor" || $userStore.role === "trustee") {
-  //   questions = [
-  //     {
-  //       questionText: "How guilty do you feel?",
-  //       type: "guilt",
-  //       rating: r1,
-  //     },
-  //     {
-  //       questionText: "How angry do you feel?",
-  //       type: "angry",
-  //       rating: r2,
-  //     },
-  //     {
-  //       questionText: `How guilty do you think ${outcomeExplanation.otherName} feels?`,
-  //       type: "other_guilt",
-  //       rating: r3,
-  //     },
-  //     {
-  //       questionText: `How angry do you think ${outcomeExplanation.otherName} feels?`,
-  //       type: "other_angry",
-  //       rating: r4,
-  //     },
-  //     {
-  //       questionText: `How close do you feel to ${outcomeExplanation.otherName}?`,
-  //       type: "close",
-  //       rating: r5,
-  //     },
-  //     {
-  //       questionText: "How satisfied are you with this outcome?",
-  //       type: "satisfied",
-  //       rating: r6,
-  //     },
-  //   ];
-  // }
 
   async function getNextTrial() {
     submitted = true;
@@ -162,9 +117,9 @@
         {outcomeExplanation.investmentAmount}
         {outcomeExplanation.outOf}
         {outcomeExplanation.endowment}
-        {outcomeExplanation.multiplier}
+        {outcomeExplanation.multiplier}<br />
         {outcomeExplanation.trustee}
-        {outcomeExplanation.returned}
+        <span class="text-green-500">{outcomeExplanation.returned}</span>
         {outcomeExplanation.returnedAmount}
         {outcomeExplanation.outcome}
 
