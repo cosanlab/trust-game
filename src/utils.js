@@ -57,7 +57,7 @@ export const stateDisplay = writable([]);
 // import { globalVars } from '../utils.js';
 // console.log(globalVars.time)
 export const globalVars = {
-  multiplier: 4,
+  multiplier: 4, // TODO: have multiplier of 4 as default, but can vary this in a future hidden multiplier version
   minPainDur: 5,
   maxPainDur: 15,
   maxEndowment: 5,
@@ -148,6 +148,17 @@ export const formatUserId = (groupId, subId, role) => {
     role_f,
     userId_f
   };
+};
+
+export const getRandomInt = (val) => {
+  let min = Math.ceil(1);
+  let max = Math.floor(val);
+  return Math.floor(Math.random() * (max - min) + min); // The maximum is exclusive and the minimum is inclusive
+}
+
+// Round float to nearest whole integer
+export const rounded = (val) => {
+  return Math.round(val);
 };
 
 // Rounds a float to 2 decimal places
@@ -326,29 +337,29 @@ export const saveQData = async (questions) => {
       // TO E FROM W: I know this is spaghetti but it (seemingly) gets the job done
       if (currentState === "phase-01") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_CHOICE"] = questions[0].rating;
+          data["trials"][currentTrial]["I_CHOICE"] = rounded(questions[0].rating);
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_PREDICTION"] = questions[0].rating;
+          data["trials"][currentTrial]["T_PREDICTION"] = rounded(questions[0].rating);
         } else {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-02") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_1ST_ORDER_EXPECTATION"] = questions[0].rating;
+          data["trials"][currentTrial]["I_1ST_ORDER_EXPECTATION"] = rounded(questions[0].rating);
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_2ND_ORDER_EXPECTATION"] = questions[0].rating;
+          data["trials"][currentTrial]["T_2ND_ORDER_EXPECTATION"] = rounded(questions[0].rating);
         } else {
           throw `${role} is an unknown role`;
         }
       } else if (currentState === "phase-03") {
         if (role === 'trustee') {
           let endowment = data["trials"][currentTrial].endowment;
-          let t_choice = questions[0].rating; // how much T chooses to give to I (of the invested amount * multiplier)
-          let i_choice = data["trials"][currentTrial]["I_CHOICE"]; // how much of endowment I chose to invest in T from phase-01
+          let t_choice = rounded(questions[0].rating); // how much T chooses to give to I (of the invested amount * multiplier)
+          let i_choice = rounded(data["trials"][currentTrial]["I_CHOICE"]); // how much of endowment I chose to invest in T from phase-01
 
           data["trials"][currentTrial]["T_CHOICE"] = t_choice; // how much T returned to I
-          data["trials"][currentTrial]["T_EARNED"] = round2(((i_choice * globalVars.multiplier) - t_choice));
-          data["trials"][currentTrial]["I_EARNED"] = round2((endowment - i_choice) + t_choice); // should be: (endowment - I_CHOICE) + T_CHOICE
+          data["trials"][currentTrial]["T_EARNED"] = rounded(((i_choice * globalVars.multiplier) - t_choice));
+          data["trials"][currentTrial]["I_EARNED"] = rounded((endowment - i_choice) + t_choice); // should be: (endowment - I_CHOICE) + T_CHOICE
 
         } else if (role === 'investor') {
           console.log("investor waiting for trustee")
@@ -357,17 +368,17 @@ export const saveQData = async (questions) => {
         }
       } else if (currentState === "phase-04") {
         if (role === 'trustee' || role === 'investor') {
-          let self = role === "trustee" ? "T" : "I"
-          let other = self === "T" ? "I" : "T"
+          console.log("finished phase-04")
+        } else if (currentState === "phase-05") {
+          if (role === 'trustee' || role === 'investor') {
 
-          data["trials"][currentTrial][`${self}_GUILT`] = questions[0].rating;
-          data["trials"][currentTrial][`${self}_ANGY`] = questions[1].rating;
-          data["trials"][currentTrial][`${self}_PREDICT_${other}_GUILT`] = questions[2].rating;
-          data["trials"][currentTrial][`${self}_PREDICT_${other}_ANGY`] = questions[3].rating;
-          data["trials"][currentTrial][`${self}_CLOSE`] = questions[4].rating;
-          data["trials"][currentTrial][`${self}_SATISFIED`] = questions[5].rating;
-        } else {
-          throw `${role} is an unknown role`;
+            let self = role === "trustee" ? "T" : "I"
+
+            data["trials"][currentTrial][`${self}_GUILT`] = rounded(questions[0].rating);
+            data["trials"][currentTrial][`${self}_COUNTERFACTUAL_GUILT`] = rounded(questions[1].rating);
+          } else {
+            throw `${role} is an unknown role`;
+          }
         }
       }
 

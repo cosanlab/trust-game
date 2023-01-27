@@ -45,24 +45,28 @@
   let t_expect = 0.5 * (investedAmount * multiplier); // trustee's rating
 
   if ($userStore.role == "investor") {
-    questions = [
-      {
-        questionText: `How much do you think ${$groupStore.T_name} will return to you?`,
-        rating: i_predict,
-        questionType: "other",
-        endowment: investedAmount * multiplier,
-      },
-    ];
+    questions = {
+      questionText: `You invested $${investedAmount} out of $${endowment}, which became $${
+        investedAmount * multiplier
+      }.\nHow much do you think ${$groupStore.T_name} will return to you?`,
+      rating: i_predict,
+      questionType: "other",
+      endowment: investedAmount * multiplier,
+    };
   } else {
     // For Trustee we ask how much they expect the investor to share with them
-    questions = [
-      {
-        questionText: `How much do you think ${$groupStore.I_name} expects you to return to them?`,
-        rating: t_expect,
-        questionType: "self",
-        endowment: investedAmount * multiplier,
-      },
-    ];
+    questions = {
+      questionText: `${
+        $groupStore.I_name
+      } invested $${investedAmount} out of $${endowment}, which became $${
+        investedAmount * multiplier
+      }.\nHow much do you think ${
+        $groupStore.I_name
+      } expects you to return to them?`,
+      rating: t_expect,
+      questionType: "self",
+      endowment: investedAmount * multiplier,
+    };
   }
 
   async function goto_phase_03() {
@@ -70,48 +74,24 @@
     await saveQData(questions);
     dispatch("to-phase-03");
   }
-
-  async function getNextQuestion() {
-    // If they're done answering move to next state
-    if (currentQ === questions.length - 1) {
-      await goto_phase_03();
-    } else {
-      currentQ = currentQ + 1;
-      showButton = true;
-      switchToRatingScale = false;
-      disableInput = false;
-    }
-  }
 </script>
 
 {#if submitted}
   <Loading text={"Waiting for your partner..."} />
 {:else}
-  <!-- TODO: where a prop for EndowmentScale would be helpful -->
   <div class="w-3/5 mx-auto">
     <div class="min-w-full pb-32 text-center">
       <div class="my-10">
-        {#if $userStore.role === "investor"}
-          <EndowmentScale
-            bind:rating={questions[currentQ].rating}
-            questionText={questions[currentQ].questionText}
-            endowment={questions[currentQ].endowment}
-            questionType={questions[currentQ].questionType}
-            disabled={disableInput}
-            visibleParams={visibleTrialParams}
-          />
-        {:else if $userStore.role === "trustee"}
-          <EndowmentScale
-            bind:rating={questions[currentQ].rating}
-            questionText={questions[currentQ].questionText}
-            endowment={questions[currentQ].endowment}
-            questionType={questions[currentQ].questionType}
-            disabled={disableInput}
-            visibleParams={visibleTrialParams}
-          />
-        {/if}
+        <EndowmentScale
+          bind:rating={questions.rating}
+          questionText={questions.questionText}
+          endowment={questions.endowment}
+          questionType={questions.questionType}
+          disabled={disableInput}
+          visibleParams={visibleTrialParams}
+        />
         {#if showButton}
-          <Button on:click={getNextQuestion}>Next</Button>
+          <Button on:click={goto_phase_03}>Next</Button>
         {/if}
       </div>
     </div>
