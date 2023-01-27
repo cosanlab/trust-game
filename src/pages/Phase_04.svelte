@@ -99,7 +99,7 @@
   async function getNextTrial() {
     submitted = true;
     await saveQData(questions);
-    dispatch("to-phase-fixation");
+    dispatch("to-phase-05");
   }
 </script>
 

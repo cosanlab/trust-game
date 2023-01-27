@@ -26,6 +26,7 @@
   import Phase_02 from "./pages/Phase_02.svelte";
   import Phase_03 from "./pages/Phase_03.svelte";
   import Phase_04 from "./pages/Phase_04.svelte";
+  import Phase_05 from "./pages/Phase_05.svelte";
   import Debrief from "./pages/Debrief.svelte";
   import Loading from "./components/Loading.svelte";
   import Footer from "./components/Footer.svelte";
@@ -146,7 +147,9 @@ determine what page a user should be on. -->
     {:else if $groupStore.currentState === "phase-03"}
       <Phase_03 on:to-phase-04={() => updateState("phase-04")} />
     {:else if $groupStore.currentState === "phase-04"}
-      <Phase_04 on:to-phase-fixation={() => updateState("phase-fixation")} />
+      <Phase_04 on:to-phase-05={() => updateState("phase-05")} />
+    {:else if $groupStore.currentState === "phase-05"}
+      <Phase_05 on:to-phase-fixation={() => updateState("phase-fixation")} />
     {:else if $groupStore.currentState === "phase-fixation"}
       <PhaseFixation on:get-next-trial={getNextTrial} />
     {:else if $groupStore.currentState === "debrief"}

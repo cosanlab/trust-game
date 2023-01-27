@@ -104,7 +104,7 @@
   async function getNextTrial() {
     submitted = true;
     await saveQData(questions);
-    dispatch("get-next-trial");
+    dispatch("to-phase-fixation");
   }
 </script>
 
