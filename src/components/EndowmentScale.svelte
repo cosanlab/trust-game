@@ -12,7 +12,7 @@
   // INPUTS:
   export let visibleParams;
   export let disabled = false;
-  export let questionText;
+  export let questionText = "";
   export let questionType = "other";
   export let rating;
   export let endowment;
@@ -20,6 +20,7 @@
   $: whoText = questionType === "other" ? "They" : "You";
   $: otherText = questionType === "other" ? "You" : "They";
   $: endowmentAmount = endowment;
+  $: questionText = questionText.replace("\n", "<br/>");
 
   let multiplier = globalVars.multiplier;
 
@@ -40,7 +41,7 @@
     <p class="mb-2 text-xl">Shared endowment: ${endowment}</p>
     <p class="mb-2 text-xl">Multiplier: {globalVars.multiplier}</p>
   {/if}
-  <h2 class="my-4 text-2xl">{questionText}</h2>
+  <h2 class="my-4 text-2xl">{@html questionText}</h2>
 </div>
 
 <!-- Money scale -->
@@ -66,28 +67,3 @@
     <p>${endowment}</p>
   </div>
 </div>
-
-<style>
-  #ratingScale::-webkit-slider-thumb {
-    @apply appearance-none h-6 w-6 rounded-full border-solid;
-  }
-  .enabled {
-    @apply bg-black border;
-  }
-  .enabled::-webkit-slider-thumb {
-    @apply bg-yellow-300 border-black;
-  }
-  .disabled {
-    @apply bg-gray-500;
-  }
-  .disabled::-webkit-slider-thumb {
-    @apply bg-yellow-500 border-gray-500 border-2;
-  }
-  .box {
-    padding: 2%;
-    background-color: rgba(255, 255, 255, 0.4);
-    border: 2px solid grey;
-    border-radius: 2px;
-    box-shadow: 2px 2px 8px rgba(0, 0, 0, 0.1);
-  }
-</style>
