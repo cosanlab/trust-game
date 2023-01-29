@@ -345,9 +345,9 @@ export const saveQData = async (questions) => {
         }
       } else if (currentState === "phase-02") {
         if (role === "investor") {
-          data["trials"][currentTrial]["I_1ST_ORDER_EXPECTATION"] = rounded(questions[0].rating);
+          data["trials"][currentTrial]["I_1ST_ORDER_EXPECTATION"] = rounded(questions.rating);
         } else if (role === 'trustee') {
-          data["trials"][currentTrial]["T_2ND_ORDER_EXPECTATION"] = rounded(questions[0].rating);
+          data["trials"][currentTrial]["T_2ND_ORDER_EXPECTATION"] = rounded(questions.rating);
         } else {
           throw `${role} is an unknown role`;
         }
